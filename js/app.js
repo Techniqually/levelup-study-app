@@ -302,8 +302,9 @@
         <div class="topic-title-row">
           <h1>Topic ${t.id}: ${escapeHtml(t.title)}</h1>
           <div class="topic-nav">
-            <button type="button" class="btn" id="topic-prev" ${prevDisabled ? "disabled" : ""}>← Prev</button>
-            <button type="button" class="btn primary" id="topic-next" ${nextDisabled ? "disabled" : ""}>Next →</button>
+            <button type="button" class="btn btn-small" id="topic-prev" ${prevDisabled ? "disabled" : ""}>← Prev</button>
+            <span class="btn-small">Topics</span>
+            <button type="button" class="btn btn-small primary" id="topic-next" ${nextDisabled ? "disabled" : ""}>Next →</button>
           </div>
         </div>
       </div>

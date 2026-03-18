@@ -362,7 +362,19 @@ body {
   cursor: pointer;
   font-size: 0.95rem;
 }
-
+.btn-small {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+.btn-small.primary {
+  background: linear-gradient(135deg, #0d9488, #6366f1);
+  border: none;
+  color: #fff;
+}
+.btn-small.danger-outline {
+  border-color: var(--danger);
+  color: var(--danger);
+}
 .btn.primary {
   background: linear-gradient(135deg, #0d9488, #6366f1);
   border: none;
