@@ -30,6 +30,9 @@
             ]
         }
     ],
+    infographics: [
+      { image: "data/subjects/chemistry/images/sustainable-03-air-qualityjpg.jpg", caption: "Air pollutants + control measures (catalytic converter, ozone layer)" }
+    ],
     flashcards: [
         {
             "front": "Main anthropogenic greenhouse gas emphasis?",

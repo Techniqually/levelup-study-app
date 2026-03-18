@@ -83,9 +83,23 @@
   <script>
     window.SUBJECT_ID = \"physics\";
     window.SUBJECT_TITLE = \"O-Level Physics (demo)\";
+    window.APP_VERSION = window.APP_VERSION || \"2026-03-18\";
   </script>
-  <script src=\"../data/subjects/physics/topics-manifest.js\"></script>
-  <script src=\"../data/shop-rewards.js\"></script>
-  <script src=\"../js/app.js\"></script>
+  <script>
+    (function () {
+      const v = encodeURIComponent(window.APP_VERSION || \"dev\");
+      const scripts = [
+        \"../data/subjects/physics/topics-manifest.js\",
+        \"../data/shop-rewards.js\",
+        \"../js/app.js\",
+      ];
+      scripts.forEach((src) => {
+        const s = document.createElement(\"script\");
+        s.src = src + (src.includes(\"?\") ? \"&\" : \"?\") + \"v=\" + v;
+        s.async = false;
+        document.body.appendChild(s);
+      });
+    })();
+  </script>
 </body>
 </html>

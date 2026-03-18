@@ -205,6 +205,19 @@ body {
   margin: 0 0 6px;
 }
 
+.topic-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.topic-nav {
+  display: flex;
+  gap: 8px;
+}
+
 .topic-header .back {
   background: none;
   border: none;

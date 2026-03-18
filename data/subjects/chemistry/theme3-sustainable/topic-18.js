@@ -27,6 +27,9 @@
             ]
         }
     ],
+    infographics: [
+      { image: "data/subjects/chemistry/images/sustainable-02-polymers.jpg", caption: "Addition and condensation polymers + recycling context" }
+    ],
     flashcards: [
         {
             "front": "Repeat unit?",

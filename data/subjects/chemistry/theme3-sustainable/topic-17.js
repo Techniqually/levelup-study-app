@@ -29,6 +29,7 @@
         }
     ],
     infographics: [
+      { image: "data/subjects/chemistry/images/sustainable-01-organic.jpg", caption: "Organic families + key tests (alkene bromine water, oxidation, esterification)" },
       { svg: "<svg viewBox=\"0 0 320 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"320\" height=\"90\" fill=\"#1c222d\"/><text x=\"8\" y=\"22\" fill=\"#a78bfa\" font-size=\"11\">Alkane C–C single</text><text x=\"8\" y=\"42\" fill=\"#fb923c\" font-size=\"11\">Alkene C=C · decolourises Br₂(aq)</text><text x=\"8\" y=\"62\" fill=\"#5eead4\" font-size=\"11\">Alcohol –OH · Acid –COOH · Ester + H₂O</text></svg>", caption: "Organic families (revision)" }
     ],
     flashcards: [

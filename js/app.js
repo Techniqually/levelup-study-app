@@ -2,6 +2,7 @@
   const SUBJECT_ID = window.SUBJECT_ID || "chemistry";
   const SUBJECT_TITLE = window.SUBJECT_TITLE || "O-Level Chemistry";
   const STORAGE_KEY = "levelup_" + SUBJECT_ID + "_v1";
+  const APP_VERSION = window.APP_VERSION || "dev";
   const QUESTION_MS = 26000;
   const PASS_PCT = 70;
   const EARLY_WRONG_SEC = 3;
@@ -39,7 +40,8 @@
     }
     loadScriptPromises[key] = new Promise((resolve, reject) => {
       const s = document.createElement("script");
-      s.src = meta.file;
+      const sep = meta.file.includes("?") ? "&" : "?";
+      s.src = meta.file + sep + "v=" + encodeURIComponent(APP_VERSION);
       s.async = true;
       s.onload = () => {
         const t = window.__topicRegistry[id];
@@ -288,10 +290,22 @@
     else if (route.tab === "quiz") body = renderQuizPanel(t);
     else if (route.tab === "game") body = renderGamePanel(t);
 
+    const idx = topicIndex(t.id);
+    const prev = idx > 0 ? manifest[idx - 1] : null;
+    const next = idx >= 0 && idx < manifest.length - 1 ? manifest[idx + 1] : null;
+    const prevDisabled = !prev;
+    const nextDisabled = !next || !isUnlocked(next.id);
+
     main.innerHTML = `
       <div class="topic-header">
         <button type="button" class="back" id="topic-back">← All topics</button>
-        <h1>Topic ${t.id}: ${escapeHtml(t.title)}</h1>
+        <div class="topic-title-row">
+          <h1>Topic ${t.id}: ${escapeHtml(t.title)}</h1>
+          <div class="topic-nav">
+            <button type="button" class="btn" id="topic-prev" ${prevDisabled ? "disabled" : ""}>← Prev</button>
+            <button type="button" class="btn primary" id="topic-next" ${nextDisabled ? "disabled" : ""}>Next →</button>
+          </div>
+        </div>
       </div>
       <div id="topic-panels">${body}</div>
     `;
@@ -299,6 +313,20 @@
       route = { view: "home" };
       renderHome();
     };
+    const prevBtn = document.getElementById("topic-prev");
+    const nextBtn = document.getElementById("topic-next");
+    if (prevBtn) {
+      prevBtn.onclick = () => {
+        if (!prev) return;
+        goTopic(prev.id, route.tab);
+      };
+    }
+    if (nextBtn) {
+      nextBtn.onclick = () => {
+        if (!next || !isUnlocked(next.id)) return;
+        goTopic(next.id, route.tab);
+      };
+    }
     bindPanelHandlers(t);
   }
 
