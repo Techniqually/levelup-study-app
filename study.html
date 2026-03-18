@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LevelUp! — O-Level Chemistry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <button type="button" class="logo-btn" id="btn-home" aria-label="Home">⚗ LevelUp!</button>
+      <div class="topbar-stats">
+        <span class="pill xp" id="stat-xp">0 XP</span>
+        <span class="pill streak" id="stat-streak">🔥 0 day</span>
+        <span class="pill badge-boss" id="stat-boss" hidden title="Theme boss beaten">🏆</span>
+        <button type="button" class="pill pill-shop" id="btn-shop" title="Rewards shop">🛒 Shop</button>
+      </div>
+      <button type="button" class="icon-btn" id="btn-settings" title="Settings">⚙</button>
+    </header>
+
+    <main id="main"></main>
+
+    <nav class="dock" id="dock" hidden>
+      <button type="button" data-tab="cheat">Notes</button>
+      <button type="button" data-tab="visual">Visuals</button>
+      <button type="button" data-tab="flash">Cards</button>
+      <button type="button" data-tab="quiz">Quiz</button>
+      <button type="button" data-tab="game">Games</button>
+    </nav>
+  </div>
+
+  <div class="modal-overlay" id="modal-root" hidden aria-hidden="true">
+    <div class="modal" id="panel-settings" hidden>
+      <h2>Settings</h2>
+      <label class="check-row">
+        <input type="checkbox" id="opt-unlock-all" />
+        <span>Unlock all topics (free study)</span>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" id="opt-challenge" />
+        <span>Hard mode: 80% (not 70%) on previous topic to unlock next</span>
+      </label>
+      <p class="hint">Uncheck "Unlock all" for guided path: Topic 1 open, then pass threshold on each topic to unlock the next.</p>
+      <div class="export-block">
+        <h3 class="export-title">Transfer progress between browsers</h3>
+        <p class="hint">Set a short password, export to get a code, then import on another browser with the <em>same</em> password.</p>
+        <label class="export-row">
+          <span>Password</span>
+          <input type="password" id="export-password" autocomplete="off" />
+        </label>
+        <button type="button" class="btn" id="btn-export-progress">Export → code</button>
+        <textarea id="export-output" class="progress-code" rows="3" readonly placeholder="Encrypted code will appear here. Copy it somewhere safe."></textarea>
+        <label class="export-row">
+          <span>Import password</span>
+          <input type="password" id="import-password" autocomplete="off" />
+        </label>
+        <textarea id="import-input" class="progress-code" rows="3" placeholder="Paste encrypted code here to import."></textarea>
+        <button type="button" class="btn primary" id="btn-import-progress">Import progress</button>
+        <p class="hint" id="sync-status"></p>
+      </div>
+      <button type="button" class="btn primary" id="btn-close-settings">Done</button>
+    </div>
+    <div class="modal explain-modal" id="panel-explain" hidden>
+      <h2 id="explain-title">Let's fix that</h2>
+      <p id="explain-body"></p>
+      <button type="button" class="btn primary" id="btn-explain-ok">Got it — continue</button>
+    </div>
+    <div class="modal modal-shop" id="panel-shop" hidden>
+      <h2>🛒 Rewards Shop</h2>
+      <p class="hint">Spend XP on rewards. Show the coupon to your parent to claim.</p>
+      <div id="shop-rewards-list"></div>
+      <hr class="shop-divider" />
+      <h3 class="shop-sub">My coupons</h3>
+      <div id="shop-coupons-list"></div>
+      <button type="button" class="btn primary" id="btn-close-shop">Done</button>
+    </div>
+  </div>
+
+  <script>
+    window.SUBJECT_ID = "chemistry";
+    window.SUBJECT_TITLE = "O-Level Chemistry";
+  </script>
+  <script src="data/subjects/chemistry/topics-manifest.js"></script>
+  <script src="data/shop-rewards.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

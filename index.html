@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LevelUp! Study Hub — Subjects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050716;
+      --card: #101322;
+      --border: #272f40;
+      --accent: #5eead4;
+      --accent2: #a78bfa;
+      --muted: #9ca3af;
+      --font: "Outfit", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #111827, #020617);
+      font-family: var(--font);
+      color: #e5e7eb;
+    }
+    .shell {
+      width: min(720px, 100%);
+      padding: 32px 20px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    p.lead {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    a.card {
+      display: block;
+      padding: 18px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.92);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+    }
+    a.card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+    }
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+    }
+    .meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1>LevelUp! Study Hub</h1>
+    <p class="lead">Choose a subject. Each keeps its own XP, streaks, shop coupons, and boss badges.</p>
+    <div class="grid">
+      <a class="card" href="study.html">
+        <h2>O-Level Chemistry</h2>
+        <div class="meta">19 topics · themes · full question bank</div>
+        <div class="tag-row">
+          <span class="tag">MOE O-Level</span>
+          <span class="tag">Boss battles</span>
+          <span class="tag">XP shop</span>
+        </div>
+      </a>
+      <a class="card" href="physics/index.html">
+        <h2>O-Level Physics (preview)</h2>
+        <div class="meta">Kinematics demo · same engine</div>
+        <div class="tag-row">
+          <span class="tag">Vector vs scalar</span>
+          <span class="tag">Graphs</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+
