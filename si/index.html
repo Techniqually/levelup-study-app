@@ -51,7 +51,13 @@
     .nav-bar .btn-next { background: var(--accent); color: white; }
     .nav-bar .btn-next:hover:not(:disabled) { filter: brightness(1.1); }
     .nav-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .controls { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    .controls-wrap { margin-bottom: 10px; }
+    .controls-panel { border: 1px solid #3f3f46; border-radius: 10px; background: #22222b; }
+    .controls-panel summary { cursor: pointer; list-style: none; padding: 10px 12px; color: var(--muted); font-size: 0.9rem; user-select: none; }
+    .controls-panel summary::-webkit-details-marker { display: none; }
+    .controls-panel summary::after { content: "▾"; float: right; color: var(--muted); }
+    .controls-panel:not([open]) summary::after { content: "▸"; }
+    .controls { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 0; padding: 0 10px 10px; }
     .control-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .control-row select, .control-row button { padding: 10px 12px; border-radius: 6px; background: var(--card); color: var(--text); border: 1px solid #3f3f46; font-size: 0.9rem; min-height: 42px; }
     .control-row button { cursor: pointer; }
@@ -68,25 +74,30 @@
   <div class="container">
     <h1>IS5126 Practice Quiz</h1>
     <p class="subtitle">Weeks 1–9 • One question at a time • Select an answer to see feedback</p>
-    <div class="controls">
-      <div class="control-row">
-        <label for="ch">Chapter:</label>
-        <select id="ch">
-          <option value="">All</option>
-        </select>
-        <label for="order-mode">Order:</label>
-        <select id="order-mode">
-          <option value="sequential">Sequential</option>
-          <option value="random-all">Random all questions</option>
-          <option value="random-lecture">Random lecture-wise</option>
-        </select>
-        <label class="toggle" for="adaptive">
-          <input type="checkbox" id="adaptive" checked />
-          Adaptive (focus weak areas)
-        </label>
-        <button type="button" id="btn-regen">Reshuffle</button>
-        <button type="button" id="btn-reset-stats">Reset stats</button>
-      </div>
+    <div class="controls-wrap">
+      <details class="controls-panel">
+        <summary>Quiz options</summary>
+        <div class="controls">
+          <div class="control-row">
+            <label for="ch">Chapter:</label>
+            <select id="ch">
+              <option value="">All</option>
+            </select>
+            <label for="order-mode">Order:</label>
+            <select id="order-mode">
+              <option value="sequential">Sequential</option>
+              <option value="random-all">Random all questions</option>
+              <option value="random-lecture">Random lecture-wise</option>
+            </select>
+            <label class="toggle" for="adaptive">
+              <input type="checkbox" id="adaptive" checked />
+              Adaptive (focus weak areas)
+            </label>
+            <button type="button" id="btn-regen">Reshuffle</button>
+            <button type="button" id="btn-reset-stats">Reset stats</button>
+          </div>
+        </div>
+      </details>
     </div>
     <div class="scoreboard" id="scoreboard"></div>
     <div class="progress" id="progress"></div>
