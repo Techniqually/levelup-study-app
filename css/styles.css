@@ -298,6 +298,44 @@ body {
   border-top: 1px solid var(--border);
 }
 
+.infographic-info {
+  padding: 10px 14px 14px;
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.infographic-info ul.mini-md {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.infographic-info li {
+  margin: 4px 0;
+}
+
+.infographic-info code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.infographic-file {
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.mini-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 10px 0;
+}
+
 /* Flashcards */
 .flash-area {
   perspective: 1000px;

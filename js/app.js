@@ -244,6 +244,73 @@
     return d.innerHTML;
   }
 
+  function renderMiniMarkdown(md) {
+    if (md == null) return "";
+    const raw = String(md);
+    const safe = escapeHtml(raw);
+
+    const inline = (s) =>
+      s
+        // Avoid breaking math like `$v=gt` by our `*italic*` / `**bold**` transforms.
+        // We only apply inline markdown to non-math segments.
+        .split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g)
+        .map((seg) => {
+          if (!seg) return seg;
+          if (seg[0] === "$") return seg; // preserve math delimiters for KaTeX
+          return seg
+            // inline code
+            .replace(/`([^`]+)`/g, "<code>$1</code>")
+            // bold
+            .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+            // italic (best-effort; avoids affecting strong because ** already handled)
+            .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        })
+        .join("");
+
+    const lines = safe.split(/\r?\n/);
+    const parts = [];
+    let inUl = false;
+
+    for (const ln of lines) {
+      const t = ln.trim();
+      if (!t) {
+        if (inUl) {
+          parts.push("</ul>");
+          inUl = false;
+        }
+        parts.push("<br/>");
+        continue;
+      }
+
+      if (t === "***") {
+        if (inUl) {
+          parts.push("</ul>");
+          inUl = false;
+        }
+        parts.push(`<hr class="mini-divider" />`);
+        continue;
+      }
+
+      const m = ln.match(/^\s*[-*]\s+(.*)$/);
+      if (m) {
+        if (!inUl) {
+          parts.push("<ul class='mini-md'>");
+          inUl = true;
+        }
+        parts.push(`<li>${inline(m[1])}</li>`);
+      } else {
+        if (inUl) {
+          parts.push("</ul>");
+          inUl = false;
+        }
+        parts.push(`<div>${inline(ln)}</div>`);
+      }
+    }
+
+    if (inUl) parts.push("</ul>");
+    return parts.join("");
+  }
+
   function goTopic(id, tab) {
     route = { view: "topic", topicId: id, tab: tab || "cheat" };
     main.innerHTML =
@@ -329,6 +396,27 @@
       };
     }
     bindPanelHandlers(t);
+
+    // Typeset `$...$` / `$$...$$` using KaTeX (loaded by `subject.html`).
+    // Retry briefly in case KaTeX auto-render hasn't finished loading yet.
+    (function tryRenderMath(el, attempt) {
+      if (
+        typeof window.renderMathInElement === "function" &&
+        el &&
+        el.querySelector
+      ) {
+        window.renderMathInElement(el, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+          ],
+          throwOnError: false,
+        });
+        return;
+      }
+      if (attempt >= 20) return;
+      setTimeout(() => tryRenderMath(el, attempt + 1), 50);
+    })(document.getElementById("topic-panels") || main, 0);
   }
 
   function formatCheatPoint(p) {
@@ -349,18 +437,44 @@
   }
 
   function renderVisuals(t) {
-    if (!t.infographics || !t.infographics.length) {
+    let infs = t.infographics;
+    if ((!infs || !infs.length) && window.SUBJECT_INFOS_BY_TOPIC) {
+      infs = window.SUBJECT_INFOS_BY_TOPIC[String(t.id)];
+    }
+
+    if (!infs || !infs.length) {
       return `<p class="empty-state">No extra diagram for this topic — check Notes for embedded ideas.</p>`;
     }
-    return t.infographics
+
+    const infoByTopicAll = window.INFO_MD_BY_TOPIC_AND_FILE || {};
+    const infoByFile = infoByTopicAll[String(t.id)] || {};
+
+    return infs
       .map((inf) => {
+        const infoKey =
+          inf.infoKey ||
+          (inf.image
+            ? inf.image.split("/").pop().split("?")[0]
+            : null);
+        const infoMd =
+          inf.infoMarkdown ||
+          (infoKey ? infoByFile[String(infoKey)] : "") ||
+          "";
         const media = inf.image
           ? `<img src="${escapeHtml(inf.image)}" alt="" class="infographic-img" loading="lazy"/>`
           : (inf.svg || "");
         return `
       <div class="infographic-wrap">
         ${media}
-        <div class="infographic-caption">${escapeHtml(inf.caption || "")}</div>
+        <div class="infographic-caption">${escapeHtml(inf.caption || t.title || "")}</div>
+        ${
+          infoMd
+            ? `<div class="infographic-info">
+                <div class="infographic-file">${escapeHtml(infoKey || "")}</div>
+                ${renderMiniMarkdown(infoMd)}
+               </div>`
+            : ""
+        }
       </div>`;
       })
       .join("");
