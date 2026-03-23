@@ -115,7 +115,7 @@
   </div>
 
   <script>
-    const QUIZ_DB_ASSET_VERSION = "2026-03-17-1"; // bump on deploy to bust CDN/browser cache
+    const QUIZ_DB_ASSET_VERSION = "2026-03-17-2"; // bump on deploy to bust CDN/browser cache
 
     function loadQuizDbScript(onReady) {
       const script = document.createElement("script");
@@ -401,7 +401,13 @@
       }
     }
 
-    loadQuizDbScript(() => {
+    loadQuizDbScript(async () => {
+      try {
+        if (typeof window.loadQuizDb === "function") await window.loadQuizDb();
+      } catch (e) {
+        document.getElementById("q-text").textContent = `Failed to load question banks: ${e.message}`;
+        return;
+      }
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", init, { once: true });
       } else {
