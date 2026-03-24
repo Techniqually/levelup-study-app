@@ -580,10 +580,11 @@
   }
 
   function renderQuizPanel(t) {
+    const bank = getTopicQuizBank(t);
     return `
       <div class="panel active" data-panel="quiz">
         <div id="quiz-start-wrap">
-          <p class="game-intro">Bank: ${t.quiz.length} MCQs · each round: ${Math.min(QUIZ_PER_ROUND, t.quiz.length)} random · timer · early wrong = health loss · 3 streak = combo.</p>
+          <p class="game-intro">Bank: ${bank.length} MCQs · each round: ${Math.min(QUIZ_PER_ROUND, bank.length)} random · timer · early wrong = health loss · 3 streak = combo.</p>
           <button type="button" class="btn primary" id="quiz-start">Start quiz</button>
         </div>
         <div id="quiz-play" hidden></div>
@@ -756,12 +757,30 @@
     ok.addEventListener("click", once);
   }
 
+  function getTopicQuizBank(t) {
+    const base = Array.isArray(t.quiz) ? t.quiz : [];
+    const byTopic = window.EXTRA_QUIZ_BY_TOPIC || {};
+    const extra = Array.isArray(byTopic[String(t.id)]) ? byTopic[String(t.id)] : [];
+    return base.concat(extra);
+  }
+
+  function getThemeExtraQuiz(themeKey) {
+    const byTheme = window.EXTRA_THEME_QUIZ || {};
+    if (Array.isArray(byTheme[themeKey])) return byTheme[themeKey];
+    const norm = String(themeKey || "").trim().toLowerCase();
+    const hitKey = Object.keys(byTheme).find(
+      (k) => String(k).trim().toLowerCase() === norm
+    );
+    return hitKey && Array.isArray(byTheme[hitKey]) ? byTheme[hitKey] : [];
+  }
+
   function runQuiz(t, container, opts) {
     opts = opts || {};
     const isBoss = !!opts.boss;
     const healthMax = isBoss ? 1 : HEALTH_START;
     const questionMs = isBoss ? Math.round(QUESTION_MS * BOSS_QUESTION_MS_MULT) : QUESTION_MS;
-    const pool = shuffle(t.quiz.map((q, i) => ({ ...q, _i: i })));
+    const bank = getTopicQuizBank(t);
+    const pool = shuffle(bank.map((q, i) => ({ ...q, _i: i })));
     const n = Math.min(QUIZ_PER_ROUND, pool.length);
     const qs = pool.slice(0, n);
     let qi = 0;
@@ -1197,7 +1216,11 @@
       container.innerHTML = "<p class='empty-state'>Loading theme topics…</p>";
       Promise.all(ids.map((id) => loadTopicScript(id)))
         .then((topics) => {
-          const allQuiz = topics.flatMap((t) => (t.quiz || []).map((q) => ({ ...q })));
+          const allQuiz = topics.flatMap((topic) =>
+            getTopicQuizBank(topic).map((q) => ({ ...q }))
+          );
+          const themeExtra = getThemeExtraQuiz(themeKey).map((q) => ({ ...q }));
+          allQuiz.push(...themeExtra);
           const synthetic = { id: "boss:" + themeKey, quiz: allQuiz };
           runQuiz(synthetic, container, { boss: true, themeId: themeKey });
         })

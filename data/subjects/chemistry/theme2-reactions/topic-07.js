@@ -109,7 +109,17 @@
     {question:"Methyl orange in acid:",options:["Yellow","Red","Blue","Pink"],correctIndex:1,explanation:"Red acidic."},
     {question:"Sulfuric acid formula:",options:["H₂SO₃","H₂SO₄","HSO₄","SO₂"],correctIndex:1,explanation:"Diprotic acid."},
     {question:"Insoluble base + acid salt prep:",options:["Filter excess solid","Distil","Burn","Only titrate"],correctIndex:0,explanation:"Excess oxide/carbonate."},
-    {question:"Water acts as acid toward NH₃:",options:["Never","Donates H⁺ to NH₃","Only gas","Only solid"],correctIndex:1,explanation:"NH₄⁺ forms."}
+    {question:"Water acts as acid toward NH₃:",options:["Never","Donates H⁺ to NH₃","Only gas","Only solid"],correctIndex:1,explanation:"NH₄⁺ forms."},
+    {question:"A buffer resists pH change mainly because:",options:["It has pH 7 always","It contains a conjugate acid–base pair that can consume added H⁺ or OH⁻","It removes all ions","It stops water autoionisation"],correctIndex:1,explanation:"Equilibrium shifts absorb small additions of acid or base."},
+    {question:"Which 0.1 M solution has the lowest pH?",options:["HCl","CH₃COOH","NH₃(aq)","NaCl(aq)"],correctIndex:0,explanation:"Strong acid is fully ionised → highest [H⁺]."},
+    {question:"Why is aqueous NH₄Cl slightly acidic?",options:["NH₄⁺ donates H⁺ to water (hydrolysis)","Cl⁻ is strongly acidic","NH₃ is a strong acid","Water has pH 0"],correctIndex:0,explanation:"The ammonium ion is the conjugate acid of a weak base."},
+    {question:"Adding water to a fixed amount of concentrated strong acid:",options:["Increases [H⁺]","Decreases [H⁺]","Does not change [H⁺]","Removes all H⁺"],correctIndex:1,explanation:"Dilution spreads the same moles of H⁺ over a larger volume."},
+    {question:"Which gas forms when a metal carbonate reacts with dilute acid?",options:["H₂","CO₂","Cl₂","NH₃"],correctIndex:1,explanation:"Carbonate + acid → salt + water + carbon dioxide."},
+    {question:"Methyl orange is a poor choice for weak acid–weak base titration because:",options:["It is always red","The endpoint is not sharp — pH jump is small","It only works in gas phase","It requires UV light"],correctIndex:1,explanation:"Indicators need a steep pH change at equivalence."},
+    {question:"Concentrated H₂SO₄ is a dehydrating agent because it:",options:["Adds water to esters","Strongly attracts water in many reactions","Is always pH 7","Contains OH⁻"],correctIndex:1,explanation:"It can remove water from species (e.g. sugar dehydration)."},
+    {question:"Which is the conjugate base of HCO₃⁻?",options:["CO₂","CO₃²⁻","H₂CO₃","OH⁻"],correctIndex:1,explanation:"Remove one H⁺ from HCO₃⁻ → CO₃²⁻."},
+    {question:"At 25 °C, if [H⁺] = 1×10⁻⁵ mol/dm³, [OH⁻] is about:",options:["1×10⁻⁹","1×10⁻⁵","1×10⁻¹⁴","1×10⁵"],correctIndex:0,explanation:"Kw ≈ 10⁻¹⁴ → [OH⁻]=Kw/[H⁺]=10⁻⁹."},
+    {question:"Why must nitric acid be handled in a fume cupboard when concentrated?",options:["It is non-toxic","It releases irritating acidic/oxidising fumes","It is odourless and inert","It is always a weak acid"],correctIndex:1,explanation:"Concentrated acids are corrosive and may release hazardous vapours."}
     ],
     trueFalse: [
     {statement:"All alkalis are soluble.",correct:false,explain:"Alkali = soluble base; many bases insoluble."},

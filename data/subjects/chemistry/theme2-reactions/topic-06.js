@@ -108,7 +108,17 @@
     {question:"Back titration used when:",options:["Direct titration impossible","Always faster","No indicator","Only gas"],correctIndex:0,explanation:"Slow direct reaction."},
     {question:"Atom economy high means:",options:["More waste","More desired in product mass","No reaction","Low yield"],correctIndex:1,explanation:"Green metric."},
     {question:"Volume 2 mol gas r.t.p.:",options:["12 dm³","24 dm³","48 dm³","6 dm³"],correctIndex:2,explanation:"2×24."},
-    {question:"0.01 mol electron charge (Faraday context qual):",options:["Proportional to moles at electrode","Fixed 1 C","Zero","Only gas"],correctIndex:0,explanation:"Q=nF."}
+    {question:"0.01 mol electron charge (Faraday context qual):",options:["Proportional to moles at electrode","Fixed 1 C","Zero","Only gas"],correctIndex:0,explanation:"Q=nF."},
+    {question:"What mass of CaCO₃ (Mr = 100) is in 0.020 mol?",options:["0.20 g","2.0 g","20 g","200 g"],correctIndex:1,explanation:"mass = n × Mr = 0.02 × 100 = 2.0 g."},
+    {question:"How many moles of H₂SO₄ are in 250 cm³ of 0.40 mol/dm³ solution?",options:["0.10","0.16","0.25","1.0"],correctIndex:0,explanation:"n = C×V = 0.40 × 0.250 = 0.10 mol."},
+    {question:"Combustion of C₃H₈ + 5O₂ → 3CO₂ + 4H₂O: moles of O₂ needed per mole of C₃H₈?",options:["3","4","5","8"],correctIndex:2,explanation:"Balanced equation shows 5 mol O₂ per 1 mol propane."},
+    {question:"A student titrates 20.0 cm³ of 0.25 M acid with 0.50 M alkali (1:1). What titre is expected?",options:["10.0 cm³","20.0 cm³","25.0 cm³","40.0 cm³"],correctIndex:0,explanation:"Moles of acid = 0.020×0.25 = 0.005; V_alkali = 0.005/0.50 = 0.010 dm³ = 10 cm³."},
+    {question:"Which is the empirical formula of C₆H₁₂O₆?",options:["CHO","CH₂O","C₂H₄O₂","C₆H₁₂O₆"],correctIndex:1,explanation:"Divide by 6 → simplest ratio CH₂O."},
+    {question:"Diluting 100 cm³ of 1.0 M NaCl to 500 cm³ total gives:",options:["0.10 M","0.20 M","0.50 M","1.0 M"],correctIndex:1,explanation:"C₂ = C₁V₁/V₂ = 1.0×100/500 = 0.20 M."},
+    {question:"% by mass of hydrogen in H₂O (H=1, O=16) is about:",options:["5.6%","11%","20%","89%"],correctIndex:1,explanation:"2/18 × 100 ≈ 11%."},
+    {question:"If a reaction has theoretical yield 8.0 g but actual 6.0 g, % yield is:",options:["133%","75%","48%","25%"],correctIndex:1,explanation:"6/8 × 100 = 75%."},
+    {question:"Which contains the greatest number of atoms: 1 mol of H₂O or 1 mol of CO₂?",options:["H₂O","CO₂","Same","Cannot compare"],correctIndex:2,explanation:"Both have 3 atoms per molecule, so 1 mol of each has the same number of atoms."},
+    {question:"For N₂ + 3H₂ → 2NH₃, what is the maximum moles of NH₃ from 3 mol N₂ and 9 mol H₂?",options:["4 mol","6 mol","9 mol","18 mol"],correctIndex:1,explanation:"N₂ is limiting (needs 9 mol H₂ for 3 mol N₂); produces 6 mol NH₃."}
     ],
     trueFalse: [
     {statement:"One mole always occupies 24 dm³.",correct:false,explain:"Only ideal gas at r.t.p.; liquids/solids differ."},

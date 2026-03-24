@@ -105,7 +105,17 @@
     {question:"Combustion hydrocarbon C oxidised to:",options:["Always only CO","CO₂ if complete","Only C","H₂"],correctIndex:1,explanation:"Complete."},
     {question:"Nitrate in acid with Cu:",options:["H₂","NOₓ gases","N₂ only","Cl₂"],correctIndex:1,explanation:"Oxidising acid."},
     {question:"Balancing redox acidic MnO₄⁻ + C₂O₄²⁻:",options:["Electrons + H₂O + H⁺","Only heat","No H⁺","Only OH⁻"],correctIndex:0,explanation:"Acid medium."},
-    {question:"Superoxide KO₂ (adv) O avg:",options:["-½","-2","-1","0"],correctIndex:0,explanation:"Interesting."}
+    {question:"Superoxide KO₂ (adv) O avg:",options:["-½","-2","-1","0"],correctIndex:0,explanation:"Interesting."},
+    {question:"In 2Na + Cl₂ → 2NaCl, chlorine is:",options:["Oxidised only","Reduced","Neither","A catalyst"],correctIndex:1,explanation:"Cl goes from 0 to −1 (gains electrons)."},
+    {question:"Oxidation state of Cr in Cr₂O₇²⁻ is:",options:["+3","+6","+7","−2"],correctIndex:1,explanation:"2Cr + 7(−2) = −2 → Cr = +6."},
+    {question:"Which is the strongest oxidising agent in typical aqueous chemistry among:",options:["Na⁺(aq)","Cl⁻(aq)","Acidified MnO₄⁻(aq)","K⁺(aq)"],correctIndex:2,explanation:"Permanganate(VII) is a powerful oxidant under acidic conditions."},
+    {question:"Disproportionation means the same element:",options:["Always becomes a noble gas","Is both oxidised and reduced in one reaction","Never changes oxidation number","Only gains oxygen"],correctIndex:1,explanation:"One species splits into higher and lower oxidation states."},
+    {question:"In electrolysis, reduction occurs at the cathode because:",options:["It is positive in electrolysis","Electrons are supplied to species at the cathode","Anions always oxidise there","It is always the platinum terminal"],correctIndex:1,explanation:"Reduction is gain of electrons — cathode supplies electrons to cations."},
+    {question:"Fuel combustion of hydrocarbons is redox because:",options:["Only oxygen bonds break","Carbon is oxidised and O₂ is reduced","No electron transfer occurs","Water is always oxidised"],correctIndex:1,explanation:"Electron transfer between fuel and oxidant."},
+    {question:"The oxidising agent in Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂ is:",options:["Br⁻","Cl₂","Br₂","Cl⁻"],correctIndex:1,explanation:"Cl₂ is reduced (gains electrons) while oxidising Br⁻."},
+    {question:"Oxidation state of S in S₂O₃²⁻ (thiosulfate) average per S is:",options:["+4","+2","+6","0"],correctIndex:1,explanation:"Total OS: 2S + 3(−2) = −2 → sum S = +4 → average +2 per S (one central S(VI) and terminal S(−II) in detailed view — O-level: average +2)."},
+    {question:"Why balance redox with H⁺ in acid and OH⁻ in alkali?",options:["To match charge and atoms in the medium","Because water has no role","To add colour only","To remove electrons"],correctIndex:0,explanation:"Half-equations must balance atoms and charge in the stated conditions."},
+    {question:"Corrosion of iron is fundamentally:",options:["Only physical wetting","Electrochemical redox with O₂ and H₂O","A single displacement of gold","Nuclear decay"],correctIndex:1,explanation:"Fe is oxidised; O₂ is reduced in rusting pathways."}
     ],
     trueFalse: [
     {statement:"If a species gains electrons it is oxidised.",correct:false,explain:"Reduced."},

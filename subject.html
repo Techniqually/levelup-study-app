@@ -211,6 +211,9 @@
         const maybeMap = "data/subjects/" + subjectId + "/infographics-images.js";
         if (tryExists(maybeMap)) scripts.push(maybeMap);
 
+        const maybeExtraQuiz = "data/subjects/" + subjectId + "/extra-quiz.js";
+        if (tryExists(maybeExtraQuiz)) scripts.push(maybeExtraQuiz);
+
         // Needs to run before js/app.js so renderVisuals can synchronously look up markdown.
         scripts.push("js/infographics-info-loader.js");
         scripts.push("data/shop-rewards.js");

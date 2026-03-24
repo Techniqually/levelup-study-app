@@ -115,7 +115,17 @@
     {question:"Boiling HCl vs HF:",options:["HCl higher","HF higher (H-bonds)","Same","Neither boils"],correctIndex:1,explanation:"HF associates."},
     {question:"Ceramic (ionic giant) property:",options:["Ductile","Brittle","Liquid at 25°C","Conducts always"],correctIndex:1,explanation:"Shatters."},
     {question:"Metallic lustre due to:",options:["Photon absorption/re-emission by electron sea","Ion colour only","Gas","Water"],correctIndex:0,explanation:"Delocalised e⁻."},
-    {question:"Intermolecular forces in liquid Br₂:",options:["Covalent bonds break","Weak IM forces between Br₂ molecules","Ionic","None"],correctIndex:1,explanation:"Molecular liquid."}
+    {question:"Intermolecular forces in liquid Br₂:",options:["Covalent bonds break","Weak IM forces between Br₂ molecules","Ionic","None"],correctIndex:1,explanation:"Molecular liquid."},
+    {question:"Which has the higher boiling point: CH₄ or SiH₄?",options:["CH₄","SiH₄","They must be equal","Neither boils"],correctIndex:1,explanation:"Larger electron cloud → stronger London dispersion forces."},
+    {question:"Solid NaCl does not conduct electricity because:",options:["It contains no ions","Ions are fixed and cannot move","Electrons swim freely","It is metallic"],correctIndex:1,explanation:"Charge carriers must be mobile."},
+    {question:"In diamond, each carbon is approximately:",options:["sp hybridised","sp³ tetrahedral","sp² planar","ionic"],correctIndex:1,explanation:"Four strong covalent bonds in a giant lattice."},
+    {question:"Why is MgO’s lattice stronger than NaCl’s (qualitative)?",options:["MgO is molecular","Higher ion charges (2+ and 2−) strengthen electrostatic attraction","NaCl has covalent character only","MgO has metallic bonding"],correctIndex:1,explanation:"Lattice energy scales strongly with ion charge."},
+    {question:"Hydrogen fluoride can boil higher than HCl mainly because:",options:["HF is non-polar","HF can hydrogen-bond; HCl cannot","HCl is always ionic","HF has lower Mr"],correctIndex:1,explanation:"Strong intermolecular hydrogen bonding in HF."},
+    {question:"Metals are ductile largely because:",options:["Ionic layers repel permanently","Layers of ions can slip while the electron sea maintains bonding","Covalent bonds break permanently","They are gases"],correctIndex:1,explanation:"Non-directional metallic bonding allows deformation."},
+    {question:"Which is a giant covalent structure at room temperature?",options:["I₂","SiO₂","CO₂","H₂O"],correctIndex:1,explanation:"Quartz is a continuous network solid."},
+    {question:"A ‘polar molecule’ must have:",options:["Only ionic bonds","An overall dipole from bond polarity and shape","Equal sharing in all bonds","No lone pairs"],correctIndex:1,explanation:"Vector sum of bond dipoles can be non-zero (e.g. H₂O)."},
+    {question:"When NaCl dissolves in water, the main driving factor is:",options:["Covalent bond formation between Na and Cl","Ion–dipole interactions and hydration stabilising separated ions","NaCl becomes metallic","Water oxidises Na⁺"],correctIndex:1,explanation:"Hydration stabilises ions in solution."},
+    {question:"Graphite conducts electricity but diamond does not mainly because:",options:["Diamond has fewer carbons","Graphite has delocalised π electrons between layers","Diamond is ionic","Graphite is a gas"],correctIndex:1,explanation:"Mobile electrons exist in graphite’s layered structure."}
     ],
     trueFalse: [
     {statement:"Diamond and graphite are both pure carbon but different structures.",correct:true,explain:"Allotropes."},

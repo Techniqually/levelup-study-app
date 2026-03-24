@@ -118,7 +118,17 @@
     {question:"Mask effectiveness vs PM₂.₅:",options:["Cloth stops all","N95 better than loose cloth","No filter works","Only outdoors"],correctIndex:1,explanation:"Filtration rating."},
     {question:"Renewable vs fossil CO₂ argument:",options:["Same always","Biomass short-cycle may be nearer carbon neutral","No CO₂ from biomass burn","Coal is renewable"],correctIndex:1,explanation:"Lifecycle nuance."},
     {question:"Air Quality Index combines:",options:["Only temperature","Several pollutants into index","Only noise","Only humidity"],correctIndex:1,explanation:"Composite."},
-    {question:"Deforestation and climate:",options:["Removes CO₂ sink","Adds O₃ layer","Cools planet always","No effect"],correctIndex:0,explanation:"Less uptake."}
+    {question:"Deforestation and climate:",options:["Removes CO₂ sink","Adds O₃ layer","Cools planet always","No effect"],correctIndex:0,explanation:"Less uptake."},
+    {question:"In a catalytic converter, CO is typically oxidised toward:",options:["More CO","CO₂","Elemental carbon only","O₃"],correctIndex:1,explanation:"CO + ½O₂ → CO₂ on the catalyst."},
+    {question:"CFC-related chlorine destroys stratospheric O₃ efficiently because Cl· acts as:",options:["A one-step reactant only","A catalyst in radical chain cycles","Only a UV filter","An inert diluent"],correctIndex:1,explanation:"Cl is regenerated; many O₃ molecules destroyed per Cl."},
+    {question:"Rain slightly below pH 7 in clean air is mainly due to:",options:["SO₂ only","Dissolved CO₂ (weak carbonic acid)","Pure H₂O (pH 0)","NOₓ only"],correctIndex:1,explanation:"Unpolluted rain ≈ pH 5.6 from CO₂."},
+    {question:"Urban ground-level ozone is often classed as a:",options:["Primary pollutant from fuel tanks only","Secondary pollutant (NOₓ + VOCs + sunlight)","Stratospheric ozone sinking","Noble gas"],correctIndex:1,explanation:"Photochemical smog formation."},
+    {question:"SO₂ in moist air can be oxidised to contribute acid rain mainly as:",options:["CO gas","Sulfuric acid (via SO₃ / sulfate)","Methane","N₂"],correctIndex:1,explanation:"Forms acidic aerosols and rain."},
+    {question:"CO is especially hazardous because it:",options:["Turns blood green","Binds haemoglobin more strongly than O₂","Is visibly coloured","Is heavier than air only"],correctIndex:1,explanation:"Reduces O₂ delivery to tissues."},
+    {question:"The Montreal Protocol chiefly limits:",options:["Only fossil CO₂","Ozone-depleting substances (e.g. CFCs)","Only PM₂.₅","Only radon"],correctIndex:1,explanation:"International phase-out of ODS."},
+    {question:"Ocean acidification is driven mainly by:",options:["Extra CO₂ dissolving and shifting carbonate equilibria","Only SO₂ scrubbing","Stratospheric O₃ loss","Argon buildup"],correctIndex:0,explanation:"CO₂ → H⁺ affects seawater pH."},
+    {question:"High combustion temperatures in engines favour NO formation because:",options:["N₂ + O₂ in air can react","Fuel is pure nitrogen","Catalysts add NO","O₂ is removed"],correctIndex:0,explanation:"Thermal NOₓ from hot air."},
+    {question:"Wet flue-gas desulfurisation in power stations primarily cuts:",options:["CO emissions","SO₂ emissions","O₂ in air","Argon"],correctIndex:1,explanation:"Scrubbing sulfur oxides from stack gases."}
     ],
     trueFalse: [
     {statement:"Stratospheric ozone is a pollutant in the same sense as ground-level ozone.",correct:false,explain:"Location matters."},

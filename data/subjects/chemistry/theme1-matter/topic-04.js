@@ -118,7 +118,17 @@
     {question:"Species isoelectronic with Ne:",options:["Na⁺","F⁻","Both","Neither"],correctIndex:2,explanation:"10 electrons each."},
     {question:"Dalton's atomic theory limitation:",options:["Atoms indivisible","Isotopes exist","Law of multiple proportions","Conservation of mass"],correctIndex:1,explanation:"Substructure discovered."},
     {question:"Penetration: s vs p electron near nucleus:",options:["s less likely","s more likely","Same","Neither exists"],correctIndex:1,explanation:"s closer on average."},
-    {question:"Atomic radius trend down group:",options:["Decreases","Increases","Constant","Oscillates randomly"],correctIndex:1,explanation:"Extra shell."}
+    {question:"Atomic radius trend down group:",options:["Decreases","Increases","Constant","Oscillates randomly"],correctIndex:1,explanation:"Extra shell."},
+    {question:"Which species is isoelectronic with Ar and has a +1 charge?",options:["S²⁻","K⁺","Cl⁻","Ca²⁺"],correctIndex:1,explanation:"K⁺ has 18 electrons like Ar (19 − 1)."},
+    {question:"An ion X²⁺ has electron arrangement 2,8. In the Periodic Table X is most likely:",options:["Na","Mg","Al","Si"],correctIndex:1,explanation:"Mg atom is 2,8,2; losing two electrons gives 2,8."},
+    {question:"Why do isotopes of the same element have very similar chemistry?",options:["Same neutron number","Same electron configuration in the neutral atom","Same mass number","Same nuclear volume exactly"],correctIndex:1,explanation:"Chemistry is mostly controlled by electrons; isotopes share Z."},
+    {question:"β⁻ decay in a nucleus increases Z because:",options:["A proton becomes a neutron","A neutron becomes a proton","A gamma is emitted","Mass number always increases by 4"],correctIndex:1,explanation:"A neutron converts to a proton + electron (β⁻) + antineutrino."},
+    {question:"The mass spectrum of chlorine shows peaks at m/z 35 and 37 mainly due to:",options:["Different charge states","Isotopes ³⁵Cl and ³⁷Cl","Ionisation only","Electron diffraction"],correctIndex:1,explanation:"Isotopes give different molecular/atomic masses."},
+    {question:"First ionisation energy generally increases across Period 3 mainly because:",options:["Atoms get larger","Effective nuclear charge increases for valence electrons","Metallic character increases","Shielding increases without limit"],correctIndex:1,explanation:"Greater nuclear pull on outer electrons (same shell)."},
+    {question:"Which statement about γ-radiation from a nucleus is correct?",options:["It changes atomic number by 2","It carries no rest mass charge","It is slow helium nuclei","It always increases mass number"],correctIndex:1,explanation:"Gamma is electromagnetic radiation; no change to Z or A."},
+    {question:"A ²³⁸U atom undergoes α-decay. The daughter nucleus has mass number:",options:["234","238","242","236"],correctIndex:0,explanation:"α is ⁴He; A decreases by 4 → 234."},
+    {question:"Why is the atomic radius of a Na atom larger than a Mg atom in Period 3?",options:["Mg has fewer protons","Mg’s higher nuclear charge pulls the same-shell electrons closer","Na has more valence electrons","Mg always has d-electrons"],correctIndex:1,explanation:"Across a period, increasing Z contracts the radius for the same shell."},
+    {question:"Relative atomic mass is rarely a whole number for many elements because:",options:["Electrons have mass 1 u","Elements are mixtures of isotopes","Protons have fractional charge","The periodic table uses molar volume"],correctIndex:1,explanation:"Ar is a weighted mean of isotopic masses and abundances."}
     ],
     trueFalse: [
     {statement:"All atoms of an element must have the same mass number.",correct:false,explain:"Isotopes."},

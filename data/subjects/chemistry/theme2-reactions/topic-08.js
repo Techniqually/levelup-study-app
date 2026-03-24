@@ -105,7 +105,18 @@
     {question:"Fertiliser nitrate benefit:",options:["N for protein","Only P","Only K","Cl only"],correctIndex:0,explanation:"N source."},
     {question:"Chloride test acidified AgNO₃:",options:["White AgCl","Black","Red","Gas"],correctIndex:0,explanation:"Except AgBr/I."},
     {question:"Sulfite + acid:",options:["SO₂ gas","CO₂ only","H₂","No gas"],correctIndex:0,explanation:"Acidified sulfite."},
-    {question:"Complex ion [Cu(NH₃)₄]²⁺ colour:",options:["Deep blue solution","Colourless","Green ppt only","Yellow"],correctIndex:0,explanation:"Excess NH₃."}
+    {question:"Complex ion [Cu(NH₃)₄]²⁺ colour:",options:["Deep blue solution","Colourless","Green ppt only","Yellow"],correctIndex:0,explanation:"Excess NH₃."},
+    {question:"Why acidify with dilute HNO₃ before adding AgNO₃ for halide tests?",options:["To make AgCl soluble","To remove carbonate/sulfite that could give false white precipitates","To oxidise all metals","To raise pH"],correctIndex:1,explanation:"Carbonates also give white precipitates with Ag⁺ — acid decomposes them."},
+    {question:"Preparing CuSO₄ from CuO + H₂SO₄, why use excess CuO?",options:["To speed light","To ensure all acid reacts so filtrate is not acidic","To make gas","To dissolve CuO less"],correctIndex:1,explanation:"Filter off excess base; solution contains only salt."},
+    {question:"Which salt is best prepared by titration of acid with alkali?",options:["CuSO₄ from CuO","NaCl from HCl + NaOH","AgCl from precipitation","BaSO₄ from mixing solutions"],correctIndex:1,explanation:"Both reactants soluble → known endpoint via titration."},
+    {question:"Heating hydrated CuSO₄·5H₂O strongly turns it white mainly because:",options:["It melts only","Water of crystallisation is lost","Copper oxidises to Cu²⁺","It becomes metallic"],correctIndex:1,explanation:"Dehydration to anhydrous CuSO₄."},
+    {question:"A ‘double salt’ contains:",options:["Only one type of ion","Two different cations and/or anions in one lattice (e.g. alums)","Only covalent bonds","No water"],correctIndex:1,explanation:"More than one kind of ion in fixed stoichiometry."},
+    {question:"Why is Ba(NO₃)₂ used instead of BaCl₂ when chloride interferes?",options:["Ba(NO₃)₂ never works","Avoid introducing Cl⁻ if testing for sulfate in a chloride matrix","BaCl₂ is insoluble","Nitrates are always acidic"],correctIndex:1,explanation:"Choose reagents that don’t add confusing ions."},
+    {question:"Fe(s) + dilute H₂SO₄ typically gives:",options:["Fe₂(SO₄)₃ + H₂","FeSO₄ + H₂","FeS + H₂","No reaction"],correctIndex:1,explanation:"Iron(II) sulfate with hydrogen (dilute acid)."},
+    {question:"Which ion with I⁻(aq) forms a yellow precipitate in a common school test?",options:["Pb²⁺","Na⁺","Ba²⁺","K⁺"],correctIndex:0,explanation:"Pb²⁺ + 2I⁻ → PbI₂(s) yellow."},
+    {question:"Washing filtered crystals with lots of distilled water can reduce yield because:",options:["Water is always pH 0","Some product still dissolves","Crystals become covalent","Filtration speeds up reaction"],correctIndex:1,explanation:"Even sparingly soluble salts lose mass if washed excessively."},
+    {question:"Epsom salt (MgSO₄·7H₂O) shows:",options:["No water in lattice","Water of crystallisation","Only covalent network","Gas hydrate only"],correctIndex:1,explanation:"The dot shows hydrated formula units."},
+    {question:"Why might evaporating a nitrate salt to complete dryness be risky?",options:["It always explodes at room temperature","Thermal decomposition can occur — controlled evaporation","Nitrates never decompose","Water never leaves"],correctIndex:1,explanation:"Heating nitrates may decompose; often stop at crystallisation point."}
     ],
     trueFalse: [
     {statement:"All nitrates are soluble.",correct:true,explain:"General rule."},

@@ -115,7 +115,17 @@
     {question:"Kevlar® type:",options:["Polyamide fibre","Polyethene","Salt","Alkane"],correctIndex:0,explanation:"Strong aromatic polyamide."},
     {question:"Phthalates context:",options:["Plasticisers","Monomers for PE","Catalysts only","Fuels"],correctIndex:0,explanation:"Softeners."},
     {question:"Combustion of PVC releases:",options:["Only N₂","HCl among products","No gases","He only"],correctIndex:1,explanation:"Chlorinated polymer."},
-    {question:"Oxo-biodegradable (debated):",options:["Proven harmless always","Fragmentation + controversy","Never fragments","Only metal"],correctIndex:1,explanation:"Environmental nuance."}
+    {question:"Oxo-biodegradable (debated):",options:["Proven harmless always","Fragmentation + controversy","Never fragments","Only metal"],correctIndex:1,explanation:"Environmental nuance."},
+    {question:"In addition polymerisation of ethene, each monomer unit typically:",options:["Joins without eliminating a small molecule (π bond opens)","Eliminates one H₂O","Eliminates one H₂","Eliminates one CO₂"],correctIndex:0,explanation:"Addition polymer: no step-wise loss of H₂O unlike condensation."},
+    {question:"PET (polyethylene terephthalate) is best described as:",options:["Poly(ethene) with terephthalate","A polyester from a diol + benzene-1,4-dicarboxylic acid (concept)","A polyamide only","Natural rubber"],correctIndex:1,explanation:"Condensation polymer with ester links."},
+    {question:"PVC contains chlorine in the polymer chain because:",options:["The monomer is chloroethene (vinyl chloride)","Chlorine is added only after polymerisation","Cl is only a colourant","PVC has no chlorine"],correctIndex:0,explanation:"Each repeat unit comes from CH₂=CHCl."},
+    {question:"Nylon formed from a diamine and a diacyl chloride is a:",options:["Polyamide","Polyester only","Polyalkene","Ionic crystal"],correctIndex:0,explanation:"–CONH– (amide) links between monomers."},
+    {question:"Thermoplastics can be remoulded when heated because:",options:["Chains are not locked in a permanent covalent network","They are always gases","They contain only ions","They cannot soften"],correctIndex:0,explanation:"No extensive cross-links; chains slide when hot."},
+    {question:"Condensation polymerisation often differs from addition polymerisation by:",options:["Eliminating a small molecule (e.g. H₂O)","Never using heat","Using only alkenes","Producing only monatomic gases"],correctIndex:0,explanation:"Step-growth with loss of H₂O / HCl etc."},
+    {question:"Which monomer is used to make poly(propene)?",options:["Propene","Propane","Propyne","Propan-1-ol"],correctIndex:0,explanation:"Same addition mechanism as ethene but with a methyl branch."},
+    {question:"Melting and remoulding for mechanical recycling suits:",options:["Typical thermoplastics","Typical thermosets","Ceramics only","Metals only"],correctIndex:0,explanation:"Thermoplastics soften reversibly."},
+    {question:"Ester functional groups appear in:",options:["Polyesters only","Polyesters and natural fats/oils","Poly(ethene) only","Diamond"],correctIndex:1,explanation:"Triglycerides are esters; Terylene is polyester."},
+    {question:"The repeat unit –CH₂–CH₂– in poly(ethene) is derived per monomer from:",options:["Two ethene molecules","One ethene molecule","Ethane only","Ethanol"],correctIndex:1,explanation:"One C=C opens to two –CH₂– units in the chain."}
     ],
     trueFalse: [
     {statement:"All plastics are addition polymers.",correct:false,explain:"Condensation: nylon, polyester."},

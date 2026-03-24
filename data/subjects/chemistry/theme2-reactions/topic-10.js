@@ -105,7 +105,17 @@
     {question:"Silver mirror Tollen aldehyde:",options:["Not cation test","Organic","Cl⁻","SO₄²⁻"],correctIndex:1,explanation:"Different test."},
     {question:"Gas relights glowing splint:",options:["CO₂","O₂","N₂","Cl₂"],correctIndex:1,explanation:"Oxygen test."},
     {question:"Pop test gas:",options:["O₂","H₂","CO₂","NH₃"],correctIndex:1,explanation:"Hydrogen."},
-    {question:"Pb²⁺ + I⁻:",options:["White","Yellow ppt","Gas","Blue"],correctIndex:1,explanation:"PbI₂."}
+    {question:"Pb²⁺ + I⁻:",options:["White","Yellow ppt","Gas","Blue"],correctIndex:1,explanation:"PbI₂."},
+    {question:"Why view K⁺ flame through cobalt blue glass?",options:["To magnify the flame","To filter yellow Na light that can mask lilac K","To cool the flame","To make sodium flame brighter"],correctIndex:1,explanation:"Sodium contamination is common; cobalt glass reduces yellow overlap."},
+    {question:"AgBr is cream and AgI is yellow. The order of solubilities (highest first) is roughly:",options:["AgCl > AgBr > AgI","AgI > AgBr > AgCl","All equal","Only AgCl exists"],correctIndex:0,explanation:"Halide silver salts become less soluble down the group (Ksp trend)."},
+    {question:"Fe³⁺(aq) + SCN⁻ can give blood-red colour due to:",options:["Precipitate of Fe(OH)₃ only","Formation of a complex ion","Cl₂ gas","Only an acid–base indicator"],correctIndex:1,explanation:"Thiocyanate forms a coloured iron(III) complex."},
+    {question:"A student adds acidified BaCl₂ and sees a white ppt. It might be sulfate OR:",options:["Always chloride","Carbonate if not acidified (BaCO₃)","Always nitrate","Always silver"],correctIndex:1,explanation:"Without acid, carbonate interferes; acid removes CO₃²⁻ as CO₂."},
+    {question:"Confirmatory test for ammonia gas:",options:["Relights a glowing splint","Turns damp red litmus blue","Gives a white ppt with AgNO₃","Turns acidified dichromate green only"],correctIndex:1,explanation:"Basic gas — litmus test is classic."},
+    {question:"MnO₄⁻(aq) is purple. When reduced to Mn²⁺ in acid, the solution becomes:",options:["More purple","Colourless/pale pink","Yellow","Black precipitate always"],correctIndex:1,explanation:"Mn²⁺ is very pale in dilute solution."},
+    {question:"Which anion test uses limewater turning milky?",options:["Sulfate","Chloride","Carbonate (acidified)","Nitrate only"],correctIndex:2,explanation:"CO₂ from carbonate + acid turns limewater milky."},
+    {question:"Clean nichrome wire with conc. HCl before a flame test to:",options:["Make the flame hotter","Remove previous metal ions that could give false colours","Dissolve the wire","Generate Cl₂ for safety"],correctIndex:1,explanation:"Contamination gives misleading flame colours."},
+    {question:"Cu²⁺ in very high [Cl⁻] can appear greener/yellow due to:",options:["Only precipitation","Formation of chloro-complexes shifting colour","Oxidation to Cu⁺ only","Reduction to Cu metal always"],correctIndex:1,explanation:"Ligand environment changes the observed colour."},
+    {question:"A reducing gas that turns acidified dichromate(VI) green is often:",options:["CO₂","SO₂","O₂","N₂"],correctIndex:1,explanation:"SO₂ reduces Cr(VI) to Cr(III) (green)."}
     ],
     trueFalse: [
     {statement:"AgBr is more soluble than AgCl in water.",correct:true,explain:"Ksp larger."},

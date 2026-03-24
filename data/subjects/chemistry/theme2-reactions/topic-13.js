@@ -106,7 +106,17 @@
     {question:"Allotropes oxygen:",options:["O₂ O₃","Only O","Fe O","Cl O"],correctIndex:0,explanation:"Ozone."},
     {question:"Halogen colour intensity down:",options:["Lighter","Darker","Colourless all","Only solid colours"],correctIndex:1,explanation:"Deeper colour."},
     {question:"Noble gas compound first (history):",options:["Xe compounds","He compounds easy","Ne many","Ar acids"],correctIndex:0,explanation:"XePtF₆."},
-    {question:"Effective nuclear charge trend across:",options:["Decreases","Increases","Constant","Random"],correctIndex:1,explanation:"Zeff up."}
+    {question:"Effective nuclear charge trend across:",options:["Decreases","Increases","Constant","Random"],correctIndex:1,explanation:"Zeff up."},
+    {question:"Between Na and Ar in Period 3, metallic character:",options:["Increases","Decreases","Is constant","Oscillates without pattern"],correctIndex:1,explanation:"Left → right: metals → metalloid → non-metals."},
+    {question:"Why does atomic radius increase down Group 1?",options:["Nuclear charge decreases","Additional electron shells increase size despite higher Z","Valence electrons are lost","Halogens pull electrons in"],correctIndex:1,explanation:"Extra shell dominates over increased nuclear charge."},
+    {question:"Which property rises down Group 17 (halogens)?",options:["Reactivity as oxidising agents","Melting/boiling points generally","Electronegativity","First ionisation energy"],correctIndex:1,explanation:"Stronger London forces between larger X₂ molecules."},
+    {question:"The first ionisation energy ‘dip’ at boron compared to beryllium is partly because:",options:["B loses a core electron","B’s outer electron is in a higher-energy p orbital (less tightly held than Be’s 2s²)","B has more protons than Be","B is a noble gas"],correctIndex:1,explanation:"s² is relatively stable; the first p electron is easier to remove."},
+    {question:"Across Period 3 from Na to Cl, electronegativity:",options:["Decreases","Increases","Stays the same","Becomes undefined"],correctIndex:1,explanation:"Greater attraction for bonding electrons toward the right."},
+    {question:"Noble gases boil at low temperatures mainly because:",options:["They are ionic","Only weak London forces between atoms","They are metals","They form hydrogen bonds"],correctIndex:1,explanation:"Monatomic — weak IM forces."},
+    {question:"Silicon is described as a metalloid because:",options:["It is a liquid metal","It shows some metallic and some non-metallic properties","It is a halogen","It has no electrical properties"],correctIndex:1,explanation:"Intermediate behaviour (e.g. semiconductor)."},
+    {question:"Transition metals often show coloured compounds because:",options:["They have no d electrons","d–d transitions can absorb visible light","They are always gases","They cannot form ions"],correctIndex:1,explanation:"Partially filled d subshell enables electronic transitions."},
+    {question:"Compared with Ca, Sr is expected to react with water:",options:["More slowly","More vigorously (more reactive down Group 2)","Not at all","Only as a catalyst"],correctIndex:1,explanation:"Down the group, outer electron is further from the nucleus."},
+    {question:"Which is a general trend for ionic radius vs atomic radius for metals in the same period?",options:["Ionic radius is always larger than atomic radius for cations","Cations are smaller than their parent atoms","Anions and cations are identical","Atoms are always smaller than their cations"],correctIndex:1,explanation:"Loss of electrons + same nuclear charge → stronger pull per electron."}
     ],
     trueFalse: [
     {statement:"Fluorine is the most electronegative element.",correct:true,explain:"Pauling scale."},

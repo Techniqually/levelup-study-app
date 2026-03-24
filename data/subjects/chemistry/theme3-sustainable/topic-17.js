@@ -116,7 +116,17 @@
     {question:"Shift equilibrium to ester:",options:["Add excess water","Remove water","Cool only","Add NaCl"],correctIndex:1,explanation:"Le Chatelier."},
     {question:"Bromine + alkene product type:",options:["Dibromoalkane","Alkane only","Carboxylic acid","No reaction"],correctIndex:0,explanation:"Addition."},
     {question:"Display ethene has:",options:["Single C–C","Double C=C","Triple bond","Ionic"],correctIndex:1,explanation:"Unsaturation."},
-    {question:"Bioethanol advantage:",options:["Renewable from biomass","Zero CO₂ lifecycle always","No land use","Only solid"],correctIndex:0,explanation:"Renewable argument."}
+    {question:"Bioethanol advantage:",options:["Renewable from biomass","Zero CO₂ lifecycle always","No land use","Only solid"],correctIndex:0,explanation:"Renewable argument."},
+    {question:"Cyclopentane (a cycloalkane) has molecular formula:",options:["C₅H₁₂","C₅H₁₀","C₅H₈","C₅H₁₀O"],correctIndex:1,explanation:"Saturated ring: CₙH₂ₙ (not CₙH₂ₙ₊₂ for an open chain)."},
+    {question:"Ethanol oxidised with acidified K₂Cr₂O₇ under reflux (product not distilled off) gives mainly:",options:["Ethanal","Ethanoic acid","Ethene","Ethane"],correctIndex:1,explanation:"Further oxidation under reflux to the carboxylic acid."},
+    {question:"Acid-catalysed hydrolysis of ethyl ethanoate gives:",options:["Ethane + ethanoic acid","Ethanol + ethanoic acid","Ethene + water","Ethanal only"],correctIndex:1,explanation:"Ester splits to carboxylic acid + alcohol."},
+    {question:"Propene + H₂ with a nickel catalyst gives:",options:["Propyne","Propane","Propanal","No reaction"],correctIndex:1,explanation:"Hydrogenation saturates the C=C."},
+    {question:"At the same concentration, which solution has the higher pH (weaker acid)?",options:["Hydrochloric acid","Ethanoic acid","They are identical","Sulfuric acid"],correctIndex:1,explanation:"Ethanoic acid is weak; strong acids have lower pH."},
+    {question:"In esterification, water forms from:",options:["Only the sulfuric acid","The acid’s –OH and the H from the alcohol’s –OH","Only O₂ from air","NaOH neutralisation"],correctIndex:1,explanation:"Condensation between –COOH and –OH (alcohol)."},
+    {question:"A main reason long-chain alkanes are cracked in refineries is to produce:",options:["Only heavier bitumen","Smaller alkanes and alkenes for fuels and feedstocks","Pure oxygen","Diamond"],correctIndex:1,explanation:"Break C–C bonds to useful shorter molecules."},
+    {question:"Why do alkenes decolourise bromine water under ordinary lab conditions more readily than alkanes?",options:["Alkanes are always ionic","The C=C π bond is an electron-rich addition site","Alkanes are lighter","Bromine cannot add to any carbon"],correctIndex:1,explanation:"Electrophilic addition across the double bond."},
+    {question:"Structural isomers with formula C₄H₁₀ include:",options:["Only n-butane","Butane and methylpropane","Butane and but-1-ene","Ethane and propane"],correctIndex:1,explanation:"Same molecular formula, different connectivity."},
+    {question:"Incomplete combustion of a hydrocarbon in limited air can produce:",options:["Only CO₂","CO and/or carbon (soot) among other products","Only H₂O","N₂ only"],correctIndex:1,explanation:"Insufficient O₂ favours CO and elemental carbon."}
     ],
     trueFalse: [
     {statement:"All alkenes have the same empirical formula CH₂.",correct:true,explain:"CₙH₂ₙ → CH₂."},
