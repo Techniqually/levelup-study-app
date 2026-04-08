@@ -11,8 +11,8 @@ window.LEVELUP_XP_POLICY = {
 };
 
 window.SHOP_REWARDS = [
-  { id: "screen-time", label: "Extra screen time 10 minutes", xp: 600, dailyMax: 6 },
-  { id: "bubble", label: "Bubble tea", xp: 2000, dailyMax: 1 },
-  { id: "friend-visit", label: "Friend visit", xp: 3000, dailyMax: 1 },
-  { id: "allowance", label: "$10 allowance extra", xp: 5000, dailyMax: 1 },
+  { id: "screen-time", label: "Extra screen time 10 minutes", xp: 700, dailyMax: 6 },
+  { id: "bubble", label: "Bubble tea", xp: 2500, dailyMax: 1 },
+  { id: "friend-visit", label: "Friend visit", xp: 4000, dailyMax: 1 },
+  { id: "allowance", label: "$5 allowance extra", xp: 5000, dailyMax: 1 },
 ];
