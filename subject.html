@@ -195,10 +195,37 @@
     <script>
       (function () {
         const params = new URLSearchParams(window.location.search);
-        const subjectId = params.get("subject") || "chemistry";
+        const KNOWN_SUBJECTS = ["chemistry", "physics", "geography"];
+        const LAST_SUBJECT_KEY = "LEVELUP_LAST_SUBJECT";
+
+        function normalizeSubject(value) {
+          const normalized = (value || "").trim().toLowerCase();
+          return KNOWN_SUBJECTS.includes(normalized) ? normalized : "";
+        }
+
+        function detectSubjectFromPathname() {
+          const parts = window.location.pathname
+            .split("/")
+            .filter(Boolean)
+            .map((p) => p.toLowerCase());
+          for (let i = parts.length - 1; i >= 0; i -= 1) {
+            const found = normalizeSubject(parts[i]);
+            if (found) return found;
+          }
+          return "";
+        }
+
+        const fromQuery = normalizeSubject(params.get("subject"));
+        const fromHash = normalizeSubject(window.location.hash.replace(/^#/, ""));
+        const fromPath = detectSubjectFromPathname();
+        const fromStorage = normalizeSubject(localStorage.getItem(LAST_SUBJECT_KEY));
+        const subjectId =
+          fromQuery || fromHash || fromPath || fromStorage || "chemistry";
+        localStorage.setItem(LAST_SUBJECT_KEY, subjectId);
         const titles = {
           chemistry: "O-Level Chemistry",
           physics: "O-Level Physics",
+          geography: "O-Level Geography",
         };
         const subjectTitle = titles[subjectId] || subjectId;
 

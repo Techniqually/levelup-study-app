@@ -51,7 +51,8 @@
   // #### Topic <id> ...
   // ### File: <filename>
   // <free-form markdown snippet; keep lines like `***` for dividers>
-  const topicRe = /^####\s+Topic\s+([0-9A-Za-z]+)\b/;
+  // Support plain integers ("1") and dot-notation geography IDs ("1.1", "4.2")
+  const topicRe = /^####\s+Topic\s+([0-9A-Za-z][0-9A-Za-z._-]*)/;
   const fileRe = /^###\s+File:\s*(.+?)\s*$/;
 
   let curTopic = null;

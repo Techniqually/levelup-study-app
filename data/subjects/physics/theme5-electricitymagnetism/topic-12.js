@@ -20,7 +20,17 @@
             "Filament lamp: curve (resistance increases as it heats).",
             "Diode: conducts one direction; steep rise after threshold."
           ]},
-        ],
+        
+        { title: "Static electricity",
+          points: [
+            "**Charging by rubbing**: electrons transfer. Gaining e⁻ → negative; losing e⁻ → positive. Protons don't move.",
+            "**Electric field**: region where charge experiences force. Field lines: from + to −; positive charge → radially out; between plates → uniform.",
+            "**Induction**: earthed object near charge → induced opposite charge retained when earth removed first, then object moved.",
+            "**Hazards**: sparks → fire (fuel tankers, flour mills). **Safety**: earthing/bonding conductors.",
+            "**Applications**: electrostatic precipitator (smoke), spray painting, photocopier, inkjet printing (deflection of charged droplets)."
+          ]
+        },
+],
         flashcards: [
           { front: "Current equation", back: "I = Q/t" },
           { front: "p.d. equation", back: "V = W/Q" },
@@ -34,7 +44,21 @@
           { front: "Filament lamp I–V", back: "curve due to heating" },
           { front: "Diode conducts…", back: "mainly one direction" },
           { front: "EMF meaning", back: "energy supplied per unit charge" },
-        ],
+        
+        { front: "Electrostatic charging by rubbing", back: "Electrons transferred between materials; one gains e⁻ (−ve), other loses e⁻ (+ve)" },
+        { front: "Electric field direction (convention)", back: "Direction of force on a positive test charge" },
+        { front: "Field lines from positive charge", back: "Radially outward" },
+        { front: "Field lines toward negative charge", back: "Radially inward" },
+        { front: "Uniform electric field location", back: "Between parallel plates (pointing from + to − plate)" },
+        { front: "Induction charging result", back: "Object gets opposite charge to the inducing object" },
+        { front: "Lightning conductor purpose", back: "Provide safe path for electrostatic discharge to ground" },
+        { front: "Electrostatic precipitator", back: "Charges dust particles → attracted to collecting plates → removes from exhaust" },
+        { front: "Charge of electron", back: "−1.6×10⁻¹⁹ C" },
+        { front: "R ∝ length", back: "Longer wire → greater resistance" },
+        { front: "R ∝ 1/area", back: "Thicker wire → lower resistance" },
+        { front: "Power from I and R", back: "P = I²R" },
+        { front: "Power from V and R", back: "P = V²/R" },
+],
         quiz: [
           {id:"physics-T12-001", question: "Current is…", options: ["energy/time", "charge/time", "force/area", "mass/volume"], correctIndex: 1, explanation: "I=Q/t." },
           {id:"physics-T12-002", question: "Unit of charge", options: ["A", "C", "V", "Ω"], correctIndex: 1, explanation: "Coulomb." },
@@ -62,7 +86,32 @@
           {id:"physics-T12-024", question: "Across an ideal diode in forward conduction, current is…", options: ["always zero", "typically large compared with reverse for the same |V|", "always infinite", "always negative"], correctIndex: 1, explanation: "Forward bias allows conduction; reverse blocks (basic model)." },
           {id:"physics-T12-025", question: "EMF of a source is best described as…", options: ["thermal energy per second", "energy supplied per unit charge by the source", "current per unit voltage", "resistance of the source only"], correctIndex: 1, explanation: "EMF is energy per coulomb supplied (when open-circuit, conceptually)." },
           {id:"physics-T12-026", question: "If R = 8 Ω and I = 0.50 A, the p.d. across the resistor is…", options: ["0.0625 V", "4.0 V", "8.5 V", "16 V"], correctIndex: 1, explanation: "V = IR = 8×0.5 = 4.0 V." },
-        ],
+        
+        {id:"physics-T12-027", question: "Electrostatic charging by rubbing transfers…", options: ["protons", "neutrons", "electrons", "photons"], correctIndex: 2, explanation: "Rubbing transfers electrons between materials." },
+        {id:"physics-T12-028", question: "A plastic rod rubbed with cloth becomes negatively charged. The cloth becomes…", options: ["negative also", "positive (electrons transferred from cloth to rod)", "neutral", "radioactive"], correctIndex: 1, explanation: "Cloth loses electrons → becomes positive." },
+        {id:"physics-T12-029", question: "Like charges…", options: ["attract", "repel", "do nothing", "neutralise instantly"], correctIndex: 1, explanation: "Like charges repel." },
+        {id:"physics-T12-030", question: "Unlike charges…", options: ["repel", "attract", "have same sign", "cannot interact"], correctIndex: 1, explanation: "Unlike (opposite) charges attract." },
+        {id:"physics-T12-031", question: "An electric field is defined as…", options: ["a region where current flows", "a region where an electric charge experiences a force", "a magnetic field region", "a temperature gradient"], correctIndex: 1, explanation: "Electric field: region where a test charge experiences a force." },
+        {id:"physics-T12-032", question: "Electric field lines around a positive point charge go…", options: ["toward the charge", "away from the charge", "circularly around it", "randomly"], correctIndex: 1, explanation: "Field lines from positive charge: radially outward." },
+        {id:"physics-T12-033", question: "Electric field lines around a negative point charge go…", options: ["away from the charge", "toward the charge", "circularly", "randomly"], correctIndex: 1, explanation: "Field lines point toward negative charge." },
+        {id:"physics-T12-034", question: "Between two parallel opposite plates, the electric field is…", options: ["radial", "uniform and parallel between the plates", "zero everywhere", "only at the edges"], correctIndex: 1, explanation: "Uniform field between parallel plates (except at edges)." },
+        {id:"physics-T12-035", question: "Induction charging: an earthed metal rod near a charged object becomes…", options: ["charged same sign as object", "charged opposite sign to the object", "neutral always", "radioactive"], correctIndex: 1, explanation: "Induction: electrons rearrange; remove earth before removing object → opposite charge retained." },
+        {id:"physics-T12-036", question: "Lightning is an example of…", options: ["conduction charging", "electrostatic discharge", "magnetic induction", "chemical reaction"], correctIndex: 1, explanation: "Charge builds up on clouds → discharges to ground as lightning." },
+        {id:"physics-T12-037", question: "A lightning conductor protects a building by…", options: ["attracting lightning to itself (pointed conductor provides path to ground)", "making building magnetic", "creating an electric field that prevents lightning", "absorbing all static"], correctIndex: 0, explanation: "Pointed tip → strong field → ionises air → provides conductive path to ground." },
+        {id:"physics-T12-038", question: "Electrostatic precipitators in factory chimneys remove…", options: ["CO₂ from combustion", "dust/smoke particles using electrostatic attraction", "sound pollution", "heat from exhaust"], correctIndex: 1, explanation: "Particles charged in strong field → attracted to oppositely charged collecting plates." },
+        {id:"physics-T12-039", question: "A hazard of static electricity in fuel tankers is…", options: ["slowing fuel flow", "sparks from electrostatic discharge igniting fuel vapour", "reducing fuel quality", "magnetising the tanker"], correctIndex: 1, explanation: "Static discharge → spark → fire/explosion hazard." },
+        {id:"physics-T12-040", question: "Which is a unit of electric charge?", options: ["ampere", "coulomb", "ohm", "volt"], correctIndex: 1, explanation: "C (coulomb) is unit of charge." },
+        {id:"physics-T12-041", question: "Charge on an electron is approximately…", options: ["1.6×10⁻¹⁹ C (positive)", "−1.6×10⁻¹⁹ C (negative)", "9.11×10⁻³¹ C", "zero"], correctIndex: 1, explanation: "e⁻ = −1.6×10⁻¹⁹ C." },
+        {id:"physics-T12-042", question: "A resistor's resistance is 10 Ω and current is 0.3 A. Power dissipated is…", options: ["0.9 W", "3 W", "0.9 W", "0.27 W"], correctIndex: 0, explanation: "P=I²R=0.09×10=0.9 W." },
+        {id:"physics-T12-043", question: "Resistance of a wire increases when its length is…", options: ["decreased", "increased", "same", "halved"], correctIndex: 1, explanation: "R ∝ L (longer wire → more resistance)." },
+        {id:"physics-T12-044", question: "Resistance of a wire decreases when its cross-sectional area is…", options: ["decreased", "unchanged", "increased", "halved"], correctIndex: 2, explanation: "R ∝ 1/A (thicker wire → less resistance)." },
+        {id:"physics-T12-045", question: "A semiconductor diode in forward bias has resistance that is…", options: ["very high", "zero always", "low (conducting)", "infinite"], correctIndex: 2, explanation: "Forward bias: low resistance → conducts current." },
+        {id:"physics-T12-046", question: "The I-V characteristic of a filament lamp curves because…", options: ["current decreases voltage", "resistance increases as temperature increases", "it is not connected correctly", "voltage is DC only"], correctIndex: 1, explanation: "Filament heats up → R increases → curve deviates from straight line." },
+        {id:"physics-T12-047", question: "Electrostatic spray painting works because the charged paint droplets…", options: ["evaporate on the car", "are attracted to the oppositely charged metal car surface, coating it evenly", "are neutral", "move randomly"], correctIndex: 1, explanation: "Opposite charges attract → even coating; less wastage." },
+        {id:"physics-T12-048", question: "A balloon charged by rubbing sticks to a wall because…", options: ["the wall is a magnet", "it induces opposite charges on wall surface (induction)", "the wall has no charge", "friction makes it sticky"], correctIndex: 1, explanation: "Charged balloon induces opposite charge on wall surface → attraction." },
+        {id:"physics-T12-049", question: "The direction of electric field lines between two charges shows the direction of force on a…", options: ["negative test charge", "positive test charge", "neutron", "proton always"], correctIndex: 1, explanation: "By convention, field direction = force on positive test charge." },
+        {id:"physics-T12-050", question: "Charge Q = 4800 C passes through a circuit in 20 minutes. Average current is…", options: ["240 A", "4 A", "96 000 A", "0.004 A"], correctIndex: 1, explanation: "t=20×60=1200 s; I=Q/t=4800/1200=4 A." },
+],
         trueFalse: [
           { statement: "Current is measured in volts.", correct: false, explain: "Current is in amperes." },
           { statement: "V = W/Q.", correct: true, explain: "Definition of p.d." },
@@ -74,7 +123,13 @@
           { statement: "1 C passing per second is 1 A.", correct: true, explain: "I=Q/t." },
           { statement: "A diode conducts equally in both directions.", correct: false, explain: "Mostly one direction." },
           { statement: "W = VQ.", correct: true, explain: "Energy transferred." },
-        ],
+        
+        { statement: "Rubbing a plastic rod transfers protons from rod to cloth.", correct: false, explain: "Protons don't move; electrons are transferred." },
+        { statement: "Electric field lines from a positive charge point radially outward.", correct: true, explain: "Convention: direction of force on positive test charge." },
+        { statement: "An electrostatic precipitator charges smoke particles to remove them.", correct: true, explain: "Charged particles attracted to collecting plates." },
+        { statement: "Resistance of a wire increases as its cross-sectional area increases.", correct: false, explain: "R ∝ 1/A; thicker wire has lower resistance." },
+        { statement: "Charging by induction gives the object the opposite charge to the inducing charge.", correct: true, explain: "Electrons rearrange and earth connection removed → opposite charge retained." },
+],
       
     });
 })();

@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="grid">
-      <a class="card" href="subject.html?subject=chemistry">
+      <a class="card" data-subject="chemistry" href="subject.html?subject=chemistry">
         <h2>O-Level Chemistry</h2>
         <div class="meta">19 topics · themes · full question bank</div>
         <div class="tag-row">
@@ -156,13 +156,23 @@
           <span class="tag">XP shop</span>
         </div>
       </a>
-      <a class="card" href="subject.html?subject=physics">
+      <a class="card" data-subject="physics" href="subject.html?subject=physics">
         <h2>O-Level Physics</h2>
         <div class="meta">16 topics (+ A/B subtopics) · full notes · quizzes · games</div>
         <div class="tag-row">
           <span class="tag">Singapore MOE</span>
           <span class="tag">Waves</span>
           <span class="tag">Electricity</span>
+        </div>
+      </a>
+      <a class="card" data-subject="geography" href="subject.html?subject=geography">
+        <h2>O-Level Geography</h2>
+        <div class="meta">15 topics · 5 clusters · full notes · quizzes · games</div>
+        <div class="tag-row">
+          <span class="tag">Singapore MOE 2279</span>
+          <span class="tag">Tectonics</span>
+          <span class="tag">Climate</span>
+          <span class="tag">Tourism</span>
         </div>
       </a>
     </div>
@@ -175,6 +185,7 @@
       const SUPABASE_SKIP_KEY = "SUPABASE_SETUP_SKIPPED_V1";
       const STUDENT_ID_KEY = "LEVELUP_STUDENT_ID";
       const STUDENT_NAME_KEY = "LEVELUP_STUDENT_NAME";
+      const LAST_SUBJECT_KEY = "LEVELUP_LAST_SUBJECT";
 
       function setupSupabaseKeysPrompt(force) {
         const existingUrl = localStorage.getItem("SUPABASE_URL") || "";
@@ -269,6 +280,14 @@
 
       document.getElementById("btn-setup-supabase").onclick = window.configureSupabaseKeys;
       document.getElementById("btn-setup-student").onclick = window.configureStudentProfile;
+
+      document.querySelectorAll("a.card[data-subject]").forEach((card) => {
+        card.addEventListener("click", () => {
+          const subject = card.getAttribute("data-subject");
+          if (!subject) return;
+          localStorage.setItem(LAST_SUBJECT_KEY, subject);
+        });
+      });
 
       // First-step gate on landing before subject selection.
       const hasSupabaseNow = setupSupabaseKeysPrompt(false);

@@ -20,7 +20,17 @@
             "Safety: time, distance, shielding; avoid ingestion/inhalation; use tongs/lead.",
             "Uses: smoke detectors (α), thickness control (β), sterilisation and cancer treatment (γ) with control and precautions."
           ]},
-        ],
+        
+        { title: "Nuclear equations and applications",
+          points: [
+            "**Alpha (α)**: ⁴₂He; A−4, Z−2. Stopped by paper/skin. High ionisation.",
+            "**Beta-minus (β⁻)**: ⁰₋₁e; A unchanged, Z+1. Stopped by thin Al. Medium ionisation.",
+            "**Gamma (γ)**: photon; A and Z unchanged. Needs thick Pb/concrete. Low ionisation.",
+            "**Nuclear equations**: balance both A and Z. ²³⁸₉₂U → ²³⁴₉₀Th + ⁴₂He (alpha); ¹⁴₆C → ¹⁴₇N + ⁰₋₁e (beta).",
+            "**Fission**: heavy nucleus splits + energy (nuclear power). **Fusion**: light nuclei join + energy (Sun). Activity (Bq) = decay/s; half-life calculation: N = N₀×(½)ⁿ."
+          ]
+        },
+],
         flashcards: [
           { front: "Mass number", back: "A = p + n" },
           { front: "Atomic number", back: "Z = number of protons" },
@@ -34,7 +44,21 @@
           { front: "Stopped by thin aluminium", back: "beta" },
           { front: "Shield for gamma", back: "thick lead/concrete" },
           { front: "Half-life", back: "time for activity/count-rate to halve" },
-        ],
+        
+        { front: "Alpha decay: change in A and Z", back: "A decreases by 4; Z decreases by 2" },
+        { front: "Beta-minus decay: change in Z", back: "Z increases by 1 (neutron → proton + electron)" },
+        { front: "Gamma decay: change in A and Z", back: "No change in A or Z (only energy emitted)" },
+        { front: "Nuclide notation ᴬZX", back: "A = mass number (p+n); Z = atomic number (protons)" },
+        { front: "Radioactive decay: spontaneous means…", back: "No external trigger; cannot be caused or stopped by chemical/physical means" },
+        { front: "Carbon-14 dating principle", back: "C-14 incorporated in life; after death only decays; ratio to C-12 gives age" },
+        { front: "Nuclear fission", back: "Heavy nucleus splits into two lighter nuclei + neutrons + energy (e.g. U-235)" },
+        { front: "Nuclear fusion", back: "Light nuclei combine to form heavier nucleus + energy (e.g. H→He in Sun)" },
+        { front: "Activity unit", back: "Becquerel (Bq) = 1 decay per second" },
+        { front: "Medical tracer ideal properties", back: "Short half-life, gamma emitter, taken up by target organ" },
+        { front: "Alpha internal hazard", back: "Highly ionising + short range → concentrated tissue damage if ingested" },
+        { front: "Balancing nuclear equations", back: "Both A (mass number) and Z (atomic number) must balance" },
+        { front: "Nuclear waste disposal", back: "Long-term secure underground storage (long half-lives)" },
+],
         quiz: [
           {id:"physics-T16-001", question: "Atomic number is number of…", options: ["neutrons", "protons", "electrons always", "nucleons"], correctIndex: 1, explanation: "Z = protons." },
           {id:"physics-T16-002", question: "Mass number equals…", options: ["p+n", "p−n", "n−p", "p only"], correctIndex: 0, explanation: "A=p+n." },
@@ -62,7 +86,32 @@
           {id:"physics-T16-024", question: "For a given isotope, half-life is…", options: ["different for every atom of that isotope", "a constant characteristic of that isotope (usual syllabus model)", "equal to full decay time always", "zero"], correctIndex: 1, explanation: "Half-life is an isotope property (conditions assumed standard)." },
           {id:"physics-T16-025", question: "Industrial thickness monitoring of thin metal/foil often uses… because absorption depends strongly on thickness.", options: ["alpha", "beta", "gamma only", "sound in vacuum"], correctIndex: 1, explanation: "β is partially absorbed; transmitted intensity changes with thickness." },
           {id:"physics-T16-026", question: "Ingesting an α-emitter is especially hazardous mainly because…", options: ["α penetrates deep in tissue", "α is highly ionising but stopped inside tissue (high local dose)", "α has infinite range", "α is non-ionising"], correctIndex: 1, explanation: "Short range concentrates ionisation damage locally if taken inside." },
-        ],
+        
+        {id:"physics-T16-027", question: "In alpha decay, the nucleus loses 2 protons and 2 neutrons. Mass number A changes by…", options: ["+4", "−4", "+2", "−2"], correctIndex: 1, explanation: "Alpha (⁴₂He) emitted → A decreases by 4." },
+        {id:"physics-T16-028", question: "In beta-minus decay, a neutron converts to a proton. Atomic number Z…", options: ["decreases by 1", "increases by 1", "stays same", "increases by 2"], correctIndex: 1, explanation: "β⁻: n→p + e⁻ + antineutrino; Z increases by 1." },
+        {id:"physics-T16-029", question: "Gamma emission causes…", options: ["change in A and Z", "decrease in Z only", "no change in A or Z (only energy emitted)", "increase in A"], correctIndex: 2, explanation: "Gamma: photon emitted; nucleus composition unchanged." },
+        {id:"physics-T16-030", question: "Nuclide notation ⁶⁰₂₇Co means this cobalt nucleus has…", options: ["27 protons, 60 neutrons", "60 protons, 27 neutrons", "27 protons, 33 neutrons", "60 protons, 33 neutrons"], correctIndex: 2, explanation: "Z=27 (protons), A=60 (nucleons); neutrons = 60−27=33." },
+        {id:"physics-T16-031", question: "Radioactive decay is random and spontaneous. 'Spontaneous' means…", options: ["it can be triggered by heating", "it occurs without external stimulation", "it only occurs in labs", "it can be stopped by shielding"], correctIndex: 1, explanation: "Spontaneous: no external cause needed; cannot be triggered or stopped chemically." },
+        {id:"physics-T16-032", question: "A sample has 1200 counts per minute. After 3 half-lives, count rate is…", options: ["400", "300", "150", "600"], correctIndex: 2, explanation: "1200 → 600 → 300 → 150 (three halvings)." },
+        {id:"physics-T16-033", question: "Carbon-14 dating works because ¹⁴C is…", options: ["absorbed only by wood", "incorporated into living organisms during life; after death, only decay occurs", "created by humans", "stable in all conditions"], correctIndex: 1, explanation: "While alive: C-14 maintained by metabolism; at death: only decay → ratio indicates age." },
+        {id:"physics-T16-034", question: "Half-life of ¹⁴C is 5730 years. A sample has ¼ of original ¹⁴C. Age is approximately…", options: ["5730 years", "11 460 years", "2865 years", "17 190 years"], correctIndex: 1, explanation: "¼ = (½)² → 2 half-lives = 2×5730=11 460 years." },
+        {id:"physics-T16-035", question: "Nuclear fission involves…", options: ["combining small nuclei", "splitting a heavy nucleus releasing energy", "emission of alpha only", "electron capture only"], correctIndex: 1, explanation: "Fission: heavy nucleus splits (e.g. U-235 → two lighter nuclei + neutrons + energy)." },
+        {id:"physics-T16-036", question: "Nuclear fusion involves…", options: ["splitting heavy nuclei", "combining small nuclei to form larger one, releasing energy", "emission of beta only", "neutron capture only"], correctIndex: 1, explanation: "Fusion: e.g. H+H→He + energy; powers the Sun." },
+        {id:"physics-T16-037", question: "Nuclear power stations use… as fuel.", options: ["fusion of hydrogen", "fission of uranium (U-235)", "coal combustion", "solar energy"], correctIndex: 1, explanation: "Current nuclear plants: controlled uranium fission." },
+        {id:"physics-T16-038", question: "Background radiation at a location comes from…", options: ["only nuclear plants nearby", "cosmic rays, naturally occurring radioactive materials (e.g. radon, K-40), and some artificial sources", "only X-ray machines", "electricity wires"], correctIndex: 1, explanation: "Natural sources: cosmic rays, radon, food, rocks; plus some artificial." },
+        {id:"physics-T16-039", question: "Ionising radiation harms living tissue mainly by…", options: ["heating it", "creating ions that disrupt chemical bonds and damage DNA", "reflecting light", "magnetising cells"], correctIndex: 1, explanation: "Ionisation breaks bonds → cell/DNA damage → cancer or cell death." },
+        {id:"physics-T16-040", question: "A nuclear equation must be balanced with respect to…", options: ["only proton numbers", "both mass number A and atomic number Z", "energy only", "neutron number only"], correctIndex: 1, explanation: "Both A and Z are conserved in nuclear equations." },
+        {id:"physics-T16-041", question: "In the equation ²³⁸₉₂U → ²³⁴₉₀Th + X, particle X is…", options: ["beta particle", "gamma ray", "alpha particle (⁴₂He)", "neutron"], correctIndex: 2, explanation: "A: 238=234+4 ✓; Z: 92=90+2 ✓ → alpha (⁴₂He)." },
+        {id:"physics-T16-042", question: "In ¹⁴₆C → ¹⁴₇N + X, particle X is…", options: ["alpha", "beta-minus (e⁻)", "gamma", "proton"], correctIndex: 1, explanation: "A unchanged (14=14); Z: 6→7 (+1) → beta-minus emission." },
+        {id:"physics-T16-043", question: "A medical tracer should have…", options: ["long half-life and high ionisation", "short half-life and gamma emission (non-ionising in body)", "very long half-life", "alpha emission for imaging"], correctIndex: 1, explanation: "Short t½ (decays quickly, less dose); gamma (escapes body for detection)." },
+        {id:"physics-T16-044", question: "Why is alpha radiation not suitable for medical tracers (internal use)?", options: ["too penetrating", "highly ionising and short range → damages internal tissue", "too few particles", "not radioactive enough"], correctIndex: 1, explanation: "Alpha: high ionisation, stopped in tissue → concentrated damage internally." },
+        {id:"physics-T16-045", question: "Safety precautions when handling radioactive sources include…", options: ["touching with bare hands briefly is fine", "using tongs, lead containers, minimising time, maximising distance", "keeping in warm area", "shining bright light on them"], correctIndex: 1, explanation: "Basic safety: tongs (distance), shielding, minimise exposure time." },
+        {id:"physics-T16-046", question: "Radioactive waste from nuclear power stations must be…", options: ["released into rivers after dilution", "stored safely, often deep underground, for long periods", "burned in incinerators", "mixed with concrete and used in construction"], correctIndex: 1, explanation: "Nuclear waste: long half-lives → secured long-term storage required." },
+        {id:"physics-T16-047", question: "The activity of a radioactive source is measured in…", options: ["joules", "becquerels (Bq)", "newtons", "pascals"], correctIndex: 1, explanation: "Becquerel (Bq): 1 disintegration per second." },
+        {id:"physics-T16-048", question: "A source initially has activity 8000 Bq. After two half-lives, activity is…", options: ["4000 Bq", "2000 Bq", "1000 Bq", "6000 Bq"], correctIndex: 1, explanation: "8000 → 4000 → 2000 Bq (two halvings)." },
+        {id:"physics-T16-049", question: "Sun's energy is produced mainly by…", options: ["fission of uranium", "fusion of hydrogen nuclei into helium", "chemical combustion", "nuclear decay chain only"], correctIndex: 1, explanation: "Solar energy: proton-proton chain (fusion of hydrogen)." },
+        {id:"physics-T16-050", question: "The activity of a radioactive source decreases over time. This means the count rate measured near it…", options: ["stays constant", "increases", "decreases as nuclei decay", "increases when temperature rises"], correctIndex: 2, explanation: "Fewer undecayed nuclei → fewer disintegrations per second → lower activity/count rate." },
+],
         trueFalse: [
           { statement: "Radioactive decay is random.", correct: true, explain: "Unpredictable for a single nucleus." },
           { statement: "Alpha is the most penetrating.", correct: false, explain: "Alpha is least penetrating." },
@@ -74,7 +123,13 @@
           { statement: "Isotopes have different chemical properties.", correct: false, explain: "Chemical depends on protons/electrons; isotopes differ mainly in physical." },
           { statement: "Ionising radiation can damage living tissue.", correct: true, explain: "Ionisation harms cells/DNA." },
           { statement: "Increasing shielding increases safety.", correct: true, explain: "Reduces exposure." },
-        ],
+        
+        { statement: "Alpha particles are the most penetrating form of radioactive emission.", correct: false, explain: "Gamma rays are most penetrating; alpha is least penetrating." },
+        { statement: "In beta-minus decay, the atomic number increases by 1.", correct: true, explain: "n→p + e⁻; one more proton → Z increases by 1." },
+        { statement: "Gamma emission changes the mass number of the nucleus.", correct: false, explain: "Gamma is just energy (photon); A and Z are unchanged." },
+        { statement: "Nuclear fusion is the process that powers the Sun.", correct: true, explain: "Fusion of hydrogen nuclei into helium releases enormous energy." },
+        { statement: "Radioactive decay can be slowed by cooling the source.", correct: false, explain: "Decay is independent of physical/chemical conditions (temperature, pressure, etc.)." },
+],
       
     });
 })();

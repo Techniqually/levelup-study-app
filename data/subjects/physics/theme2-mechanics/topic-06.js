@@ -21,7 +21,16 @@
             "On frictionless fall: loss in GPE ≈ gain in KE.",
             "Braking: KE → thermal in brakes + road (and sound)."
           ]},
-        ],
+        
+        { title: "Energy resources comparison",
+          points: [
+            "**Non-renewable**: fossil fuels (coal/oil/gas) + nuclear. Reliable, high energy density; fossil fuels pollute; nuclear: radioactive waste.",
+            "**Renewable**: solar (low density, weather-dependent), wind (variable), hydro (reliable, flooding), tidal (predictable, expensive), geothermal (location-specific), biofuel (land-use issues).",
+            "Key formula: \\(v=\\sqrt{2gh}\\) (all GPE → KE, frictionless). Motor: \\(P=Fv\\). Electrical: \\(E=VIt\\).",
+            "1 kWh = 3.6 MJ (billing unit). Efficiency \\(\\eta\\) = useful/total."
+          ]
+        },
+],
         flashcards: [
           { front: "Work done", back: "W = F × s (along force direction)" },
           { front: "GPE", back: "mgh" },
@@ -35,7 +44,21 @@
           { front: "What energy store for stretched spring", back: "elastic potential" },
           { front: "What store for raised object", back: "gravitational potential" },
           { front: "Braking converts KE to…", back: "thermal energy" },
-        ],
+        
+        { front: "1 kWh in joules", back: "\\(1\\,\\text{kWh} = 3.6\\times10^6\\,\\text{J}\\)" },
+        { front: "Speed at bottom of frictionless ramp height h", back: "\\(v=\\sqrt{2gh}\\) (GPE→KE)" },
+        { front: "Electrical energy formula", back: "\\(E = VIt\\)" },
+        { front: "Motor lifting at speed v", back: "\\(P = Fv = mgv\\)" },
+        { front: "Work done at angle θ", back: "\\(W = Fs\\cos\\theta\\)" },
+        { front: "Non-renewable energy examples", back: "Coal, oil, natural gas, nuclear fuel" },
+        { front: "Renewable energy examples", back: "Solar, wind, hydro, tidal, geothermal, biofuel" },
+        { front: "Nuclear power: energy from…", back: "Fission of heavy nuclei (U-235); heat → steam → turbines" },
+        { front: "Pendulum: lowest point energy form", back: "Maximum kinetic energy" },
+        { front: "Pendulum: highest point energy form", back: "Maximum gravitational PE" },
+        { front: "Biofuel carbon claim", back: "Carbon neutral: CO₂ released ≈ CO₂ absorbed during growth" },
+        { front: "Geothermal energy source", back: "Earth's internal heat" },
+        { front: "Work done perpendicular to force", back: "Zero (cos 90° = 0)" },
+],
         quiz: [
           {id:"physics-T6-001", question: "Work done is…", options: ["Fs", "F/s", "s/F", "mgh"], correctIndex: 0, explanation: "W=Fs." },
           {id:"physics-T6-002", question: "Unit of work", options: ["W", "J", "N", "Pa"], correctIndex: 1, explanation: "Joule." },
@@ -63,7 +86,32 @@
           {id:"physics-T6-024", question: "A 0.5 kg ball falls 2 m (g=10). Approximate loss of GPE if air resistance is negligible is…", options: ["1 J", "5 J", "10 J", "100 J"], correctIndex: 2, explanation: "ΔEp=mgh=0.5×10×2=10 J." },
           {id:"physics-T6-025", question: "Useful power output 400 W, wasted power 100 W. Efficiency is…", options: ["20%", "25%", "80%", "400%"], correctIndex: 2, explanation: "η=400/(400+100)=80%." },
           {id:"physics-T6-026", question: "Work done by a force is zero when…", options: ["force is large", "displacement is perpendicular to the force", "velocity is constant", "time is long"], correctIndex: 1, explanation: "W=Fs cosθ; θ=90° → W=0." },
-        ],
+        
+        {id:"physics-T6-027", question: "1 kWh expressed in joules is…", options: ["360 J", "3600 J", "36 000 J", "3 600 000 J"], correctIndex: 3, explanation: "1 kWh = 1000 W × 3600 s = 3 600 000 J = 3.6 MJ." },
+        {id:"physics-T6-028", question: "A 2 kW heater runs for 30 min. Energy used in kWh is…", options: ["0.5 kWh", "1 kWh", "60 kWh", "0.067 kWh"], correctIndex: 1, explanation: "E=P×t=2×0.5=1 kWh." },
+        {id:"physics-T6-029", question: "Fossil fuels are described as non-renewable because…", options: ["they produce CO₂", "they form over millions of years and are used faster than replaced", "they are solid", "they come from plants only"], correctIndex: 1, explanation: "Rate of use >> rate of formation." },
+        {id:"physics-T6-030", question: "Renewable energy resources include…", options: ["coal, oil, gas", "nuclear, coal, gas", "solar, wind, hydro, tidal, geothermal, biofuel", "wood only"], correctIndex: 2, explanation: "All these replenish naturally on human timescales." },
+        {id:"physics-T6-031", question: "A wind turbine is 30% efficient; wind delivers 50 000 W. Electrical output is…", options: ["15 kW", "30 kW", "50 kW", "167 kW"], correctIndex: 0, explanation: "Output=0.3×50000=15 000 W=15 kW." },
+        {id:"physics-T6-032", question: "Energy transferred by electric current \\(E=VIt\\). If V=12 V, I=2 A, t=30 s, E=?", options: ["14 J", "24 J", "360 J", "720 J"], correctIndex: 3, explanation: "E=12×2×30=720 J." },
+        {id:"physics-T6-033", question: "Nuclear power uses… to generate electricity.", options: ["fusion only in current plants", "fission of heavy nuclei releasing heat", "chemical combustion", "photovoltaic effect"], correctIndex: 1, explanation: "Nuclear fission (e.g. U-235) releases heat → steam → turbines." },
+        {id:"physics-T6-034", question: "A ball rolls from rest down a frictionless ramp, height 5 m (g=10). Speed at bottom is…", options: ["5 m/s", "10 m/s", "50 m/s", "100 m/s"], correctIndex: 1, explanation: "mgh=½mv²→v=√(2gh)=√100=10 m/s." },
+        {id:"physics-T6-035", question: "A pendulum swings. At the lowest point its energy is mainly…", options: ["gravitational PE", "elastic PE", "kinetic", "nuclear"], correctIndex: 2, explanation: "Lowest = maximum speed = maximum KE." },
+        {id:"physics-T6-036", question: "At the highest point of a pendulum swing, energy is mainly…", options: ["kinetic", "gravitational PE", "elastic PE", "sound"], correctIndex: 1, explanation: "Momentarily stationary = zero KE = maximum GPE." },
+        {id:"physics-T6-037", question: "Work done against friction converts mechanical energy mainly to…", options: ["gravitational PE", "elastic PE", "thermal energy", "nuclear"], correctIndex: 2, explanation: "Friction → heat." },
+        {id:"physics-T6-038", question: "A 500 W motor lifts 10 kg at constant speed (g=10). Speed of lifting is…", options: ["0.5 m/s", "5 m/s", "50 m/s", "500 m/s"], correctIndex: 1, explanation: "P=Fv=mgv → v=P/(mg)=500/100=5 m/s." },
+        {id:"physics-T6-039", question: "Geothermal energy comes from…", options: ["sun directly", "heat inside the Earth", "ocean tides", "burning biomass"], correctIndex: 1, explanation: "Earth's internal heat (radioactive decay + original formation heat)." },
+        {id:"physics-T6-040", question: "Tidal power uses…", options: ["wind moving water", "gravitational effect of Moon/Sun on oceans", "sunlight on water", "chemical reaction in seawater"], correctIndex: 1, explanation: "Tidal flow driven by Moon/Sun gravity." },
+        {id:"physics-T6-041", question: "A solar panel with 20% efficiency receives 500 W/m². Electrical output per m² is…", options: ["20 W", "100 W", "500 W", "2500 W"], correctIndex: 1, explanation: "0.20×500=100 W/m²." },
+        {id:"physics-T6-042", question: "Work done = \\(Fs\\cos\\theta\\). If force is perpendicular to displacement (θ=90°), work done is…", options: ["Fs", "Fs/2", "zero", "2Fs"], correctIndex: 2, explanation: "cos90°=0." },
+        {id:"physics-T6-043", question: "Biofuels are considered 'carbon neutral' because…", options: ["they produce no CO₂", "CO₂ released when burned is roughly equal to CO₂ absorbed while growing", "they are solid", "they contain no carbon"], correctIndex: 1, explanation: "Net CO₂ is approximately zero (in ideal model)." },
+        {id:"physics-T6-044", question: "A hydroelectric dam converts…", options: ["chemical → electrical", "gravitational PE → KE → electrical", "nuclear → thermal", "kinetic → gravitational"], correctIndex: 1, explanation: "Water falls: GPE→KE of turbine→electrical." },
+        {id:"physics-T6-045", question: "A 60 W light bulb converts electrical energy. If only 5% is visible light, wasted power (mainly heat) is…", options: ["3 W", "5 W", "55 W", "57 W"], correctIndex: 3, explanation: "Wasted = 95% of 60 = 57 W." },
+        {id:"physics-T6-046", question: "A ball thrown upward: as it rises, KE…", options: ["increases", "decreases", "stays constant", "becomes GPE first then KE"], correctIndex: 1, explanation: "KE converts to GPE as it rises (ignoring air resistance)." },
+        {id:"physics-T6-047", question: "Nuclear fuel has very high energy density. Compared to coal, same mass of nuclear fuel releases…", options: ["similar energy", "less energy", "millions of times more energy", "zero energy"], correctIndex: 2, explanation: "Nuclear reactions release ~million × more energy per kg than chemical." },
+        {id:"physics-T6-048", question: "Energy is measured in kWh in electrical billing because…", options: ["kWh is easier for physics", "kilowatt-hours are practical for large domestic energy amounts", "W is too large", "J and kWh are the same"], correctIndex: 1, explanation: "1 kWh=3.6 MJ; convenient for billing large amounts." },
+        {id:"physics-T6-049", question: "A spring (elastic PE = 50 J) is released and all energy goes to a 2 kg block. Block speed is…", options: ["5 m/s", "7.07 m/s", "10 m/s", "25 m/s"], correctIndex: 1, explanation: "50=½×2×v² → v²=50 → v≈7.07 m/s." },
+        {id:"physics-T6-050", question: "Power output of a car moving at 20 m/s against drag force 800 N is…", options: ["40 W", "400 W", "4000 W", "16 000 W"], correctIndex: 3, explanation: "P=Fv=800×20=16 000 W=16 kW." },
+],
         trueFalse: [
           { statement: "Work done can be negative if force opposes displacement.", correct: true, explain: "Direction matters." },
           { statement: "Power is energy transferred per unit time.", correct: true, explain: "Definition." },
@@ -75,7 +123,13 @@
           { statement: "A force can do work even if object doesn’t move.", correct: false, explain: "No displacement → no work." },
           { statement: "Energy is created when a battery runs.", correct: false, explain: "Chemical energy is converted to electrical." },
           { statement: "If speed doubles, KE doubles.", correct: false, explain: "It quadruples." },
-        ],
+        
+        { statement: "1 kWh = 3.6 MJ.", correct: true, explain: "1000 W × 3600 s = 3 600 000 J." },
+        { statement: "Work done is zero when force is perpendicular to displacement.", correct: true, explain: "W=Fs cosθ; cos90°=0." },
+        { statement: "Nuclear power plants use fusion reactions.", correct: false, explain: "Current plants use fission; fusion is still experimental." },
+        { statement: "At the top of a pendulum swing, kinetic energy is maximum.", correct: false, explain: "KE is zero at the top (momentarily at rest); GPE is maximum." },
+        { statement: "Renewable energy sources are always efficient.", correct: false, explain: "Renewables can have low efficiency (solar panels ~15-20%) and are often weather-dependent." },
+],
       
     });
 })();

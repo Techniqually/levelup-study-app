@@ -20,7 +20,17 @@
             "Direction by Fleming’s left-hand rule (Force, Field, Current).",
             "Increase force by increasing B, I, or length in field."
           ]},
-        ],
+        
+        { title: "Electromagnetic induction, generator and transformer",
+          points: [
+            "**Faraday's law**: e.m.f. induced ∝ rate of change of flux. Larger B, N, A, or faster rotation → larger e.m.f.",
+            "**Lenz's law**: induced current opposes the change → work must be done → energy is transferred to electrical.",
+            "**AC generator**: rotating coil in B field; slip rings → AC output; e.m.f. = 0 when coil ⊥ to field (flux max); e.m.f. = max when coil ∥ to field.",
+            "**Transformer**: \\(V_P/V_S=N_P/N_S\\); \\(V_PI_P=V_SI_S\\) (ideal). Step-up: N_S>N_P. Step-down: N_S<N_P. Works with AC only.",
+            "**Grid transmission**: high V → low I → \\(P_{loss}=I^2R\\) reduced. Step-up before cables, step-down for consumers."
+          ]
+        },
+],
         flashcards: [
           { front: "Like poles", back: "repel" },
           { front: "Unlike poles", back: "attract" },
@@ -34,7 +44,21 @@
           { front: "Magnetic material example", back: "iron/steel" },
           { front: "Soft iron core used because…", back: "magnetises/demagnetises easily" },
           { front: "Steel used for permanent magnets because…", back: "retains magnetism" },
-        ],
+        
+        { front: "Electromagnetic induction", back: "Changing magnetic flux through a coil induces an e.m.f." },
+        { front: "Lenz's law", back: "Induced current opposes the change that caused it (energy conservation)" },
+        { front: "Increasing induced e.m.f.", back: "Faster movement, more coil turns, stronger magnet, larger coil area" },
+        { front: "AC generator output", back: "Sinusoidal voltage; slip rings used to maintain AC" },
+        { front: "DC motor vs AC generator", back: "Motor: electrical→mechanical; Generator: mechanical→electrical" },
+        { front: "Transformer voltage ratio", back: "\\(V_P/V_S = N_P/N_S\\)" },
+        { front: "Ideal transformer power equation", back: "\\(V_P I_P = V_S I_S\\) (no losses)" },
+        { front: "Step-up transformer", back: "N_S > N_P → V_S > V_P (increases voltage)" },
+        { front: "Step-down transformer", back: "N_S < N_P → V_S < V_P (decreases voltage)" },
+        { front: "High-voltage transmission reason", back: "Same power at high V → lower I → less I²R loss in cables" },
+        { front: "Transformers work only with…", back: "AC (alternating current) — needs changing flux" },
+        { front: "Soft iron core in transformer", back: "Easily magnetised/demagnetised — efficient flux coupling" },
+        { front: "Commutator (DC motor) purpose", back: "Reverses current every half turn → keeps force direction constant" },
+],
         quiz: [
           {id:"physics-T15-001", question: "Like poles…", options: ["attract", "repel", "do nothing", "merge"], correctIndex: 1, explanation: "Repel." },
           {id:"physics-T15-002", question: "Field lines outside magnet go from…", options: ["S to N", "N to S", "east to west", "up to down"], correctIndex: 1, explanation: "N to S outside." },
@@ -62,7 +86,32 @@
           {id:"physics-T15-024", question: "Closer, denser field lines around a pole indicate…", options: ["weaker field", "stronger field", "zero field", "electric field only"], correctIndex: 1, explanation: "Line density represents B-field strength." },
           {id:"physics-T15-025", question: "Earth’s magnetic field makes a freely pivoted compass needle align approximately…", options: ["east–west", "along the local field direction (toward magnetic north/south)", "vertically only", "randomly"], correctIndex: 1, explanation: "Compass aligns tangent to field lines." },
           {id:"physics-T15-026", question: "For a solenoid with fixed current and core, increasing the number of turns per unit length generally…", options: ["weakens the interior field", "strengthens the interior field", "cancels the field", "makes the field purely electric"], correctIndex: 1, explanation: "More turns increases ampere-turns, increasing B inside (basic model)." },
-        ],
+        
+        {id:"physics-T15-027", question: "Moving a magnet into a coil induces an e.m.f. This is called…", options: ["electrostatic induction", "electromagnetic induction (Faraday's law)", "motor effect", "galvanometer effect"], correctIndex: 1, explanation: "Faraday's law: changing magnetic flux induces e.m.f." },
+        {id:"physics-T15-028", question: "The magnitude of induced e.m.f. increases when…", options: ["magnet moves slower", "fewer turns in coil", "magnet moves faster OR more turns in coil OR stronger magnet", "wire is thicker only"], correctIndex: 2, explanation: "Larger rate of flux change → larger e.m.f." },
+        {id:"physics-T15-029", question: "Lenz's law states that the induced current direction is such that it…", options: ["aids the change that caused it", "opposes the change that produced it (conservation of energy)", "is always clockwise", "has zero magnitude"], correctIndex: 1, explanation: "Opposing change → energy conservation; work done against opposition → electrical energy." },
+        {id:"physics-T15-030", question: "An AC generator (alternator) produces AC because…", options: ["the coil is made of steel", "as the coil rotates, flux changes direction → e.m.f. reverses", "the magnet is always stationary", "slip rings allow current to flow one way only"], correctIndex: 1, explanation: "Rotation causes alternating flux linkage → alternating e.m.f." },
+        {id:"physics-T15-031", question: "In a simple AC generator, slip rings (instead of split-ring commutator) are used to…", options: ["convert AC to DC", "allow continuous rotation while maintaining contact — producing AC", "increase magnetic field", "stop the coil rotating"], correctIndex: 1, explanation: "Slip rings + brushes maintain contact during full rotation → AC output." },
+        {id:"physics-T15-032", question: "An ideal transformer has V_P/V_S = N_P/N_S. If N_P=500, N_S=50, V_P=240 V, then V_S =…", options: ["2400 V", "24 V", "240 V", "48 V"], correctIndex: 1, explanation: "V_S = V_P × N_S/N_P = 240×50/500 = 24 V (step-down)." },
+        {id:"physics-T15-033", question: "An ideal transformer also obeys V_P I_P = V_S I_S. If V_P=240 V, I_P=0.5 A, V_S=24 V, then I_S =…", options: ["5 A", "0.5 A", "50 A", "0.05 A"], correctIndex: 0, explanation: "I_S = V_P I_P / V_S = 240×0.5/24 = 5 A." },
+        {id:"physics-T15-034", question: "A step-up transformer increases voltage by…", options: ["having fewer secondary turns than primary", "having more secondary turns than primary", "using a permanent magnet", "using DC current"], correctIndex: 1, explanation: "Step-up: N_S > N_P → V_S > V_P." },
+        {id:"physics-T15-035", question: "Electrical power is transmitted at high voltage to reduce…", options: ["frequency of AC", "energy losses in cables (P_loss = I²R; lower I at high V for same power)", "number of transformers", "cost of generating electricity"], correctIndex: 1, explanation: "P=IV; for same power, high V → low I → lower cable losses (I²R)." },
+        {id:"physics-T15-036", question: "Transformers only work with…", options: ["DC current", "AC current (changing flux)", "static charges", "nuclear energy"], correctIndex: 1, explanation: "Transformer needs changing flux → only works with AC." },
+        {id:"physics-T15-037", question: "If the primary voltage of a transformer is doubled (same turns ratio), secondary voltage…", options: ["halves", "doubles", "stays same", "triples"], correctIndex: 1, explanation: "V_S/V_P = N_S/N_P; same ratio → if V_P doubles, V_S doubles." },
+        {id:"physics-T15-038", question: "The output voltage graph of a simple AC generator over one rotation looks like…", options: ["a square wave", "a DC constant value", "a sinusoidal (sine) wave", "a random signal"], correctIndex: 2, explanation: "e.m.f. ∝ rate of flux change ∝ sinθ → sinusoidal output." },
+        {id:"physics-T15-039", question: "In a split-ring commutator (DC motor), the role of the commutator is to…", options: ["increase field strength", "reverse coil connections every half turn, keeping force in same direction", "reduce friction", "increase coil turns automatically"], correctIndex: 1, explanation: "Commutator reverses current every half revolution → unidirectional force (DC motor)." },
+        {id:"physics-T15-040", question: "The induced e.m.f. is zero when the coil plane in a generator is…", options: ["parallel to the field (at 0°/180°)", "perpendicular to field (at 90°/270°)", "rotating at maximum speed", "outside the magnetic field"], correctIndex: 1, explanation: "e.m.f. ∝ rate of flux change; at 90° the coil plane is ⊥ to field → flux change rate is zero. Wait: At 90° coil plane is ⊥ to B, meaning coil face is parallel to B field lines, so flux is zero but rate of change of flux is maximum. At 0° coil face is perpendicular to B, flux is maximum but rate of change is zero. So e.m.f. is zero when coil is perpendicular to B field (coil plane perpendicular to field = coil face parallel to field direction).", explanation: "e.m.f. is zero when coil plane is perpendicular to field (i.e., flux is maximum, rate of change = 0)." },
+        {id:"physics-T15-041", question: "Power loss in transmission cables \\(P_{loss}=I^2R\\). If current is halved, power loss…", options: ["halves", "quarters", "stays same", "doubles"], correctIndex: 1, explanation: "I halved → I² becomes ¼ → power loss ¼." },
+        {id:"physics-T15-042", question: "The National Grid uses very high voltages (e.g. 400 kV) for transmission because…", options: ["it is cheaper to produce", "same power at higher V means lower I → lower I²R losses in cables", "higher V means thicker cables needed", "AC generators produce 400 kV naturally"], correctIndex: 1, explanation: "P=IV; high V → low I for same P → reduced cable heating losses." },
+        {id:"physics-T15-043", question: "A transformer core is made of soft iron because…", options: ["soft iron is non-magnetic", "soft iron easily becomes magnetised and demagnetised with each AC cycle", "soft iron is an insulator", "soft iron has high retentivity"], correctIndex: 1, explanation: "Low retentivity → quickly follows AC field changes efficiently." },
+        {id:"physics-T15-044", question: "To increase the output e.m.f. of a generator, you can…", options: ["use a weaker magnet", "reduce number of turns", "rotate coil faster OR use more turns OR stronger magnet OR iron core", "reduce area of coil"], correctIndex: 2, explanation: "Any of these increases the rate of flux change → larger e.m.f." },
+        {id:"physics-T15-045", question: "Electromagnetic induction was discovered by…", options: ["Ohm", "Faraday", "Maxwell", "Ampere"], correctIndex: 1, explanation: "Michael Faraday (1831) discovered electromagnetic induction." },
+        {id:"physics-T15-046", question: "When the south pole of a magnet is pushed into a coil, and when the north pole is pushed in, the induced current direction is…", options: ["same in both cases", "opposite in both cases (reversal)", "zero in both", "depends on coil material"], correctIndex: 1, explanation: "Different pole → opposite change in flux → opposite induced current (Lenz's law)." },
+        {id:"physics-T15-047", question: "Wireless phone charging (inductive charging) works using…", options: ["radio waves", "electromagnetic induction between two coils", "magnetism only", "UV radiation"], correctIndex: 1, explanation: "AC in transmitting coil → changing B field → induced e.m.f. in receiving coil." },
+        {id:"physics-T15-048", question: "A generator converts…", options: ["electrical energy to mechanical energy", "mechanical energy to electrical energy", "chemical to kinetic", "light to electrical"], correctIndex: 1, explanation: "Generator: kinetic (mechanical rotation) → electrical energy." },
+        {id:"physics-T15-049", question: "A motor converts…", options: ["electrical energy to mechanical", "mechanical to electrical", "chemical to electrical", "heat to mechanical"], correctIndex: 0, explanation: "Motor: electrical energy → mechanical energy." },
+        {id:"physics-T15-050", question: "A transformer has N_P=1000 and N_S=5000. This is a…", options: ["step-down transformer (V_S < V_P)", "step-up transformer (V_S > V_P)", "isolating transformer", "AC-DC converter"], correctIndex: 1, explanation: "N_S > N_P → V_S > V_P: step-up." },
+],
         trueFalse: [
           { statement: "Field lines never cross.", correct: true, explain: "Direction would be ambiguous." },
           { statement: "Like poles attract.", correct: false, explain: "They repel." },
@@ -74,7 +123,13 @@
           { statement: "A compass aligns with electric field.", correct: false, explain: "It aligns with magnetic field." },
           { statement: "Adding a soft iron core increases electromagnet strength.", correct: true, explain: "Concentrates field." },
           { statement: "Magnetic field lines go from S to N outside magnet.", correct: false, explain: "N to S outside." },
-        ],
+        
+        { statement: "Electromagnetic induction requires a changing magnetic flux.", correct: true, explain: "Static flux induces nothing; changing flux induces e.m.f. (Faraday's law)." },
+        { statement: "Transformers work with DC current.", correct: false, explain: "DC → constant flux → no induced e.m.f. Transformers need AC." },
+        { statement: "A step-up transformer has more secondary turns than primary turns.", correct: true, explain: "N_S > N_P → V_S > V_P (step-up)." },
+        { statement: "High-voltage transmission reduces power losses in cables.", correct: true, explain: "High V → low I → P_loss = I²R is much smaller." },
+        { statement: "Lenz's law states that the induced current aids the change that produced it.", correct: false, explain: "Lenz's law: induced current OPPOSES the change (energy conservation)." },
+],
       
     });
 })();

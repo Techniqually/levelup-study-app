@@ -20,7 +20,17 @@
             "Vacuum flask reduces conduction (vacuum), convection (vacuum), radiation (silvered surfaces).",
             "Insulation: trapped air (poor conductor), double glazing, reflective foil."
           ]},
-        ],
+        
+        { title: "Radiation details and applications",
+          points: [
+            "**Radiation**: IR EM waves. Rate depends on: surface area, temperature (↑T → much more radiation: \\(\\propto T^4\\)), surface colour/texture (dull black = best emitter/absorber; shiny = worst).",
+            "**Greenhouse effect**: solar shortwave passes atmosphere → absorbed by Earth → re-emitted as IR → CO₂/H₂O absorb IR → warming.",
+            "**Practical applications**: solar panels (black absorber), thermos flask (vacuum + silvering), fire suits (shiny reflector), cooking pots (copper base + plastic handle).",
+            "**Conduction rate**: \\(\\frac{Q}{t} = kA\\frac{\\Delta T}{d}\\) (qualitative: larger ΔT, larger A, shorter d, higher k → faster conduction).",
+            "**Convection**: density-driven; hot fluid rises, cool sinks → creates circulation currents in room, ocean, atmosphere."
+          ]
+        },
+],
         flashcards: [
           { front: "Thermal equilibrium", back: "No net heat flow; same temperature." },
           { front: "Conduction happens mainly in…", back: "solids (esp. metals via electrons)" },
@@ -34,7 +44,21 @@
           { front: "Main radiation from hot objects", back: "infrared" },
           { front: "Metals good conductors because…", back: "free electrons transfer energy fast" },
           { front: "Convection current direction", back: "hot rises, cool sinks" },
-        ],
+        
+        { front: "Rate of conduction depends on…", back: "Temperature gradient (ΔT/Δx) and thermal conductivity (k)" },
+        { front: "Convection in a room radiator", back: "Hot air rises (less dense) → cool air sinks → circulation" },
+        { front: "Stefan-Boltzmann concept (qualitative)", back: "Radiation emitted ∝ T⁴ and surface area; dull black emits most" },
+        { front: "Fibreglass / wool insulation", back: "Trapped air pockets — poor conductor + stops convection" },
+        { front: "Solar panel colour", back: "Dull black — high absorptivity for solar radiation" },
+        { front: "Firefighter suit colour", back: "Shiny/silver — reflects IR to minimize absorption from flames" },
+        { front: "Thermos flask: 3 layers of protection", back: "1) Vacuum (no conduction/convection); 2) Silvered walls (reduce radiation); 3) Stopper (reduces conduction/convection at top)" },
+        { front: "Double glazing insulation", back: "Sealed air/gas gap reduces conduction and prevents convection" },
+        { front: "Land vs sea breeze", back: "Day: land heats faster → hot air rises → sea breeze blows in. Night: reversed." },
+        { front: "Greenhouse gases", back: "CO₂, H₂O vapour, CH₄ — absorb IR re-emitted by Earth" },
+        { front: "Multiple clothing layers", back: "Trapped air between layers is a poor conductor" },
+        { front: "Poor heat conductors (examples)", back: "Air, wood, plastic, rubber, foam" },
+        { front: "Good heat conductors (examples)", back: "Copper, aluminium, iron (metals with free electrons)" },
+],
         quiz: [
           {id:"physics-T8-001", question: "Heat flows from…", options: ["cold to hot", "hot to cold", "high density to low density", "low pressure to high"], correctIndex: 1, explanation: "Energy transfers down temperature gradient." },
           {id:"physics-T8-002", question: "Convection occurs in…", options: ["solids only", "fluids only", "vacuum only", "all states equally"], correctIndex: 1, explanation: "Convection needs fluid motion." },
@@ -62,7 +86,32 @@
           {id:"physics-T8-024", question: "Sitting near a campfire feels hot even when cold air blows past because…", options: ["conduction from smoke", "radiated IR from hot coals", "convection in solids", "latent heat of wood"], correctIndex: 1, explanation: "Line-of-sight IR radiation." },
           {id:"physics-T8-025", question: "Double glazing reduces U-value mainly by…", options: ["thickening glass only", "trapped air/gas gap reducing conduction and convection", "painting black", "increasing pressure"], correctIndex: 1, explanation: "Air layer is insulating." },
           {id:"physics-T8-026", question: "A vacuum in a flask stops conduction and convection because…", options: ["IR cannot pass", "there are no material particles to carry energy", "silver reflects sound", "heat capacity is infinite"], correctIndex: 1, explanation: "No medium for particle transfer." },
-        ],
+        
+        {id:"physics-T8-027", question: "Energy transfer by conduction depends on…", options: ["density difference", "temperature gradient and thermal conductivity", "visible light", "electric field"], correctIndex: 1, explanation: "Rate of conduction depends on ΔT/Δx and thermal conductivity k." },
+        {id:"physics-T8-028", question: "In metals, heat conducts mainly via…", options: ["atoms vibrating", "convection currents", "free electrons transferring energy", "radiation from atoms"], correctIndex: 2, explanation: "Free electrons are dominant carriers of heat in metals." },
+        {id:"physics-T8-029", question: "Convection in a room with a radiator works because hot air…", options: ["rises (less dense) → cool air sinks → circulation", "falls (more dense) → cool air rises", "moves horizontally only", "conducts through air"], correctIndex: 0, explanation: "Warm air → less dense → buoyant → rises → cool air replaces it." },
+        {id:"physics-T8-030", question: "A loft (attic) insulated with fibre glass reduces heat loss mainly by reducing…", options: ["radiation only", "conduction and convection (trapped air pockets)", "only conduction", "conduction only via electrons"], correctIndex: 1, explanation: "Fibreglass traps air → reduces conduction; fibres prevent convection." },
+        {id:"physics-T8-031", question: "All objects above absolute zero emit thermal radiation mainly as…", options: ["X-rays", "infrared radiation", "microwaves", "visible light only"], correctIndex: 1, explanation: "Objects emit IR at typical temperatures; hotter objects emit more." },
+        {id:"physics-T8-032", question: "A black kettle and a shiny kettle hold the same hot water. The black kettle cools…", options: ["slower (better insulator)", "at the same rate", "faster (better emitter)", "only by conduction"], correctIndex: 2, explanation: "Dull black: higher emissivity → loses heat faster by radiation." },
+        {id:"physics-T8-033", question: "Solar water heaters use panels that are…", options: ["white and shiny", "dull and black", "transparent and reflective", "always silvered"], correctIndex: 1, explanation: "Dull black → high absorptivity for solar radiation." },
+        {id:"physics-T8-034", question: "Land and sea breezes arise mainly due to…", options: ["tidal effects", "different rates of heating/cooling of land vs sea → convection", "different altitudes", "ocean density changes"], correctIndex: 1, explanation: "Land heats/cools faster → daytime sea breeze; night land breeze." },
+        {id:"physics-T8-035", question: "Heat flow rate (conduction) increases when temperature difference…", options: ["decreases", "increases", "stays the same", "becomes zero"], correctIndex: 1, explanation: "Rate ∝ ΔT (temperature gradient)." },
+        {id:"physics-T8-036", question: "The vacuum in a thermos flask prevents…", options: ["radiation only", "conduction and convection (but not radiation)", "all heat transfer completely", "only convection"], correctIndex: 1, explanation: "Vacuum has no particles → no conduction or convection; silvering reduces radiation." },
+        {id:"physics-T8-037", question: "A window on a cold day: the inner surface feels cold. This is mainly because…", options: ["radiation from wall", "conduction through glass carries heat away from indoor air", "air pressure is low", "convection goes upward not downward"], correctIndex: 1, explanation: "Glass conducts heat from warm side to cold side." },
+        {id:"physics-T8-038", question: "Wearing multiple thin layers in cold weather works because…", options: ["each layer absorbs infrared", "trapped air between layers is a poor conductor", "cotton is a metal conductor", "layers increase weight"], correctIndex: 1, explanation: "Insulating air gaps slow conduction loss." },
+        {id:"physics-T8-039", question: "Radiation rate from a hot surface increases with…", options: ["surface area and surface temperature (both)", "only surface area", "only temperature", "only colour of surroundings"], correctIndex: 0, explanation: "Higher T and larger A both increase radiation." },
+        {id:"physics-T8-040", question: "Greenhouse effect: which gas absorbs IR radiation from Earth's surface?", options: ["nitrogen", "oxygen", "carbon dioxide and water vapour", "argon"], correctIndex: 2, explanation: "CO₂ and H₂O are greenhouse gases; they absorb and re-emit IR." },
+        {id:"physics-T8-041", question: "A cooking pot with a copper base and plastic handle is designed for…", options: ["high conduction everywhere", "good conduction in base (copper), poor in handle (plastic)", "decoration only", "reducing convection"], correctIndex: 1, explanation: "Copper conducts heat to food; plastic insulates handle." },
+        {id:"physics-T8-042", question: "Thermal equilibrium between two bodies means…", options: ["they have the same mass", "net heat flow between them is zero (same T)", "they have the same volume", "all energy is radiated"], correctIndex: 1, explanation: "Equal temperatures → no net energy transfer." },
+        {id:"physics-T8-043", question: "A thermometer reaches correct temperature when it is in…", options: ["mechanical equilibrium", "chemical equilibrium", "thermal equilibrium with the measured object", "electrical equilibrium"], correctIndex: 2, explanation: "Thermometer reading stabilises when T_thermometer = T_object." },
+        {id:"physics-T8-044", question: "Fire-fighters' suits are shiny to…", options: ["absorb maximum radiation", "reflect IR radiation and reduce absorption", "increase thermal conduction", "reduce convection"], correctIndex: 1, explanation: "Shiny surface → low absorptivity → reflects IR from flames." },
+        {id:"physics-T8-045", question: "Double glazing reduces heat loss by having…", options: ["two layers of gas only", "a sealed air/gas gap that reduces conduction and prevents convection", "silvered outer glass", "vacuum between panes"], correctIndex: 1, explanation: "Sealed air layer provides thermal resistance." },
+        {id:"physics-T8-046", question: "Air is a poor conductor because…", options: ["it contains nitrogen", "gas molecules are far apart and collide infrequently", "it is transparent", "it has no electrons"], correctIndex: 1, explanation: "Large molecular spacing → poor energy transfer by conduction." },
+        {id:"physics-T8-047", question: "Why does stirring hot soup make it cool faster?", options: ["conduction increases", "convection increases (more mixing of hot liquid with cooler air)", "radiation increases", "latent heat is released"], correctIndex: 1, explanation: "Stirring creates convective mixing, increasing heat loss to surroundings." },
+        {id:"physics-T8-048", question: "Energy from the Sun reaches Earth mainly by…", options: ["conduction", "convection", "radiation", "all three equally"], correctIndex: 2, explanation: "Vacuum of space: only radiation possible." },
+        {id:"physics-T8-049", question: "Which order represents the speeds of conduction in materials from fastest to slowest?", options: ["metal > non-metal > gas", "gas > liquid > metal", "non-metal > metal > gas", "all same speed"], correctIndex: 0, explanation: "Metals (free electrons + lattice) > non-metals (lattice only) > gases (sparse collisions)." },
+        {id:"physics-T8-050", question: "A house with poorly insulated walls loses heat mainly by…", options: ["radiation through walls", "conduction through walls and convection from surface to cold outside air", "evaporation only", "only radiation from roof"], correctIndex: 1, explanation: "Walls: conduction through material + convective surface losses." },
+],
         trueFalse: [
           { statement: "Radiation requires particles to travel.", correct: false, explain: "EM radiation travels in vacuum." },
           { statement: "Convection cannot occur in solids.", correct: true, explain: "No bulk flow." },
@@ -74,7 +123,13 @@
           { statement: "Radiation from a heater is mainly infrared.", correct: true, explain: "IR dominates." },
           { statement: "Conduction transfers heat by bulk movement.", correct: false, explain: "That’s convection." },
           { statement: "Black surfaces reflect IR strongly.", correct: false, explain: "Black absorbs strongly." },
-        ],
+        
+        { statement: "Metals are good conductors mainly due to free electrons.", correct: true, explain: "Free electrons rapidly transfer kinetic energy through the metal lattice." },
+        { statement: "Convection can occur in solids.", correct: false, explain: "Convection requires fluid flow; solids conduct but cannot convect." },
+        { statement: "A dull black surface emits more infrared than a shiny surface at the same temperature.", correct: true, explain: "Higher emissivity → more radiation." },
+        { statement: "The vacuum in a thermos flask prevents all heat transfer.", correct: false, explain: "Vacuum stops conduction and convection but not radiation (silvering reduces that)." },
+        { statement: "Land breezes occur during the day when land heats faster than sea.", correct: false, explain: "Sea breeze blows from sea to land during day; land breeze at night when land cools faster." },
+],
       
     });
 })();

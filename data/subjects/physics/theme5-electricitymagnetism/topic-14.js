@@ -20,7 +20,17 @@
             "Use correct fuse rating; avoid overloading sockets; intact insulation.",
             "Earthing + double insulation reduce risk."
           ]},
-        ],
+        
+        { title: "Practical electricity: safety and calculations",
+          points: [
+            "**Formulae**: \\(P=VI\\), \\(E=VIt\\), \\(I=P/V\\), \\(R=V^2/P\\). Cost = energy (kWh) × unit price.",
+            "**Plug wiring**: Live (Brown, left), Neutral (Blue, right), Earth (Green-Yellow, top). Fuse in LIVE wire.",
+            "**Fuse**: melts if I > rated value. Choose just above operating I. Earth: fault → big I → fuse blows.",
+            "**Safety**: earthing of metal casings, double insulation, RCDs, correct fuse ratings, no damaged insulation.",
+            "**Hazards**: damaged insulation, overloaded cables/sockets, damp conditions, using wrong fuse rating."
+          ]
+        },
+],
         flashcards: [
           { front: "Electrical power", back: "P = VI" },
           { front: "Electrical energy", back: "E = Pt" },
@@ -34,7 +44,21 @@
           { front: "Power in resistor", back: "P=I²R" },
           { front: "Why transmit at high voltage", back: "lower current for same power → less I²R loss" },
           { front: "kWh meaning", back: "energy used by 1 kW device for 1 hour" },
-        ],
+        
+        { front: "Electrical energy formula", back: "\\(E = VIt = Pt\\)" },
+        { front: "Cost calculation", back: "Energy in kWh × price per kWh" },
+        { front: "Fuse wire melts when…", back: "Current exceeds fuse rating → melts the wire → breaks circuit" },
+        { front: "Fuse in which wire?", back: "Live wire (so circuit is fully broken when fuse blows)" },
+        { front: "Earth wire purpose", back: "Fault current path → fuse blows before user gets shock" },
+        { front: "UK/SG plug colours", back: "Live: Brown, Neutral: Blue, Earth: Green-Yellow" },
+        { front: "Double insulation", back: "Two layers of insulation → no earth wire needed" },
+        { front: "RCD / circuit breaker advantage over fuse", back: "Can be reset; faster response; detects smaller fault currents" },
+        { front: "Operating current from power rating", back: "I = P/V" },
+        { front: "Correct fuse rating rule", back: "Choose fuse rating just above normal operating current" },
+        { front: "Switch always in which wire?", back: "Live wire — so appliance is dead when switch open" },
+        { front: "Overloading danger", back: "Too many appliances → excessive current → cables overheat → fire" },
+        { front: "1 kWh = ?", back: "3.6 × 10⁶ J = 3.6 MJ" },
+],
         quiz: [
           {id:"physics-T14-001", question: "Electrical power equals…", options: ["VI", "V/I", "I/V", "F/A"], correctIndex: 0, explanation: "P=VI." },
           {id:"physics-T14-002", question: "Energy used by 2 kW heater for 3 h is…", options: ["6 kWh", "1.5 kWh", "5 kWh", "0.67 kWh"], correctIndex: 0, explanation: "2×3=6 kWh." },
@@ -62,7 +86,32 @@
           {id:"physics-T14-024", question: "Power loss in a distribution line of resistance r carrying current I is…", options: ["Ir", "I²r", "V²r", "I/r"], correctIndex: 1, explanation: "Heating loss P = I²R for the line." },
           {id:"physics-T14-025", question: "A 100 W lamp left on for 10 h uses energy…", options: ["0.1 kWh", "1 kWh", "10 kWh", "1000 kWh"], correctIndex: 1, explanation: "E = Pt = 0.1 kW×10 h = 1 kWh." },
           {id:"physics-T14-026", question: "Which is a unit of electrical energy (billable)?", options: ["kW", "A", "kWh", "Ω"], correctIndex: 2, explanation: "kWh is energy; kW is power." },
-        ],
+        
+        {id:"physics-T14-027", question: "Electrical energy used by a 2 kW kettle in 5 minutes is…", options: ["10 kJ", "600 kJ", "10 000 J", "600 J"], correctIndex: 1, explanation: "E=Pt=2000×300=600 000 J=600 kJ." },
+        {id:"physics-T14-028", question: "Cost of running a 1500 W heater for 4 hours at $0.25/kWh is…", options: ["$0.375", "$1.50", "$1.50", "$6.00"], correctIndex: 1, explanation: "Energy=1.5 kW×4h=6 kWh; cost=6×0.25=$1.50." },
+        {id:"physics-T14-029", question: "A fuse 'blows' when current exceeds a rated value because…", options: ["voltage drops", "current melts the thin fuse wire", "resistance becomes infinite first", "it is magnetic"], correctIndex: 1, explanation: "Fuse wire has low melting point; excess current melts it, breaking circuit." },
+        {id:"physics-T14-030", question: "A fuse is always fitted in the…", options: ["neutral wire", "earth wire", "live wire", "between neutral and earth"], correctIndex: 2, explanation: "Fuse in live wire: breaks circuit before dangerous current reaches appliance." },
+        {id:"physics-T14-031", question: "Earth wire in a plug serves to…", options: ["carry normal current", "provide path for fault current if casing becomes live → blows fuse", "reduce voltage", "prevent short circuits only"], correctIndex: 1, explanation: "If live wire touches metal casing: large current → earth → fuse blows." },
+        {id:"physics-T14-032", question: "Which is the correct colour coding for UK/Singapore mains plug wires?", options: ["live: brown, neutral: blue, earth: green-yellow", "live: blue, neutral: brown, earth: red", "live: green, neutral: red, earth: blue", "live: yellow, neutral: green, earth: brown"], correctIndex: 0, explanation: "Standard: Live=Brown, Neutral=Blue, Earth=Green-Yellow." },
+        {id:"physics-T14-033", question: "Double insulation means…", options: ["two fuses are used", "appliance has two layers of insulating material — no earth wire needed", "the cord is doubled", "uses two separate earths"], correctIndex: 1, explanation: "Double-insulated appliances (like hair dryers) don't need an earth wire." },
+        {id:"physics-T14-034", question: "A residual current device (RCD) / circuit breaker trips when…", options: ["voltage is too high", "a small difference in live/neutral current is detected (indicating earth fault)", "temperature is high", "frequency changes"], correctIndex: 1, explanation: "RCD detects fault currents much smaller than fuse rating → faster protection." },
+        {id:"physics-T14-035", question: "Overloading a socket is dangerous because…", options: ["it weakens magnetic field", "too many appliances draw too much current → cables heat → fire risk", "voltage increases dangerously", "fuses get more sensitive"], correctIndex: 1, explanation: "Excessive current → cable resistance heating → fire." },
+        {id:"physics-T14-036", question: "Damp conditions increase electrocution risk because…", options: ["water is magnetic", "water (especially with impurities) is a conductor → lower body resistance", "water insulates better", "water reduces voltage"], correctIndex: 1, explanation: "Damp reduces insulation resistance → current can pass through body." },
+        {id:"physics-T14-037", question: "P = VI. A 230 V appliance draws 2 A. Power is…", options: ["115 W", "228 W", "232 W", "460 W"], correctIndex: 3, explanation: "P=230×2=460 W." },
+        {id:"physics-T14-038", question: "A 2 kW (rated at 230 V) heater. Operating current is…", options: ["0.87 A", "4.6 A", "8.7 A", "46 A"], correctIndex: 2, explanation: "I=P/V=2000/230≈8.7 A." },
+        {id:"physics-T14-039", question: "The correct fuse rating for the heater in Q14-038 (≈8.7 A) is…", options: ["3 A", "5 A", "10 A or 13 A (next rating above 8.7 A)", "1 A"], correctIndex: 2, explanation: "Fuse must be rated just above operating current: 10 A or 13 A." },
+        {id:"physics-T14-040", question: "Switches must be fitted to the live wire because…", options: ["it is thicker", "if switch is in neutral, the appliance is at live potential even when 'off'", "it has lower resistance", "neutral carries no voltage"], correctIndex: 1, explanation: "Switch in live wire cuts power completely when open." },
+        {id:"physics-T14-041", question: "Electrical energy E = VIt. For a 12 V battery delivering 0.5 A for 2 hours, total energy is…", options: ["12 J", "1200 J", "43 200 J", "12 000 J"], correctIndex: 2, explanation: "t=2×3600=7200 s; E=12×0.5×7200=43 200 J." },
+        {id:"physics-T14-042", question: "Damaged cable insulation is a hazard because…", options: ["it makes appliance heavier", "bare live wire can touch casing or person → shock/fire", "it reduces power", "it affects frequency"], correctIndex: 1, explanation: "Exposed conductor → contact → shock or short circuit." },
+        {id:"physics-T14-043", question: "A 60 W lamp runs 8 hours/day for 30 days. Energy used in kWh is…", options: ["1.44 kWh", "14.4 kWh", "0.48 kWh", "144 kWh"], correctIndex: 1, explanation: "E=0.06 kW×8×30=14.4 kWh." },
+        {id:"physics-T14-044", question: "In the 3-pin plug, the longest pin is the…", options: ["live pin", "neutral pin", "earth pin", "fuse holder"], correctIndex: 2, explanation: "Earth pin is longest — enters socket first to earth before live/neutral connect." },
+        {id:"physics-T14-045", question: "Cables carrying higher current should have…", options: ["thinner wires to save material", "thicker wires to reduce resistance and heating", "more insulation but thinner core", "smaller cross-section"], correctIndex: 1, explanation: "Higher I → more heating in thin wire; thick wire reduces R and heating." },
+        {id:"physics-T14-046", question: "An electric oven rated 3 kW at 230 V. Its operating resistance is…", options: ["≈ 17.6 Ω", "≈ 176 Ω", "≈ 1760 Ω", "≈ 690 Ω"], correctIndex: 0, explanation: "R=V²/P=230²/3000=52900/3000≈17.6 Ω." },
+        {id:"physics-T14-047", question: "Why are heating elements made of high-resistance materials like nichrome?", options: ["cheaper", "high resistance converts more electrical energy to heat", "lower melting point", "safer at high voltages"], correctIndex: 1, explanation: "P=I²R; high R → more power as heat for same current." },
+        {id:"physics-T14-048", question: "The neutral wire in a mains circuit is at approximately…", options: ["230 V", "50 V", "0 V (earthed at substation)", "alternating between +V and −V"], correctIndex: 2, explanation: "Neutral is connected to earth at supply substation → ≈0 V." },
+        {id:"physics-T14-049", question: "A circuit breaker has an advantage over a fuse because it…", options: ["melts more easily", "can be reset without replacing", "carries less current", "works only for AC"], correctIndex: 1, explanation: "Circuit breaker: electromagnetic/thermal trip → can reset." },
+        {id:"physics-T14-050", question: "Energy unit 1 kWh equals…", options: ["1000 J", "3600 J", "3.6 MJ", "1 MJ"], correctIndex: 2, explanation: "1 kWh = 1000 W × 3600 s = 3 600 000 J = 3.6 MJ." },
+],
         trueFalse: [
           { statement: "Fuse is put in live wire.", correct: true, explain: "Cuts off live supply on fault." },
           { statement: "Earth wire carries current during normal operation.", correct: false, explain: "It carries current only during faults." },
@@ -74,7 +123,13 @@
           { statement: "Neutral wire is always live.", correct: false, explain: "Neutral is near 0 V but can be dangerous if wiring faulty." },
           { statement: "A fuse has very low melting point wire.", correct: true, explain: "So it melts under excess current." },
           { statement: "E = Pt.", correct: true, explain: "Energy = power × time." },
-        ],
+        
+        { statement: "The fuse in a plug is connected in the live wire.", correct: true, explain: "Fuse in live wire breaks circuit completely when blown." },
+        { statement: "Double-insulated appliances require an earth wire.", correct: false, explain: "Double insulation provides two layers of protection — no earth wire needed." },
+        { statement: "A circuit breaker can be reset after tripping, unlike a fuse.", correct: true, explain: "Fuses must be replaced; circuit breakers can be reset." },
+        { statement: "The neutral wire is at 230 V.", correct: false, explain: "Neutral is at approximately 0 V (earthed at supply substation)." },
+        { statement: "Running a 2 kW heater for 3 hours uses 6 kWh of electrical energy.", correct: true, explain: "E = P×t = 2 kW × 3 h = 6 kWh." },
+],
       
     });
 })();

@@ -172,9 +172,9 @@ function main() {
     return;
   }
 
-  // const files = collectTopicFiles(SUBJECTS_ROOT);
-  const fileRegex = /^topic(?!-).*\.js$/i;
-  const files = collectTopicFiles(SUBJECTS_ROOT, fileRegex);
+  const files = collectTopicFiles(SUBJECTS_ROOT);
+  // const fileRegex = /^topic(?!-).*\.js$/i;
+  // const files = collectTopicFiles(SUBJECTS_ROOT, fileRegex);
   let touched = 0;
   let addedTotal = 0;
 

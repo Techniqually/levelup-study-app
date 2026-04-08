@@ -20,7 +20,17 @@
             "In parallel, adding a branch decreases total R → increases total current from source.",
             "Power in component \(P = VI = I^2 R = V^2/R\\) (as needed)."
           ]},
-        ],
+        
+        { title: "Series and parallel circuit rules",
+          points: [
+            "**Series**: same I everywhere. \\(V_{total}=V_1+V_2+\\cdots\\). \\(R_T=R_1+R_2+\\cdots\\).",
+            "**Parallel**: same V across each branch. \\(I_{total}=I_1+I_2+\\cdots\\). \\(\\frac{1}{R_T}=\\sum\\frac{1}{R_i}\\).",
+            "**Potential divider**: \\(V_{out}=V_s\\times\\frac{R_2}{R_1+R_2}\\). LDR (light↑→R↓), NTC thermistor (T↑→R↓).",
+            "**Kirchhoff at junction**: \\(\\sum I_{in} = \\sum I_{out}\\) (charge conservation).",
+            "**Meters**: ammeter in series (low R); voltmeter in parallel (high R). Power: P=VI=I²R=V²/R."
+          ]
+        },
+],
         flashcards: [
           { front: "Series current", back: "same through all components" },
           { front: "Parallel p.d.", back: "same across each branch" },
@@ -34,7 +44,21 @@
           { front: "Adding branch in parallel effect on total current", back: "increases total current" },
           { front: "Power formula", back: "P=VI" },
           { front: "Fuse purpose", back: "melts to break circuit if current too high" },
-        ],
+        
+        { front: "Series resistors total R", back: "\\(R_T = R_1 + R_2 + \\cdots\\)" },
+        { front: "Parallel resistors total R", back: "\\(\\frac{1}{R_T} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\cdots\\)" },
+        { front: "Potential divider formula", back: "\\(V_{out} = V_{supply}\\times\\frac{R_2}{R_1+R_2}\\)" },
+        { front: "LDR behaviour", back: "Resistance decreases as light intensity increases" },
+        { front: "NTC thermistor behaviour", back: "Resistance decreases as temperature increases" },
+        { front: "Ammeter connection", back: "Series; needs very low resistance (≈0 Ω)" },
+        { front: "Voltmeter connection", back: "Parallel; needs very high resistance (≈∞)" },
+        { front: "Series circuit: one break", back: "Whole circuit fails" },
+        { front: "Parallel circuit: one branch breaks", back: "Other branches continue working" },
+        { front: "Higher R in series gets…", back: "Higher voltage across it (same current)" },
+        { front: "Power formula P=I²R", back: "For current through a resistor" },
+        { front: "Adding parallel branches effect", back: "Decreases total R; increases total current from source" },
+        { front: "LED emits light when…", back: "Current flows in forward bias direction" },
+],
         quiz: [
           {id:"physics-T13-001", question: "In series circuit, current is…", options: ["different in each", "same everywhere", "zero", "infinite"], correctIndex: 1, explanation: "Series current same." },
           {id:"physics-T13-002", question: "In parallel circuit, p.d. across branches is…", options: ["same", "different", "zero", "double"], correctIndex: 0, explanation: "Parallel shares same p.d." },
@@ -62,7 +86,32 @@
           {id:"physics-T13-024", question: "Kirchhoff’s junction idea: at a node, total current in equals…", options: ["zero always", "total current out", "twice the smallest branch current", "voltage"], correctIndex: 1, explanation: "Charge conservation ⇒ sum in = sum out." },
           {id:"physics-T13-025", question: "A 12 V, 24 W lamp operating normally draws current…", options: ["0.5 A", "2 A", "12 A", "288 A"], correctIndex: 1, explanation: "I = P/V = 24/12 = 2 A." },
           {id:"physics-T13-026", question: "A voltmeter reads 12 V across a resistor carrying 3.0 A. The resistance is…", options: ["4 Ω", "9 Ω", "36 Ω", "0.25 Ω"], correctIndex: 0, explanation: "R = V/I = 12/3 = 4 Ω." },
-        ],
+        
+        {id:"physics-T13-027", question: "Two 6 Ω resistors in series. Total resistance is…", options: ["3 Ω", "6 Ω", "12 Ω", "36 Ω"], correctIndex: 2, explanation: "Series: R_T=R₁+R₂=6+6=12 Ω." },
+        {id:"physics-T13-028", question: "Two 6 Ω resistors in parallel. Total resistance is…", options: ["3 Ω", "6 Ω", "12 Ω", "1 Ω"], correctIndex: 0, explanation: "1/R_T=1/6+1/6=2/6 → R_T=3 Ω." },
+        {id:"physics-T13-029", question: "A 3 Ω and 6 Ω resistor in parallel. Total resistance is…", options: ["9 Ω", "4.5 Ω", "2 Ω", "0.5 Ω"], correctIndex: 2, explanation: "1/R=1/3+1/6=2/6+1/6=3/6=½ → R=2 Ω." },
+        {id:"physics-T13-030", question: "In a series circuit with 12 V and two equal resistors (4 Ω each), current is…", options: ["0.67 A", "1.5 A", "3 A", "6 A"], correctIndex: 1, explanation: "R_T=8 Ω; I=V/R=12/8=1.5 A." },
+        {id:"physics-T13-031", question: "In the above series circuit (Q13-030), p.d. across each 4 Ω resistor is…", options: ["12 V", "6 V", "3 V", "1.5 V"], correctIndex: 1, explanation: "V=IR=1.5×4=6 V (each gets half the total p.d.)." },
+        {id:"physics-T13-032", question: "An LDR's resistance changes with…", options: ["temperature", "light intensity (decreases in bright light)", "pressure", "current only"], correctIndex: 1, explanation: "Light-dependent resistor: higher light → lower resistance." },
+        {id:"physics-T13-033", question: "An NTC thermistor's resistance changes with…", options: ["light", "temperature (decreases as temperature increases)", "voltage only", "magnetic field"], correctIndex: 1, explanation: "Negative temperature coefficient: higher T → lower R." },
+        {id:"physics-T13-034", question: "In a potential divider with two resistors R₁ and R₂ (in series from 9 V), voltage across R₂ is…", options: ["9 V always", "9V × R₂/(R₁+R₂)", "9V × R₁/(R₁+R₂)", "depends on current only"], correctIndex: 1, explanation: "Potential divider: V₂ = V_supply × R₂/(R₁+R₂)." },
+        {id:"physics-T13-035", question: "In a parallel circuit, if one branch fails (open circuit), the others…", options: ["also fail", "continue working", "draw less current", "double their current"], correctIndex: 1, explanation: "Parallel branches are independent; others continue normally." },
+        {id:"physics-T13-036", question: "In a series circuit, if one component fails (open circuit)…", options: ["others still work", "whole circuit fails", "only adjacent components fail", "power increases"], correctIndex: 1, explanation: "Series: one break → whole circuit breaks." },
+        {id:"physics-T13-037", question: "An ammeter has very low resistance so that it…", options: ["breaks the circuit", "does not significantly alter the circuit current it is measuring", "increases voltage", "acts as a fuse"], correctIndex: 1, explanation: "Ideal ammeter R≈0; inserting it in series doesn't change I." },
+        {id:"physics-T13-038", question: "A voltmeter has very high resistance so that it…", options: ["carries all the current", "takes almost no current from the branch being measured", "heats up less", "works only in DC"], correctIndex: 1, explanation: "Ideal voltmeter R≈∞; negligible current drawn → doesn't disturb circuit." },
+        {id:"physics-T13-039", question: "In a parallel circuit with 12 V, branch 1 has 4 Ω, branch 2 has 6 Ω. Total current from source is…", options: ["2 A", "3 A", "5 A", "7 A"], correctIndex: 2, explanation: "I₁=12/4=3 A; I₂=12/6=2 A; I_total=3+2=5 A." },
+        {id:"physics-T13-040", question: "Adding more branches in parallel to a circuit…", options: ["decreases total current from source", "increases total current from source", "does not change total current", "doubles the e.m.f."], correctIndex: 1, explanation: "More branches → lower total R → higher I from source." },
+        {id:"physics-T13-041", question: "A potential divider with R₁=2kΩ and R₂=8kΩ from 10V. Output voltage across R₂ is…", options: ["2 V", "4 V", "8 V", "10 V"], correctIndex: 2, explanation: "V₂=10×8/(2+8)=8 V." },
+        {id:"physics-T13-042", question: "As an LDR gets brighter, resistance drops. In a potential divider, the output voltage across the LDR…", options: ["increases", "decreases", "stays the same", "becomes zero immediately"], correctIndex: 1, explanation: "V_LDR ∝ R_LDR (divider); R drops → V_LDR drops." },
+        {id:"physics-T13-043", question: "Power dissipated in a 10 Ω resistor with 2 A current is…", options: ["5 W", "20 W", "40 W", "0.2 W"], correctIndex: 2, explanation: "P=I²R=4×10=40 W." },
+        {id:"physics-T13-044", question: "Kirchhoff's current law (syllabus level): at a junction, total current in = total current out. This is based on…", options: ["energy conservation", "charge conservation", "momentum conservation", "mass conservation"], correctIndex: 1, explanation: "Charge neither created nor destroyed at a junction." },
+        {id:"physics-T13-045", question: "In a series circuit, the component with the highest resistance has…", options: ["lowest voltage across it", "highest voltage across it", "same voltage as others", "zero current"], correctIndex: 1, explanation: "V=IR; same I in series → higher R → higher V." },
+        {id:"physics-T13-046", question: "Total effective resistance of 3 resistors (2 Ω, 3 Ω, 6 Ω) in parallel is…", options: ["11 Ω", "1 Ω", "3 Ω", "0.5 Ω"], correctIndex: 1, explanation: "1/R=1/2+1/3+1/6=3/6+2/6+1/6=1 → R=1 Ω." },
+        {id:"physics-T13-047", question: "A variable resistor (rheostat) is connected in a circuit to…", options: ["measure current", "measure voltage", "control/vary the current", "switch circuit on/off only"], correctIndex: 2, explanation: "Variable resistor changes R → controls I." },
+        {id:"physics-T13-048", question: "An NTC thermistor used as input transducer in a potential divider: as temperature rises, the output voltage across the thermistor…", options: ["increases", "decreases", "stays constant", "oscillates"], correctIndex: 1, explanation: "NTC: higher T → lower R → lower V across thermistor in divider." },
+        {id:"physics-T13-049", question: "In a circuit, two batteries of 3 V and 5 V are connected in series (same polarity). Total e.m.f. is…", options: ["2 V", "4 V", "8 V", "15 V"], correctIndex: 2, explanation: "Series same polarity: total e.m.f.=3+5=8 V." },
+        {id:"physics-T13-050", question: "An LED (light-emitting diode) emits light when…", options: ["current passes in reverse bias", "current passes in forward bias", "voltage is zero", "temperature is high only"], correctIndex: 1, explanation: "LED conducts (and emits light) in forward bias." },
+],
         trueFalse: [
           { statement: "Current splits in parallel circuits.", correct: true, explain: "Branches share current." },
           { statement: "Voltage splits in series circuits.", correct: true, explain: "p.d. shared across components." },
@@ -74,7 +123,13 @@
           { statement: "If a series circuit breaks, all components stop working.", correct: true, explain: "Open circuit." },
           { statement: "Parallel circuits allow independent control of branches.", correct: true, explain: "Each branch is separate path." },
           { statement: "Short circuit has very high resistance.", correct: false, explain: "It has very low resistance." },
-        ],
+        
+        { statement: "In a parallel circuit, all branches have the same current.", correct: false, explain: "Parallel: same voltage, different currents (depending on resistance of each branch)." },
+        { statement: "Adding resistors in series increases total resistance.", correct: true, explain: "R_T = R₁+R₂+... always greater than any individual resistor." },
+        { statement: "An NTC thermistor's resistance decreases as temperature increases.", correct: true, explain: "NTC = Negative Temperature Coefficient." },
+        { statement: "Ammeters are connected in parallel with components.", correct: false, explain: "Ammeters are in series; voltmeters are in parallel." },
+        { statement: "In a potential divider, a larger R₂ gives a larger output voltage across R₂.", correct: true, explain: "V₂ = V_s × R₂/(R₁+R₂); larger R₂ → larger fraction → larger V₂." },
+],
       
     });
 })();

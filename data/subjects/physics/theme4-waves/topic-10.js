@@ -20,7 +20,17 @@
             "UV: sterilisation/fluorescence; X-rays: imaging; gamma: cancer treatment/sterilisation.",
             "**Ionising**: UV, X, gamma (can damage cells/DNA)."
           ]},
-        ],
+        
+        { title: "EM spectrum: wavelengths, frequencies and applications",
+          points: [
+            "Order (increasing f, decreasing λ): radio > microwave > IR > visible > UV > X-ray > gamma.",
+            "All EM: transverse, c=3×10⁸ m/s in vacuum, no medium needed.",
+            "**Ionising** (UV, X, γ): break bonds, damage DNA → cancer risk with overexposure.",
+            "**Non-ionising** (radio, micro, IR, visible): primarily thermal (heating) risk at high intensity.",
+            "Key applications: micro (phones/ovens/sat TV), IR (remotes/thermal), UV (sterilise/security), X (medical/security), γ (cancer treatment/sterilise food)."
+          ]
+        },
+],
         flashcards: [
           { front: "Speed of EM in vacuum", back: "3.0×10⁸ m/s" },
           { front: "Spectrum order (low f → high f)", back: "radio, micro, IR, visible, UV, X, gamma" },
@@ -34,7 +44,21 @@
           { front: "Non-ionising examples", back: "radio, microwaves, IR, visible" },
           { front: "c=fλ", back: "wave equation for EM in vacuum" },
           { front: "Higher f means…", back: "shorter λ; higher energy" },
-        ],
+        
+        { front: "Speed of all EM waves in vacuum", back: "\\(c = 3\\times10^8\\) m/s" },
+        { front: "EM spectrum order (low to high f)", back: "Radio → Microwave → IR → Visible → UV → X-ray → Gamma" },
+        { front: "Radio waves uses", back: "Broadcasting (radio/TV), astronomy, RFID tags" },
+        { front: "Microwave uses", back: "Mobile phones, microwave ovens, satellite TV" },
+        { front: "Infrared uses", back: "Remote controls, thermal imaging, intruder alarms" },
+        { front: "UV uses", back: "Sunbeds, bank note detection, water sterilisation" },
+        { front: "X-ray uses", back: "Medical radiology, security screening, industrial defect detection" },
+        { front: "Gamma ray uses", back: "Cancer treatment, food sterilisation, medical tracers" },
+        { front: "Ionising EM waves", back: "UV, X-rays, gamma rays — can break chemical bonds/damage DNA" },
+        { front: "Non-ionising EM waves", back: "Radio, microwave, IR, visible — heating effect at high intensity" },
+        { front: "Mobile phone / satellite TV waves", back: "Microwaves" },
+        { front: "Ozone layer absorbs", back: "Ultraviolet (UV) radiation from Sun" },
+        { front: "All EM waves are…", back: "Transverse; travel at 3×10⁸ m/s in vacuum; no medium needed" },
+],
         quiz: [
           {id:"physics-T10-001", question: "All EM waves travel in vacuum at…", options: ["340 m/s", "3×10⁸ m/s", "9.8 m/s²", "depends on colour"], correctIndex: 1, explanation: "Speed of light c." },
           {id:"physics-T10-002", question: "Correct spectrum order (low f to high f)", options: ["gamma→radio", "radio→gamma", "IR→radio→UV", "visible→radio→X"], correctIndex: 1, explanation: "Radio to gamma." },
@@ -61,7 +85,33 @@
           {id:"physics-T10-023", question: "A TV remote often uses… to send signals.", options: ["gamma rays", "infrared", "X-rays", "ultrasound"], correctIndex: 1, explanation: "Common remotes use IR LEDs." },
           {id:"physics-T10-024", question: "Sterilising equipment with penetrating radiation in hospitals often uses…", options: ["alpha particles", "beta particles", "gamma rays", "radio waves"], correctIndex: 2, explanation: "Gamma is highly penetrating and used for sterilisation (with precautions)." },
           {id:"physics-T10-025", question: "Moving from infrared → visible → ultraviolet in the spectrum, frequency…", options: ["decreases", "stays the same", "increases", "becomes zero"], correctIndex: 2, explanation: "That direction is toward higher f (shorter λ)." },
-        ],
+        
+        {id:"physics-T10-026", question: "All electromagnetic waves travel at approximately…", options: ["340 m/s", "3×10⁵ m/s", "3×10⁸ m/s", "3×10¹¹ m/s"], correctIndex: 2, explanation: "Speed of light in vacuum ≈ 3×10⁸ m/s." },
+        {id:"physics-T10-027", question: "Which EM wave has the longest wavelength?", options: ["X-rays", "visible light", "microwaves", "radio waves"], correctIndex: 3, explanation: "Radio waves have longest wavelength (up to hundreds of metres)." },
+        {id:"physics-T10-028", question: "Which EM wave has the highest frequency?", options: ["radio waves", "infrared", "visible light", "gamma rays"], correctIndex: 3, explanation: "Gamma rays: shortest wavelength → highest frequency." },
+        {id:"physics-T10-029", question: "All electromagnetic waves are…", options: ["longitudinal", "transverse", "mechanical", "require a medium"], correctIndex: 1, explanation: "All EM waves are transverse." },
+        {id:"physics-T10-030", question: "Infrared radiation is used in remote controls because…", options: ["it is invisible to humans and passes through air easily", "it ionises electronics", "it reflects from mirrors only", "it travels faster than light"], correctIndex: 0, explanation: "IR: not visible, penetrates air, absorbed/reflected as needed." },
+        {id:"physics-T10-031", question: "Microwave ovens work because microwaves…", options: ["ionise food molecules", "cause water molecules in food to vibrate and heat up", "reflect off food", "create static electricity"], correctIndex: 1, explanation: "Microwaves are absorbed by water molecules → heating." },
+        {id:"physics-T10-032", question: "UV radiation is used in bank note authentication because…", options: ["UV destroys the ink", "certain inks fluoresce under UV", "UV makes paper transparent", "UV ionises water in notes"], correctIndex: 1, explanation: "Security markings fluoresce (glow) under UV." },
+        {id:"physics-T10-033", question: "X-rays are used in medical imaging because…", options: ["they are transverse", "they penetrate soft tissue but are absorbed by dense structures (bone)", "they cannot ionise tissue", "they travel at audio frequencies"], correctIndex: 1, explanation: "Differential absorption creates shadow images." },
+        {id:"physics-T10-034", question: "Gamma rays can treat cancer because…", options: ["they ionise and kill rapidly dividing cells", "they heat tumours only", "they are non-ionising", "they are absorbed only by healthy tissue"], correctIndex: 0, explanation: "High-energy gamma ionises DNA in cancer cells." },
+        {id:"physics-T10-035", question: "Ozone layer protects Earth from…", options: ["radio waves", "infrared", "ultraviolet radiation", "visible light"], correctIndex: 2, explanation: "Ozone absorbs harmful UV from Sun." },
+        {id:"physics-T10-036", question: "Thermal imaging cameras detect…", options: ["visible light", "radio waves", "infrared radiation emitted by warm objects", "X-rays"], correctIndex: 2, explanation: "All warm objects emit IR; cameras detect this." },
+        {id:"physics-T10-037", question: "Mobile phone signals use…", options: ["visible light", "X-rays", "microwaves", "gamma rays"], correctIndex: 2, explanation: "Mobile communications use microwave frequencies." },
+        {id:"physics-T10-038", question: "Satellite television signals travel as…", options: ["sound waves", "microwaves between satellite and dish", "visible light", "radio waves in cables"], correctIndex: 1, explanation: "Satellite TV uses microwave transmission." },
+        {id:"physics-T10-039", question: "Which EM radiation is used for sterilising food (killing bacteria without heating)?", options: ["infrared", "visible light", "gamma rays", "radio waves"], correctIndex: 2, explanation: "Gamma rays: high ionising power kills bacteria." },
+        {id:"physics-T10-040", question: "Increasing exposure to X-rays primarily raises risk of…", options: ["hearing loss", "cancer (ionising damage to DNA)", "colour blindness", "reduced heart rate"], correctIndex: 1, explanation: "Ionising radiation damages DNA → cancer risk." },
+        {id:"physics-T10-041", question: "Correct order of EM spectrum from LOWEST to HIGHEST frequency:", options: ["radio → gamma → visible → X-ray → UV", "radio → microwave → infrared → visible → UV → X-ray → gamma", "gamma → X-ray → UV → visible → IR → micro → radio", "visible → radio → gamma → UV → IR"], correctIndex: 1, explanation: "Order: radio, microwave, IR, visible, UV, X-ray, gamma (increasing frequency)." },
+        {id:"physics-T10-042", question: "Optical fibres use visible light for telecommunications because…", options: ["light is slow in glass", "light can carry large amounts of information as pulses at high speed", "light absorbs easily", "glass reflects radio waves"], correctIndex: 1, explanation: "High-frequency light: high bandwidth for data." },
+        {id:"physics-T10-043", question: "RFID tags use… to read information without contact.", options: ["visible light", "radio waves", "gamma rays", "microwaves only"], correctIndex: 1, explanation: "RFID: radio frequency identification." },
+        {id:"physics-T10-044", question: "Sunburn is caused by…", options: ["infrared radiation", "visible light", "ultraviolet radiation", "X-rays"], correctIndex: 2, explanation: "UV radiation damages skin cells." },
+        {id:"physics-T10-045", question: "Which EM wave has wavelength of about 10⁻¹⁰ m (0.1 nm)?", options: ["radio waves", "microwaves", "visible light", "X-rays"], correctIndex: 3, explanation: "X-ray wavelengths are ≈ 0.01–10 nm (10⁻¹¹–10⁻⁸ m)." },
+        {id:"physics-T10-046", question: "Non-ionising radiation (e.g. microwaves, radio waves) mainly causes harm by…", options: ["no harm ever", "breaking DNA directly", "heating body tissue (thermal effect)", "creating electrical currents in bones"], correctIndex: 2, explanation: "Non-ionising EM: primarily thermal (heating) risk at high intensities." },
+        {id:"physics-T10-047", question: "Infrared intruder alarms detect…", options: ["visible light from torch", "change in IR emission when a warm body moves across the sensor", "microwave reflections", "sound"], correctIndex: 1, explanation: "PIR sensor detects IR from human body warmth." },
+        {id:"physics-T10-048", question: "Water disinfection using UV works because…", options: ["UV heats water to boiling", "UV ionises and destroys DNA of microorganisms", "UV makes water alkaline", "UV dissolves bacteria"], correctIndex: 1, explanation: "UV radiation damages DNA of bacteria/viruses." },
+        {id:"physics-T10-049", question: "Gamma rays from a radioactive source differ from X-rays in that gamma rays…", options: ["have longer wavelength", "are transverse only", "originate from nuclear transitions not electron transitions", "travel slower"], correctIndex: 2, explanation: "Gamma: nuclear origin; X-rays: electronic (electron deceleration/transition)." },
+        {id:"physics-T10-050", question: "The energy of an EM wave photon increases as…", options: ["wavelength increases", "frequency decreases", "frequency increases", "speed increases"], correctIndex: 2, explanation: "E=hf; energy proportional to frequency." },
+],
         trueFalse: [
           { statement: "EM waves are transverse.", correct: true, explain: "Fields oscillate perpendicular to travel." },
           { statement: "All EM waves have the same speed in vacuum.", correct: true, explain: "All travel at c." },
@@ -73,7 +123,13 @@
           { statement: "Red light has higher frequency than blue.", correct: false, explain: "Red is lower frequency." },
           { statement: "Infrared is used in remote controls.", correct: true, explain: "IR LEDs send signals." },
           { statement: "EM waves carry energy.", correct: true, explain: "Energy transfer via radiation." },
-        ],
+        
+        { statement: "All EM waves travel at the same speed in a vacuum.", correct: true, explain: "c = 3×10⁸ m/s for all EM waves in vacuum." },
+        { statement: "Gamma rays have a longer wavelength than radio waves.", correct: false, explain: "Gamma rays have the SHORTEST wavelength (highest frequency)." },
+        { statement: "Microwaves are ionising radiation.", correct: false, explain: "Microwaves are non-ionising; only UV, X-rays, and gamma rays are ionising." },
+        { statement: "UV radiation from the Sun can cause skin cancer.", correct: true, explain: "UV ionises and damages DNA in skin cells." },
+        { statement: "X-rays are used in airport security screening.", correct: true, explain: "X-rays penetrate bags/clothing but are blocked by dense metals." },
+],
       
     });
 })();

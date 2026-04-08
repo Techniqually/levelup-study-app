@@ -38,7 +38,16 @@
             "Graph skills: gradient = Δy/Δx; area under v–t = displacement; gradient of v–t = acceleration."
           ],
         },
-      ],
+      
+        { title: "Full prefix table & orders of magnitude",
+          points: [
+            "T (\\(10^{12}\\)), G (\\(10^9\\)), M (\\(10^6\\)), k (\\(10^3\\)), d (\\(10^{-1}\\)), c (\\(10^{-2}\\)), m (\\(10^{-3}\\)), μ (\\(10^{-6}\\)), n (\\(10^{-9}\\)).",
+            "Sizes: proton \\(\\sim10^{-15}\\) m; atom \\(\\sim10^{-10}\\) m; cell \\(\\sim10^{-5}\\) m; human \\(\\sim1.8\\) m; Earth radius \\(\\sim6.4\\times10^6\\) m.",
+            "SI base quantities: mass (kg), length (m), time (s), current (A), temperature (K), amount of substance (mol).",
+            "Vector addition: for two perpendicular vectors \\(A\\) and \\(B\\): \\(R=\\sqrt{A^2+B^2}\\), \\(\\theta=\\arctan(B/A)\\) from A."
+          ]
+        },
+],
       flashcards: [
         { front: "SI unit of force?", back: "newton (N) = kg·m/s²" },
         { front: "Difference: speed vs velocity", back: "Speed scalar; velocity vector (direction)." },
@@ -52,7 +61,21 @@
         { front: "Density formula", back: "ρ = m/V" },
         { front: "Prefix μ", back: "micro = 10⁻⁶" },
         { front: "Why repeat measurements?", back: "Reduce random error; increase reliability." },
-      ],
+      
+        { front: "nano (n) value", back: "\\(10^{-9}\\)" },
+        { front: "giga (G) value", back: "\\(10^9\\)" },
+        { front: "tera (T) value", back: "\\(10^{12}\\)" },
+        { front: "centi (c) value", back: "\\(10^{-2}\\)" },
+        { front: "deci (d) value", back: "\\(10^{-1}\\)" },
+        { front: "Amount of substance SI unit", back: "mol (mole)" },
+        { front: "Hydrogen atom diameter", back: "\\(\\sim10^{-10}\\) m" },
+        { front: "Proton diameter", back: "\\(\\sim10^{-15}\\) m" },
+        { front: "Earth radius", back: "\\(\\sim6.4\\times10^6\\) m" },
+        { front: "Head-to-tail vector addition result", back: "Arrow from tail of 1st to head of last" },
+        { front: "Micrometer resolution", back: "0.001 mm = \\(10^{-6}\\) m" },
+        { front: "Accuracy vs precision", back: "Accuracy: close to true value; Precision: consistent readings" },
+        { front: "Pythagoras for perpendicular vectors", back: "\\(R=\\sqrt{A^2+B^2}\\)" },
+],
       quiz: [
         {id:"physics-T1-001", question: "Which is a vector quantity?", options: ["speed", "mass", "force", "temperature"], correctIndex: 2, explanation: "Force has magnitude and direction." },
         {id:"physics-T1-002", question: "Unit of energy is…", options: ["N", "J", "W", "Pa"], correctIndex: 1, explanation: "Joule (J)." },
@@ -80,7 +103,32 @@
         {id:"physics-T1-024", question: "Convert 90 km/h to m/s.", options: ["25 m/s", "50 m/s", "36 m/s", "15 m/s"], correctIndex: 0, explanation: "90×1000/3600 = 25 m/s." },
         {id:"physics-T1-025", question: "Which pair are both vectors?", options: ["speed and distance", "mass and weight", "displacement and acceleration", "energy and power"], correctIndex: 2, explanation: "Displacement and acceleration have magnitude and direction." },
         {id:"physics-T1-026", question: "Micrometer reads 0.01 mm divisions. Two readings used in a difference can give length uncertainty about…", options: ["±0.01 mm", "±0.02 mm", "±0.005 mm", "±1 mm"], correctIndex: 1, explanation: "Each end contributes ~one division; combined uncertainty is often ~±2× least count for a difference." },
-      ],
+      
+        {id:"physics-T1-027", question: "The prefix 'nano' (n) represents…", options: ["\\(10^{-6}\\)", "\\(10^{-9}\\)", "\\(10^{-12}\\)", "\\(10^{-3}\\)"], correctIndex: 1, explanation: "nano = \\(10^{-9}\\)." },
+        {id:"physics-T1-028", question: "The prefix 'giga' (G) represents…", options: ["\\(10^3\\)", "\\(10^6\\)", "\\(10^9\\)", "\\(10^{12}\\)"], correctIndex: 2, explanation: "giga = \\(10^9\\)." },
+        {id:"physics-T1-029", question: "The prefix 'tera' (T) represents…", options: ["\\(10^9\\)", "\\(10^{10}\\)", "\\(10^{12}\\)", "\\(10^{15}\\)"], correctIndex: 2, explanation: "tera = \\(10^{12}\\)." },
+        {id:"physics-T1-030", question: "The prefix 'centi' (c) represents…", options: ["\\(10^{-1}\\)", "\\(10^{-2}\\)", "\\(10^{-3}\\)", "\\(10^{-6}\\)"], correctIndex: 1, explanation: "centi = \\(10^{-2}\\)." },
+        {id:"physics-T1-031", question: "The prefix 'deci' (d) represents…", options: ["\\(10^{-3}\\)", "\\(10^{-2}\\)", "\\(10^{-1}\\)", "\\(10^{1}\\)"], correctIndex: 2, explanation: "deci = \\(10^{-1}\\) (one tenth)." },
+        {id:"physics-T1-032", question: "The diameter of a hydrogen atom is approximately…", options: ["\\(10^{-6}\\) m", "\\(10^{-8}\\) m", "\\(10^{-10}\\) m", "\\(10^{-15}\\) m"], correctIndex: 2, explanation: "Atomic diameter ≈ \\(10^{-10}\\) m (1 ångström)." },
+        {id:"physics-T1-033", question: "A proton diameter is approximately…", options: ["\\(10^{-10}\\) m", "\\(10^{-12}\\) m", "\\(10^{-15}\\) m", "\\(10^{-18}\\) m"], correctIndex: 2, explanation: "Proton ≈ \\(10^{-15}\\) m (femtometre scale)." },
+        {id:"physics-T1-034", question: "Earth's radius is approximately…", options: ["\\(6.4\\times10^3\\) m", "\\(6.4\\times10^5\\) m", "\\(6.4\\times10^6\\) m", "\\(6.4\\times10^9\\) m"], correctIndex: 2, explanation: "≈ 6400 km = \\(6.4\\times10^6\\) m." },
+        {id:"physics-T1-035", question: "A typical human cell diameter is approximately…", options: ["\\(10^{-10}\\) m", "\\(10^{-7}\\) m", "\\(10^{-5}\\) m", "\\(10^{-2}\\) m"], correctIndex: 2, explanation: "≈ 10–20 μm = \\(\\sim10^{-5}\\) m." },
+        {id:"physics-T1-036", question: "The SI base quantity 'amount of substance' has unit…", options: ["g", "kg", "mol", "atom"], correctIndex: 2, explanation: "mol (mole) is the SI unit." },
+        {id:"physics-T1-037", question: "Which is an SI base quantity?", options: ["force", "velocity", "electric current", "pressure"], correctIndex: 2, explanation: "Current (A) is one of the seven SI base quantities." },
+        {id:"physics-T1-038", question: "45 nm expressed in metres is…", options: ["\\(4.5\\times10^{-7}\\) m", "\\(4.5\\times10^{-8}\\) m", "\\(4.5\\times10^{-9}\\) m", "\\(4.5\\times10^{-10}\\) m"], correctIndex: 1, explanation: "45×\\(10^{-9}\\) = \\(4.5\\times10^{-8}\\) m." },
+        {id:"physics-T1-039", question: "3.2 GHz expressed in Hz is…", options: ["\\(3.2\\times10^6\\) Hz", "\\(3.2\\times10^7\\) Hz", "\\(3.2\\times10^9\\) Hz", "\\(3.2\\times10^{12}\\) Hz"], correctIndex: 2, explanation: "G = \\(10^9\\)." },
+        {id:"physics-T1-040", question: "Two vectors 3 N East and 4 N North are added. Resultant magnitude is…", options: ["1 N", "5 N", "7 N", "12 N"], correctIndex: 1, explanation: "Pythagoras: \\(\\sqrt{3^2+4^2}=5\\) N." },
+        {id:"physics-T1-041", question: "In the head-to-tail vector method, the resultant is drawn from…", options: ["head of first to head of second", "tail of first to head of second", "tail of first to tail of second", "head of first to tail of second"], correctIndex: 1, explanation: "Resultant = from start of 1st to tip of last." },
+        {id:"physics-T1-042", question: "Best instrument to measure the diameter of a wire accurately is…", options: ["metre rule", "vernier calipers", "micrometer screw gauge", "spring balance"], correctIndex: 2, explanation: "Micrometer gives 0.01 mm resolution for fine wires." },
+        {id:"physics-T1-043", question: "A vernier caliper typically reads to nearest…", options: ["0.1 cm", "0.01 cm", "0.001 cm", "1 cm"], correctIndex: 1, explanation: "Standard vernier: 0.01 cm (0.1 mm)." },
+        {id:"physics-T1-044", question: "Which instrument measures atmospheric pressure?", options: ["manometer", "barometer", "thermometer", "galvanometer"], correctIndex: 1, explanation: "Barometer." },
+        {id:"physics-T1-045", question: "Repeated measurements scatter around a mean. This dominant error is…", options: ["systematic", "random", "zero error", "parallax"], correctIndex: 1, explanation: "Scatter around mean → random error." },
+        {id:"physics-T1-046", question: "5.27 rounded to 2 significant figures is…", options: ["5.2", "5.3", "5.00", "5.27"], correctIndex: 1, explanation: "Third digit 7 rounds up second digit: 5.3." },
+        {id:"physics-T1-047", question: "Which quantity is always non-negative?", options: ["velocity", "displacement", "mass", "acceleration"], correctIndex: 2, explanation: "Mass has no direction and cannot be negative." },
+        {id:"physics-T1-048", question: "A measurement is accurate if it is close to…", options: ["the most common repeated value", "the true/accepted value", "any repeated value", "the median"], correctIndex: 1, explanation: "Accuracy = closeness to true value." },
+        {id:"physics-T1-049", question: "A car moves at 25 m/s East, then 25 m/s North. The change in velocity magnitude is…", options: ["0", "25 m/s", "\\(25\\sqrt{2}\\) m/s", "50 m/s"], correctIndex: 2, explanation: "\\(|\\Delta v|=\\sqrt{25^2+25^2}=25\\sqrt{2}\\approx35.4\\) m/s." },
+        {id:"physics-T1-050", question: "500 mA expressed in amperes is…", options: ["5000 A", "50 A", "0.5 A", "0.05 A"], correctIndex: 2, explanation: "milli = \\(10^{-3}\\): 500 mA = 0.5 A." },
+],
       trueFalse: [
         { statement: "Velocity is a scalar.", correct: false, explain: "Velocity includes direction." },
         { statement: "1 m/s² means velocity increases by 1 m/s every second.", correct: true, explain: "Definition of acceleration." },
@@ -92,6 +140,12 @@
         { statement: "For lengths measured between two marks, uncertainty may be ±1 mm.", correct: true, explain: "Two end readings contribute." },
         { statement: "Weight is measured in kilograms.", correct: false, explain: "Weight is a force in newtons." },
         { statement: "A vector can be represented by an arrow.", correct: true, explain: "Arrow shows magnitude and direction." },
-      ],
+      
+        { statement: "The prefix 'nano' means \\(10^{-6}\\).", correct: false, explain: "nano = \\(10^{-9}\\); micro (μ) = \\(10^{-6}\\)." },
+        { statement: "Amount of substance is an SI base quantity measured in mol.", correct: true, explain: "One of the seven SI base quantities." },
+        { statement: "A hydrogen atom has diameter ≈ \\(10^{-10}\\) m.", correct: true, explain: "Ångström scale." },
+        { statement: "Two perpendicular 3 N and 4 N vectors sum to 7 N.", correct: false, explain: "\\(\\sqrt{9+16}=5\\) N, not 7 N." },
+        { statement: "Precision means readings are close to the true value.", correct: false, explain: "Precision = reproducibility; accuracy = closeness to true value." },
+],
     });
 })();

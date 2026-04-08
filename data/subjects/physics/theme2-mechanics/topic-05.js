@@ -19,7 +19,17 @@
             "Lowering CoG and widening base increases stability.",
             "Finding CoG of lamina: suspend, draw plumb line; intersection is CoG."
           ]},
-        ],
+        
+        { title: "Moments and equilibrium calculations",
+          points: [
+            "Moment \\(\\tau = F\\times d_\\perp\\). Unit: N·m. For angled force: \\(\\tau = F l \\sin\\theta\\).",
+            "Principle of moments (equilibrium): \\(\\sum\\tau_{CW} = \\sum\\tau_{ACW}\\).",
+            "Full equilibrium: **both** \\(\\sum F=0\\) AND \\(\\sum\\tau=0\\) about any point.",
+            "Couple: two equal, opposite, parallel forces separated by d → pure torque = \\(F\\times d\\).",
+            "CoG: weight acts here. Stability: CoG low + wide base. Topples when vertical through CoG falls outside base."
+          ]
+        },
+],
         flashcards: [
           { front: "Moment formula", back: "τ = F × perpendicular distance" },
           { front: "Equilibrium conditions", back: "ΣF=0 and Σmoment=0" },
@@ -33,7 +43,21 @@
           { front: "Unit of moment", back: "N·m" },
           { front: "Door handle far from hinge helps because…", back: "larger d → larger moment" },
           { front: "If Σmoment ≠ 0, object…", back: "rotates / tends to rotate" },
-        ],
+        
+        { front: "Principle of moments formula", back: "Sum of CW moments = Sum of ACW moments (equilibrium)" },
+        { front: "Torque = ?", back: "\\(\\tau = F \\times d_\\perp\\) (force × perpendicular distance to pivot)" },
+        { front: "Couple magnitude", back: "\\(C = F \\times d\\) (one force × separation)" },
+        { front: "Stable equilibrium: CoG when displaced", back: "Rises → restoring torque → returns to equilibrium" },
+        { front: "Unstable equilibrium: CoG when displaced", back: "Falls → object moves further away from equilibrium" },
+        { front: "CoG of irregular lamina (experimental)", back: "Hang from two points; draw plumb lines; intersection = CoG" },
+        { front: "Force through pivot → moment is…", back: "Zero (zero perpendicular distance)" },
+        { front: "Angle-affected moment", back: "\\(\\tau = F\\cdot l\\cdot\\sin\\theta\\) where θ is angle between force and beam" },
+        { front: "CoG of L-shape", back: "May be outside the physical material (in empty space)" },
+        { front: "Two equilibrium conditions", back: "1) ΣF = 0; 2) Σmoments = 0 about any point" },
+        { front: "Stability improved by…", back: "Lowering CoG and/or widening base" },
+        { front: "Tightrope walker's pole purpose", back: "Lowers effective CoG; slows tilting" },
+        { front: "Unit of moment", back: "N·m (not joule, even though dimensions same)" },
+],
         quiz: [
           {id:"physics-T5-001", question: "Moment about pivot is…", options: ["F/d", "F×d⊥", "F×A", "m/V"], correctIndex: 1, explanation: "Torque = force × perpendicular distance." },
           {id:"physics-T5-002", question: "Unit of moment", options: ["N", "N/m", "N·m", "J"], correctIndex: 2, explanation: "N·m." },
@@ -61,7 +85,32 @@
           {id:"physics-T5-024", question: "Two children sit on a seesaw balanced horizontally. If one moves closer to the pivot, that side’s moment…", options: ["increases", "decreases", "stays same", "becomes infinite"], correctIndex: 1, explanation: "τ = F×d; smaller d → smaller moment." },
           {id:"physics-T5-025", question: "SI base units of moment (N·m) are equivalent to…", options: ["kg·m²·s⁻²", "kg·m·s⁻²", "kg·m·s⁻¹", "kg·m²·s⁻³"], correctIndex: 0, explanation: "N·m = (kg·m/s²)·m = kg·m²/s² = kg·m²·s⁻²." },
           {id:"physics-T5-026", question: "For equilibrium, ΣF = 0 is necessary but a body can still rotate if…", options: ["Σmoment ≠ 0", "mass is zero", "g is zero", "forces are balanced"], correctIndex: 0, explanation: "Need both ΣF=0 and Σmoment=0 for full equilibrium." },
-        ],
+        
+        {id:"physics-T5-027", question: "A beam 4 m long, pivoted at centre. 30 N at 1 m left, and force F at 1.5 m right for equilibrium. F equals…", options: ["20 N", "30 N", "45 N", "60 N"], correctIndex: 0, explanation: "CW=ACW: F×1.5=30×1 → F=20 N." },
+        {id:"physics-T5-028", question: "A uniform beam of weight 60 N has length 3 m. Supported at left end and at 2 m. Reaction at 2 m support is…", options: ["20 N", "30 N", "45 N", "60 N"], correctIndex: 2, explanation: "Taking moments about left end: R×2=60×1.5 → R=45 N." },
+        {id:"physics-T5-029", question: "A torque of 60 N·m is applied by a force of 20 N. The perpendicular distance is…", options: ["1.2 m", "2 m", "3 m", "4 m"], correctIndex: 2, explanation: "d=τ/F=60/20=3 m." },
+        {id:"physics-T5-030", question: "The CoG of a uniform rectangle is at its…", options: ["corner", "edge", "geometric centre", "base"], correctIndex: 2, explanation: "By symmetry, CoG at the intersection of diagonals." },
+        {id:"physics-T5-031", question: "A racing car has a low, wide build to…", options: ["reduce mass", "lower CoG and widen base → more stable", "reduce air pressure", "increase moment of inertia"], correctIndex: 1, explanation: "Lower CoG + wider base = greater stability." },
+        {id:"physics-T5-032", question: "A double-decker bus vs a sports car: which is more stable?", options: ["double-decker (always)", "sports car (lower CoG, wider base typically)", "same stability", "depends only on mass"], correctIndex: 1, explanation: "Lower CoG and wider wheelbase → more stable." },
+        {id:"physics-T5-033", question: "A child at 1.5 m left of pivot (30 N) balances an adult at 0.5 m right. Adult's weight is…", options: ["10 N", "30 N", "45 N", "90 N"], correctIndex: 3, explanation: "30×1.5=F×0.5 → F=90 N." },
+        {id:"physics-T5-034", question: "A see-saw is balanced. If the heavier person moves closer to the pivot…", options: ["see-saw stays balanced", "lighter end drops", "heavier end drops", "nothing happens"], correctIndex: 2, explanation: "Heavier person's moment decreases → lighter end has greater net moment → heavier end drops." },
+        {id:"physics-T5-035", question: "To find CoG of a flat irregular shape (lamina) experimentally, you should…", options: ["measure its width only", "hang it from two different points and draw plumb lines; CoG at intersection", "weigh it", "roll it on a table"], correctIndex: 1, explanation: "Standard practical method." },
+        {id:"physics-T5-036", question: "For stable equilibrium, when the object is tilted slightly…", options: ["CoG lowers — restoring torque brings it back", "CoG rises — restoring torque brings it back", "CoG stays level — no torque", "it keeps tilting"], correctIndex: 1, explanation: "In stable equilibrium, tilting raises CoG → restoring moment." },
+        {id:"physics-T5-037", question: "A wrench of length 0.4 m applies a force of 50 N perpendicular. Torque on bolt is…", options: ["12.5 N·m", "20 N·m", "50 N·m", "125 N·m"], correctIndex: 1, explanation: "τ=Fd=50×0.4=20 N·m." },
+        {id:"physics-T5-038", question: "A force acting through the pivot creates a moment of…", options: ["maximum", "minimum", "zero", "equal to Fd only"], correctIndex: 2, explanation: "Perpendicular distance = 0 → moment = 0." },
+        {id:"physics-T5-039", question: "An L-shaped uniform object: its CoG is…", options: ["at the corner", "inside the material", "possibly outside the physical material", "at the geometric centre of the bounding rectangle"], correctIndex: 2, explanation: "For L-shapes, CoG can fall in the empty region (outside material)." },
+        {id:"physics-T5-040", question: "A 10 N force at 45° to a beam acts at 0.6 m from pivot. Perpendicular distance is…", options: ["0.3 m", "0.424 m", "0.6 m", "0.849 m"], correctIndex: 1, explanation: "d⊥=0.6×sin45°=0.6×0.707≈0.424 m." },
+        {id:"physics-T5-041", question: "Moment of 10 N force at 45° to beam, distance 0.6 m from pivot, is…", options: ["3 N·m", "4.24 N·m", "6 N·m", "8.49 N·m"], correctIndex: 1, explanation: "τ=F×d⊥=10×0.424≈4.24 N·m." },
+        {id:"physics-T5-042", question: "Principle of moments states: for equilibrium…", options: ["sum of forces = 0 only", "sum of clockwise moments = sum of anticlockwise moments", "only gravity matters", "only one moment pair needed"], correctIndex: 1, explanation: "Principle of moments." },
+        {id:"physics-T5-043", question: "A tall thin vase is less stable than a short wide bowl because…", options: ["vase has more mass", "vase has higher CoG and narrower base", "bowl has no CoG", "vase is colourful"], correctIndex: 1, explanation: "Higher CoG + narrower base = less stable." },
+        {id:"physics-T5-044", question: "A tightrope walker uses a long pole to…", options: ["increase speed", "lower effective CoG and slow correction swings", "reduce weight", "create a couple"], correctIndex: 1, explanation: "Long pole lowers CoG and increases moment of inertia (harder to tip)." },
+        {id:"physics-T5-045", question: "In equilibrium: total upward force = total downward force, AND…", options: ["total moment about any point = maximum", "total moment about any point = zero", "only vertical forces matter", "speed is constant"], correctIndex: 1, explanation: "Force equilibrium alone is not enough; moment equilibrium also required." },
+        {id:"physics-T5-046", question: "A uniform 5 m plank (weight 200 N) rests on two supports at each end. Reaction at each support is…", options: ["100 N", "200 N", "400 N", "50 N"], correctIndex: 0, explanation: "Symmetric: each support = 200/2 = 100 N." },
+        {id:"physics-T5-047", question: "Which increases the stability of a loaded truck?", options: ["placing load high up", "placing load low and centred", "reducing the wheel base", "removing the wheels"], correctIndex: 1, explanation: "Lower CoG + no shift outside base → more stable." },
+        {id:"physics-T5-048", question: "A couple (two 8 N forces 0.3 m apart) has moment of…", options: ["0.8 N·m", "1.2 N·m", "2.4 N·m", "4.8 N·m"], correctIndex: 2, explanation: "Couple = F×d=8×0.3=2.4 N·m." },
+        {id:"physics-T5-049", question: "The SI unit of moment of force is…", options: ["N", "N/m", "N·m", "Pa"], correctIndex: 2, explanation: "Moment = force × distance = N·m." },
+        {id:"physics-T5-050", question: "A non-uniform rod of weight 80 N balances at 60 cm from left end. CoG is…", options: ["at 50 cm (centre)", "at 60 cm from left", "at 60 cm from right", "cannot be determined"], correctIndex: 1, explanation: "Balance point = CoG for a suspended object." },
+],
         trueFalse: [
           { statement: "Moment depends on perpendicular distance.", correct: true, explain: "τ=F×d⊥." },
           { statement: "For equilibrium, only ΣF=0 is needed.", correct: false, explain: "Must also have Σmoment=0." },
@@ -73,7 +122,13 @@
           { statement: "If weight’s line of action is within base, object will not topple.", correct: true, explain: "No toppling moment." },
           { statement: "CoG is always at geometric centre.", correct: false, explain: "Only for uniform symmetric objects." },
           { statement: "A door handle is far from hinge to increase turning effect.", correct: true, explain: "Larger moment arm." },
-        ],
+        
+        { statement: "For a body in equilibrium, the sum of moments about any point is zero.", correct: true, explain: "Equilibrium requires zero net moment about any axis." },
+        { statement: "The CoG of any object is always inside the object.", correct: false, explain: "For L-shapes or hollow objects, CoG can fall in empty space." },
+        { statement: "A couple produces only rotation, no net force.", correct: true, explain: "Forces cancel; turning effect remains." },
+        { statement: "Raising the CoG of a vehicle always increases its stability.", correct: false, explain: "Higher CoG → less stable (topples more easily)." },
+        { statement: "Force acting through the pivot has zero moment about that pivot.", correct: true, explain: "Perpendicular distance = 0 → moment = 0." },
+],
       
     });
 })();
