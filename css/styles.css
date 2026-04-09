@@ -936,9 +936,41 @@ body {
 }
 
 .modal-shop {
-  max-width: 420px;
-  max-height: 85vh;
+  max-width: 860px;
+  width: 95vw;
+  max-height: 90vh;
   overflow-y: auto;
+}
+
+.shop-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 32px;
+  align-items: start;
+}
+
+@media (min-width: 640px) {
+  .shop-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.shop-rewards-col {}
+
+.shop-coupons-col {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+@media (min-width: 640px) {
+  .shop-coupons-col {
+    border-top: none;
+    border-left: 1px solid var(--border);
+    padding-top: 0;
+    padding-left: 32px;
+    margin-top: 0;
+  }
 }
 
 .modal-report {
@@ -1010,6 +1042,14 @@ body {
   margin: 16px 0;
 }
 
+.shop-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
 .shop-sub {
   font-size: 0.9rem;
   margin: 0 0 10px;
@@ -1045,18 +1085,41 @@ body {
   flex-shrink: 0;
 }
 
+.coupon-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 880px) {
+  .coupon-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .coupon-card {
   background: var(--surface2);
   border: 1px solid var(--accent);
   border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  font-size: 0.9rem;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  position: relative;
 }
 
 .coupon-card strong {
   display: block;
   margin-bottom: 4px;
+  padding-right: 28px;
+}
+
+.coupon-num {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .coupon-xp,

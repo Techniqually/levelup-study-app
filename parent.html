@@ -253,6 +253,21 @@
           .join("");
       }
 
+      function recentCouponList(rows) {
+        const arr = Array.isArray(rows) ? rows : [];
+        if (!arr.length) return "<span class='chip'>none</span>";
+        return arr
+          .slice(0, 8)
+          .map((r) => {
+            const label = esc(r.reward_label || r.reward_id || "reward");
+            const code = esc(r.coupon_code || "-");
+            const date = fmt(r.purchased_at);
+            const claimed = r.claimed_at ? `Claimed ${fmt(r.claimed_at)}` : "Active";
+            return `<span class="chip">${label} · ${Number(r.xp_cost || 0)} XP · ${date} · ${esc(claimed)} · code ${code}</span>`;
+          })
+          .join("");
+      }
+
       function studentDetailBlocks(s) {
         return `
           <div class="actions-row">
@@ -299,6 +314,10 @@
             <div class="mini">
               <h4>Subjects</h4>
               <div class="chips">${subjectList(s.subject_stats)}</div>
+            </div>
+            <div class="mini">
+              <h4>Recent coupons (verification)</h4>
+              <div class="chips">${recentCouponList(s.recent_coupons)}</div>
             </div>
           </div>
         `;

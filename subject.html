@@ -158,15 +158,24 @@
       </div>
 
       <div class="modal modal-shop" id="panel-shop" hidden>
-        <h2>🛒 Rewards Shop</h2>
-        <p class="hint">Spend XP on rewards. Show the coupon to your parent to claim.</p>
-        <div id="shop-rewards-list"></div>
-        <hr class="shop-divider" />
-        <h3 class="shop-sub">My coupons</h3>
-        <div id="shop-coupons-list"></div>
-        <button type="button" class="btn primary" id="btn-close-shop">
-          Done
-        </button>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+          <h2 style="margin:0">🛒 Rewards Shop</h2>
+          <button type="button" class="btn primary" id="btn-close-shop">Done</button>
+        </div>
+        <div class="shop-toolbar">
+          <button type="button" class="btn" id="btn-shop-refresh">Refresh</button>
+          <span class="hint" id="shop-sync-status">Not synced yet.</span>
+        </div>
+        <p class="hint" style="margin-top:0">Spend XP on rewards. Show the coupon to your parent to claim.</p>
+        <div class="shop-layout">
+          <div class="shop-rewards-col">
+            <div id="shop-rewards-list"></div>
+          </div>
+          <div class="shop-coupons-col">
+            <h3 class="shop-sub" id="shop-coupons-heading">My coupons today</h3>
+            <div id="shop-coupons-list"></div>
+          </div>
+        </div>
       </div>
 
       <div class="modal modal-report" id="panel-report" hidden>
@@ -232,7 +241,7 @@
 
         window.SUBJECT_ID = subjectId;
         window.SUBJECT_TITLE = subjectTitle;
-        window.APP_VERSION = window.APP_VERSION || "2026-04-09-cooldown-fix-1";
+        window.APP_VERSION = window.APP_VERSION || "2026-04-09-shop-server-first-4";
         window.SUPABASE_PROJECT_CODE = window.SUPABASE_PROJECT_CODE || "study-app";
         const STUDENT_ID_KEY = "LEVELUP_STUDENT_ID";
         const STUDENT_NAME_KEY = "LEVELUP_STUDENT_NAME";

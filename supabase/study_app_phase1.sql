@@ -582,6 +582,191 @@ $$;
 revoke all on function public.study_purchase_reward_v2(text, text, text, text, text, text, int, int) from public;
 grant execute on function public.study_purchase_reward_v2(text, text, text, text, text, text, int, int) to anon, authenticated;
 
+create or replace function public.study_get_daily_counts(
+  p_project_code text,
+  p_student_id text,
+  p_device_id text default null
+) returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_project_id uuid;
+  v_profile_id uuid;
+  v_today date := (now() at time zone 'utc')::date;
+begin
+  select id into v_project_id from public.projects where code = p_project_code;
+  if v_project_id is null then
+    return jsonb_build_object('ok', false, 'error', 'project_not_found');
+  end if;
+
+  select p.id into v_profile_id
+  from public.profiles p
+  where p.project_id = v_project_id
+    and (
+      (coalesce(trim(p_student_id), '') <> '' and p.student_id = p_student_id)
+      or (coalesce(trim(coalesce(p_device_id, '')), '') <> '' and p.device_id = p_device_id)
+    )
+  limit 1;
+
+  if v_profile_id is null then
+    return jsonb_build_object('ok', true, 'date', v_today::text, 'counts', '[]'::jsonb);
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'date', v_today::text,
+    'counts', (
+      select coalesce(
+        jsonb_agg(jsonb_build_object('reward_id', dc.reward_id, 'count', dc.count)),
+        '[]'::jsonb
+      )
+      from public.study_daily_counters dc
+      where dc.project_id = v_project_id
+        and dc.profile_id = v_profile_id
+        and dc.day = v_today
+    )
+  );
+end;
+$$;
+
+revoke all on function public.study_get_daily_counts(text, text, text) from public;
+grant execute on function public.study_get_daily_counts(text, text, text) to anon, authenticated;
+
+create or replace function public.study_get_shop_snapshot(
+  p_project_code text,
+  p_student_id text,
+  p_device_id text default null
+) returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_project_id uuid;
+  v_profile_id uuid;
+  v_today date := (now() at time zone 'utc')::date;
+  v_counts jsonb := '[]'::jsonb;
+  v_coupons_today jsonb := '[]'::jsonb;
+  v_coupons_recent jsonb := '[]'::jsonb;
+  v_balance int := 0;
+begin
+  select id into v_project_id from public.projects where code = p_project_code;
+  if v_project_id is null then
+    return jsonb_build_object('ok', false, 'error', 'project_not_found');
+  end if;
+
+  select p.id into v_profile_id
+  from public.profiles p
+  where p.project_id = v_project_id
+    and (
+      (coalesce(trim(p_student_id), '') <> '' and p.student_id = p_student_id)
+      or (coalesce(trim(coalesce(p_device_id, '')), '') <> '' and p.device_id = p_device_id)
+    )
+  limit 1;
+
+  if v_profile_id is null then
+    return jsonb_build_object(
+      'ok', true,
+      'date', v_today::text,
+      'counts', '[]'::jsonb,
+      'coupons_today', '[]'::jsonb,
+      'coupons_recent', '[]'::jsonb,
+      'xp_balance', 0
+    );
+  end if;
+
+  select coalesce(sum(delta), 0) into v_balance
+  from public.study_xp_ledger
+  where project_id = v_project_id and profile_id = v_profile_id;
+
+  select coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'reward_id', dc.reward_id,
+        'count', dc.count
+      )
+      order by dc.reward_id
+    ),
+    '[]'::jsonb
+  )
+  into v_counts
+  from public.study_daily_counters dc
+  where dc.project_id = v_project_id
+    and dc.profile_id = v_profile_id
+    and dc.day = v_today;
+
+  select coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'purchase_id', rp.id,
+        'reward_id', rp.reward_id,
+        'reward_label', rp.reward_label,
+        'xp_cost', rp.xp_cost,
+        'coupon_code', rp.coupon_code,
+        'client_purchase_id', rp.client_purchase_id,
+        'purchased_at', rp.purchased_at,
+        'claimed_at', rp.claimed_at
+      )
+      order by rp.purchased_at desc
+    ),
+    '[]'::jsonb
+  )
+  into v_coupons_today
+  from public.study_reward_purchases rp
+  where rp.project_id = v_project_id
+    and rp.profile_id = v_profile_id
+    and (rp.purchased_at at time zone 'utc')::date = v_today;
+
+  select coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'purchase_id', z.id,
+        'reward_id', z.reward_id,
+        'reward_label', z.reward_label,
+        'xp_cost', z.xp_cost,
+        'coupon_code', z.coupon_code,
+        'client_purchase_id', z.client_purchase_id,
+        'purchased_at', z.purchased_at,
+        'claimed_at', z.claimed_at
+      )
+      order by z.purchased_at desc
+    ),
+    '[]'::jsonb
+  )
+  into v_coupons_recent
+  from (
+    select
+      rp.id,
+      rp.reward_id,
+      rp.reward_label,
+      rp.xp_cost,
+      rp.coupon_code,
+      rp.client_purchase_id,
+      rp.purchased_at,
+      rp.claimed_at
+    from public.study_reward_purchases rp
+    where rp.project_id = v_project_id
+      and rp.profile_id = v_profile_id
+    order by rp.purchased_at desc
+    limit 30
+  ) z;
+
+  return jsonb_build_object(
+    'ok', true,
+    'date', v_today::text,
+    'counts', v_counts,
+    'coupons_today', v_coupons_today,
+    'coupons_recent', v_coupons_recent,
+    'xp_balance', v_balance
+  );
+end;
+$$;
+
+revoke all on function public.study_get_shop_snapshot(text, text, text) from public;
+grant execute on function public.study_get_shop_snapshot(text, text, text) to anon, authenticated;
+
 create or replace function public.study_clear_profile_data(
   p_project_code text,
   p_student_id text default null,
@@ -736,7 +921,8 @@ begin
       coalesce(xa.xp_events, 0) as xp_events,
       coalesce(tsa.studied_topics, 0) as studied_topics,
       coalesce(tsa.last_activity, pr.created_at) as last_activity,
-      coalesce(rpa.purchases, 0) as purchases
+      coalesce(rpa.purchases, 0) as purchases,
+      coalesce(rpa.recent_coupons, '[]'::jsonb) as recent_coupons
     from public.profiles pr
     left join lateral (
       select
@@ -755,10 +941,31 @@ begin
         and ts.profile_id = pr.id
     ) tsa on true
     left join lateral (
-      select count(*) as purchases
-      from public.study_reward_purchases rp
-      where rp.project_id = pr.project_id
-        and rp.profile_id = pr.id
+      select
+        count(*) as purchases,
+        coalesce(
+          jsonb_agg(
+            jsonb_build_object(
+              'purchase_id', z.id,
+              'reward_id', z.reward_id,
+              'reward_label', z.reward_label,
+              'xp_cost', z.xp_cost,
+              'coupon_code', z.coupon_code,
+              'purchased_at', z.purchased_at,
+              'claimed_at', z.claimed_at
+            )
+            order by z.purchased_at desc
+          ),
+          '[]'::jsonb
+        ) as recent_coupons
+      from (
+        select rp.id, rp.reward_id, rp.reward_label, rp.xp_cost, rp.coupon_code, rp.purchased_at, rp.claimed_at
+        from public.study_reward_purchases rp
+        where rp.project_id = pr.project_id
+          and rp.profile_id = pr.id
+        order by rp.purchased_at desc
+        limit 10
+      ) z
     ) rpa on true
     where pr.project_id = v_project_id
   )
@@ -773,6 +980,7 @@ begin
         'xp_events', xp_events,
         'studied_topics', studied_topics,
         'purchases', purchases,
+        'recent_coupons', recent_coupons,
         'last_activity', last_activity
       )
       order by xp_balance desc, last_activity desc
@@ -840,7 +1048,8 @@ begin
       coalesce(xa.xp_last_7d, 0) as xp_last_7d,
       coalesce(xa.xp_events_last_7d, 0) as xp_events_last_7d,
       coalesce(tsa.last_activity, pr.created_at) as last_activity,
-      coalesce(rpa.purchases, 0) as purchases
+      coalesce(rpa.purchases, 0) as purchases,
+      coalesce(rpa.recent_coupons, '[]'::jsonb) as recent_coupons
     from public.profiles pr
     left join lateral (
       select
@@ -864,10 +1073,31 @@ begin
         and ts.profile_id = pr.id
     ) tsa on true
     left join lateral (
-      select count(*) as purchases
-      from public.study_reward_purchases rp
-      where rp.project_id = pr.project_id
-        and rp.profile_id = pr.id
+      select
+        count(*) as purchases,
+        coalesce(
+          jsonb_agg(
+            jsonb_build_object(
+              'purchase_id', z.id,
+              'reward_id', z.reward_id,
+              'reward_label', z.reward_label,
+              'xp_cost', z.xp_cost,
+              'coupon_code', z.coupon_code,
+              'purchased_at', z.purchased_at,
+              'claimed_at', z.claimed_at
+            )
+            order by z.purchased_at desc
+          ),
+          '[]'::jsonb
+        ) as recent_coupons
+      from (
+        select rp.id, rp.reward_id, rp.reward_label, rp.xp_cost, rp.coupon_code, rp.purchased_at, rp.claimed_at
+        from public.study_reward_purchases rp
+        where rp.project_id = pr.project_id
+          and rp.profile_id = pr.id
+        order by rp.purchased_at desc
+        limit 10
+      ) z
     ) rpa on true
     where pr.project_id = v_project_id
   ),
@@ -954,6 +1184,7 @@ begin
         'xp_last_7d', p.xp_last_7d,
         'xp_events_last_7d', p.xp_events_last_7d,
         'purchases', p.purchases,
+        'recent_coupons', p.recent_coupons,
         'last_activity', p.last_activity,
         'areas_overall', coalesce(ar.areas_overall, '[]'::jsonb),
         'areas_week', coalesce(ar.areas_week, '[]'::jsonb),

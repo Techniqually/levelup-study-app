@@ -23,7 +23,7 @@
 
   const QUIZ_PER_ROUND = 20;
   const BOSS_QUESTION_MS_MULT = 0.8;
-  const BOSS_XP = 800;
+  const BOSS_XP = 500;
   const STREAK_DAILY_XP_BASE = 4;
   const STATE_VERSION = 2;
   const XP_POLICY = window.LEVELUP_XP_POLICY || {};
@@ -97,6 +97,7 @@
   let route = { view: "home", topicId: null, tab: "cheat" };
   let quizSession = null;
   let flashSession = null;
+  let shopInFlight = false;
   let timeTracker = { topicId: null, tab: null, startedAt: 0 };
 
   // Small time-based XP to make Flashcards + Visuals contribute too.
@@ -148,6 +149,10 @@
         studentId: STUDENT_ID,
         studentName: STUDENT_NAME,
       },
+      serverDailyCounts: {},
+      serverCouponsToday: [],
+      shopCouponsLoaded: false,
+      shopLastSyncAt: 0,
       dailyChallenge: {
         date: "",
         answered: 0,
@@ -178,6 +183,12 @@
       studentId: STUDENT_ID,
       studentName: STUDENT_NAME,
     };
+    next.serverDailyCounts = next.serverDailyCounts || {};
+    next.serverCouponsToday = Array.isArray(next.serverCouponsToday)
+      ? next.serverCouponsToday
+      : [];
+    next.shopCouponsLoaded = !!next.shopCouponsLoaded;
+    next.shopLastSyncAt = Number(next.shopLastSyncAt || 0);
     next.dailyChallenge = {
       ...defaultState().dailyChallenge,
       ...(next.dailyChallenge || {}),
@@ -549,13 +560,18 @@
     return `${hours}h ${remMins}m`;
   }
 
-  function getServerPurchaseErrorMessage(reason) {
+  function getServerPurchaseErrorMessage(reason, payload) {
     const r = String(reason || "").toLowerCase();
     if (r.includes("daily_limit_reached")) {
       return "Daily reward limit reached for this item. Try again tomorrow.";
     }
     if (r.includes("insufficient_xp")) {
-      return "Not enough XP yet for this reward.";
+      const serverBalance = payload && Number(payload.balance);
+      const cost = payload && Number(payload.cost);
+      if (Number.isFinite(serverBalance) && Number.isFinite(cost)) {
+        return `Server XP balance is ${serverBalance}, reward costs ${cost}. Please wait a moment for sync and try again.`;
+      }
+      return "Server says XP is insufficient for this reward. Please wait a moment for sync and try again.";
     }
     if (r.includes("invalid_daily_max")) {
       return "Reward configuration issue. Please refresh and try again.";
@@ -648,11 +664,101 @@
 
   function getRewardPurchasesOnDate(couponId, isoDate) {
     const day = String(isoDate || getTodayIsoDate());
-    return (state.purchaseLedger || []).filter(
+    const localCount = (state.purchaseLedger || []).filter(
       (p) =>
         String(p.couponId || "") === String(couponId) &&
         String((p.date || "").slice(0, 10)) === day
     ).length;
+    const cache = state.serverDailyCounts || {};
+    const serverCount = Number(
+      (cache[String(couponId)] && cache[String(couponId)][day]) || 0
+    );
+    return Math.max(localCount, serverCount);
+  }
+
+  function applyServerDailyCounts(result) {
+    if (!result || !result.ok) return false;
+    const today = getTodayIsoDate();
+    if (String(result.date || "").slice(0, 10) !== today) return false;
+    const counts = Array.isArray(result.counts) ? result.counts : [];
+    let changed = false;
+    counts.forEach(({ reward_id, count }) => {
+      const serverCount = Number(count || 0);
+      if (!serverCount) return;
+      state.serverDailyCounts = state.serverDailyCounts || {};
+      const existing = Number(
+        (state.serverDailyCounts[reward_id] && state.serverDailyCounts[reward_id][today]) || 0
+      );
+      if (serverCount > existing) {
+        state.serverDailyCounts[reward_id] = state.serverDailyCounts[reward_id] || {};
+        state.serverDailyCounts[reward_id][today] = serverCount;
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
+  function applyShopSnapshot(snapshot) {
+    if (!snapshot || !snapshot.ok) return false;
+    const today = getTodayIsoDate();
+    let changed = false;
+    if (applyServerDailyCounts(snapshot)) changed = true;
+    const fromServer = Array.isArray(snapshot.coupons_today)
+      ? snapshot.coupons_today
+      : [];
+    const normalizedTodayCoupons = fromServer
+      .map((c) => ({
+        id: c.reward_id || "",
+        label: c.reward_label || "",
+        xp: Number(c.xp_cost || 0),
+        date: String((c.purchased_at || "").slice(0, 10)),
+        purchaseId: c.client_purchase_id || c.purchase_id || "",
+        couponCode: c.coupon_code || "",
+        purchasedAt: c.purchased_at || "",
+        claimedAt: c.claimed_at || null,
+      }))
+      .filter((c) => c.date === today);
+    const prev = JSON.stringify(state.serverCouponsToday || []);
+    const next = JSON.stringify(normalizedTodayCoupons);
+    if (prev !== next) {
+      state.serverCouponsToday = normalizedTodayCoupons;
+      changed = true;
+    }
+    if (!state.shopCouponsLoaded) {
+      state.shopCouponsLoaded = true;
+      changed = true;
+    }
+    if (Number.isFinite(Number(snapshot.xp_balance))) {
+      const serverXp = Number(snapshot.xp_balance);
+      if (serverXp !== Number(state.xp || 0)) {
+        state.xp = serverXp;
+        changed = true;
+      }
+    }
+    state.shopLastSyncAt = Date.now();
+    return changed;
+  }
+
+  function getShopCouponsForDisplay() {
+    const today = getTodayIsoDate();
+    if (state.shopCouponsLoaded) {
+      return state.serverCouponsToday.slice();
+    }
+    return (state.coupons || []).filter(
+      (c) => String((c.date || "").slice(0, 10)) === today
+    );
+  }
+
+  function formatCouponDateTime(dateStr, isoTs) {
+    const d = isoTs ? new Date(isoTs) : new Date(`${dateStr}T00:00:00Z`);
+    if (!d || Number.isNaN(d.getTime())) return escapeHtml(String(dateStr || ""));
+    const yyyy = d.getUTCFullYear();
+    const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const dd = String(d.getUTCDate()).padStart(2, "0");
+    const hh = String(d.getUTCHours()).padStart(2, "0");
+    const mi = String(d.getUTCMinutes()).padStart(2, "0");
+    const ss = String(d.getUTCSeconds()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss} UTC`;
   }
 
   function addXp(deltaXp, meta) {
@@ -3127,7 +3233,8 @@
     };
   }
 
-  function openShop() {
+  function openShop(triggerServerSync) {
+    const shouldSync = triggerServerSync !== false;
     const root = document.getElementById("modal-root");
     const panelExplain = document.getElementById("panel-explain");
     const panelSettings = document.getElementById("panel-settings");
@@ -3140,45 +3247,58 @@
     panelShop.hidden = false;
     root.hidden = false;
     root.setAttribute("aria-hidden", "false");
+
+    const syncStatus = document.getElementById("shop-sync-status");
+    const refreshBtn = document.getElementById("btn-shop-refresh");
+    if (refreshBtn) refreshBtn.disabled = shopInFlight;
+    if (syncStatus) {
+      syncStatus.textContent = state.shopLastSyncAt
+        ? `Synced ${new Date(state.shopLastSyncAt).toLocaleTimeString()}.`
+        : "Not synced yet.";
+    }
+
     const rewards = window.SHOP_REWARDS || [];
     const purchaseGate = canPurchaseReward();
     const list = document.getElementById("shop-rewards-list");
     list.innerHTML = rewards
-      .map(
-        (r) => {
-          const dailyMax = getRewardDailyMax(r);
-          const todayCount = getRewardPurchasesOnDate(r.id, getTodayIsoDate());
-          const dailyRemaining = Math.max(0, dailyMax - todayCount);
-          const cooldownMs = getPurchaseEffectiveCooldownMs(r.id, dailyMax, todayCount);
-          const cooldownHrs = Math.ceil(cooldownMs / (1000 * 60 * 60));
-          const disabled = state.xp < r.xp || cooldownMs > 0 || !purchaseGate.ok;
-          const disabledByDailyMax = dailyRemaining <= 0;
-          const reallyDisabled = disabled || disabledByDailyMax;
-          const title =
-            cooldownMs > 0
-              ? `Cooldown active (${cooldownHrs}h left)`
-              : disabledByDailyMax
-                ? `Daily max reached (${dailyMax}/day)`
+      .map((r) => {
+        const dailyMax = getRewardDailyMax(r);
+        const todayCount = getRewardPurchasesOnDate(r.id, getTodayIsoDate());
+        const dailyRemaining = Math.max(0, dailyMax - todayCount);
+        const cooldownMs = getPurchaseEffectiveCooldownMs(r.id, dailyMax, todayCount);
+        const cooldownHrs = Math.ceil(cooldownMs / (1000 * 60 * 60));
+        const disabled = state.xp < r.xp || cooldownMs > 0 || !purchaseGate.ok || shopInFlight;
+        const disabledByDailyMax = dailyRemaining <= 0;
+        const reallyDisabled = disabled || disabledByDailyMax;
+        const title =
+          cooldownMs > 0
+            ? `Cooldown active (${cooldownHrs}h left)`
+            : disabledByDailyMax
+              ? `Daily max reached (${dailyMax}/day)`
               : !purchaseGate.ok
                 ? "Need mixed study in last 24h (quiz + flash/game across 2 topics)"
-              : state.xp < r.xp
-                ? "Not enough XP"
-                : "Buy";
-          return `
-        <div class="shop-item">
-          <span class="shop-label">${escapeHtml(r.label)}</span>
-          <span class="shop-xp">${r.xp} XP · ${dailyRemaining}/${dailyMax} left today</span>
-          <button type="button" class="btn primary shop-buy" title="${escapeHtml(title)}" data-id="${escapeHtml(r.id)}" data-xp="${r.xp}" data-label="${escapeHtml(r.label)}" data-daily-max="${dailyMax}" ${reallyDisabled ? "disabled" : ""}>${
-            cooldownMs > 0
-              ? `Cooldown ${cooldownHrs}h`
-              : disabledByDailyMax
-                ? "Daily max reached"
+                : state.xp < r.xp
+                  ? "Not enough XP"
+                  : shopInFlight
+                    ? "Syncing..."
+                    : "Buy";
+        return `
+      <div class="shop-item">
+        <span class="shop-label">${escapeHtml(r.label)}</span>
+        <span class="shop-xp">${r.xp} XP · ${dailyRemaining}/${dailyMax} left today</span>
+        <button type="button" class="btn primary shop-buy" title="${escapeHtml(title)}" data-id="${escapeHtml(r.id)}" data-xp="${r.xp}" data-label="${escapeHtml(r.label)}" data-daily-max="${dailyMax}" ${reallyDisabled ? "disabled" : ""}>${
+          cooldownMs > 0
+            ? `Cooldown ${cooldownHrs}h`
+            : disabledByDailyMax
+              ? "Daily max reached"
+              : shopInFlight
+                ? "Syncing..."
                 : "Buy"
-          }</button>
-        </div>`;
-        }
-      )
+        }</button>
+      </div>`;
+      })
       .join("");
+
     if (!purchaseGate.ok) {
       const gateNote = document.createElement("p");
       gateNote.className = "hint";
@@ -3190,80 +3310,161 @@
         }, topics ${purchaseGate.cov.topicCount}).`;
       list.prepend(gateNote);
     }
+
     list.querySelectorAll(".shop-buy").forEach((btn) => {
       btn.onclick = async () => {
         const xp = Number(btn.dataset.xp);
         const label = btn.dataset.label;
         const id = btn.dataset.id;
         const dailyMax = Number(btn.dataset.dailyMax || DEFAULT_REWARD_DAILY_MAX);
+        if (!(progressStore && progressStore.hasClient())) {
+          alert("Internet connection required to buy rewards.");
+          return;
+        }
+        if (shopInFlight) return;
+        shopInFlight = true;
+        if (syncStatus) syncStatus.textContent = "Syncing balance and limits...";
+        openShop();
+        let snapshot = await progressStore.fetchShopSnapshot();
+        if (applyShopSnapshot(snapshot)) saveState();
         const todayCount = getRewardPurchasesOnDate(id, getTodayIsoDate());
-        const effectiveCooldownMs = getPurchaseEffectiveCooldownMs(
-          id,
-          dailyMax,
-          todayCount
-        );
-        if (state.xp < xp) return;
-        if (effectiveCooldownMs > 0) return;
-        if (!canPurchaseReward().ok) return;
-        if (todayCount >= dailyMax) return;
+        const effectiveCooldownMs = getPurchaseEffectiveCooldownMs(id, dailyMax, todayCount);
+        if (state.xp < xp || effectiveCooldownMs > 0 || !canPurchaseReward().ok || todayCount >= dailyMax) {
+          shopInFlight = false;
+          openShop();
+          return;
+        }
         let rpcCouponCode = null;
-        if (progressStore && progressStore.hasClient()) {
-          const rpcResult = await progressStore.purchaseRewardServer({
+        let rpcResult = await progressStore.purchaseRewardServer({
+          id,
+          label,
+          xp,
+          dailyMax,
+        });
+        if (
+          rpcResult &&
+          !rpcResult.ok &&
+          String(rpcResult.error || "").toLowerCase().includes("insufficient_xp") &&
+          state.xp >= xp
+        ) {
+          const serverBalance = Number(rpcResult.balance);
+          const localBalance = Number(state.xp || 0);
+          if (
+            Number.isFinite(serverBalance) &&
+            Number.isFinite(localBalance) &&
+            localBalance > serverBalance
+          ) {
+            const gap = Math.max(0, localBalance - serverBalance);
+            if (gap > 0) {
+              await progressStore.syncXpEntry({
+                ts: Date.now(),
+                subjectId: SUBJECT_ID,
+                topicId: "general",
+                theme: "",
+                tab: "quiz",
+                activityType: "sync_reconcile",
+                sourceId: `reconcile:${Date.now()}`,
+                reason: "sync_reconcile",
+                deltaXp: gap,
+                clientEventId: `reconcile-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              });
+            }
+          } else {
+            await progressStore.migrateFromLocalState(portableState(), {
+              force: true,
+            });
+          }
+          rpcResult = await progressStore.purchaseRewardServer({
             id,
             label,
             xp,
             dailyMax,
           });
-          if (!rpcResult || !rpcResult.ok) {
-            const reason = (rpcResult && rpcResult.error) || "purchase_blocked";
-            alert(getServerPurchaseErrorMessage(reason));
+        }
+        if (!rpcResult || !rpcResult.ok) {
+          const reason = (rpcResult && rpcResult.error) || "purchase_blocked";
+          if (String(reason).toLowerCase().includes("daily_limit_reached")) {
+            snapshot = await progressStore.fetchShopSnapshot();
+            if (applyShopSnapshot(snapshot)) saveState();
+            shopInFlight = false;
+            openShop();
             return;
           }
-          rpcCouponCode = rpcResult.coupon_code || null;
+          shopInFlight = false;
+          alert(getServerPurchaseErrorMessage(reason, rpcResult));
+          openShop();
+          return;
         }
+        rpcCouponCode = rpcResult.coupon_code || null;
         const purchase = recordPurchaseEntry({ id, label, xp });
         spendXp(xp, {
           activityType: "purchase",
           sourceId: id,
           reason: "reward_purchase",
         });
-        state.coupons = state.coupons || [];
         state.purchaseLedger.push(purchase);
-        if (progressStore && progressStore.hasClient()) {
-          progressStore.recordPurchase({
-            ...purchase,
-            couponCode: rpcCouponCode,
-            clientPurchaseId: purchase.id,
-          });
-        }
+        state.coupons = state.coupons || [];
         state.coupons.push({
           id,
           label,
           xp,
           date: new Date().toISOString().slice(0, 10),
+          purchasedAt: new Date().toISOString(),
           purchaseId: purchase.id,
           couponCode: rpcCouponCode,
         });
-        saveState();
+        snapshot = await progressStore.fetchShopSnapshot();
+        if (applyShopSnapshot(snapshot)) {
+          saveState();
+        } else {
+          saveState();
+        }
+        shopInFlight = false;
         openShop();
       };
     });
-    const coupons = state.coupons || [];
+
+    const coupons = getShopCouponsForDisplay();
     const couponsList = document.getElementById("shop-coupons-list");
+    const couponHeading = document.getElementById("shop-coupons-heading");
+    if (couponHeading) {
+      couponHeading.textContent = coupons.length
+        ? `My coupons today (${coupons.length})`
+        : "My coupons today";
+    }
     couponsList.innerHTML =
       coupons.length === 0
-        ? "<p class='hint'>No coupons yet. Earn XP and buy a reward!</p>"
-        : coupons
+        ? "<p class='hint'>No coupons today yet. Earn XP and buy a reward!</p>"
+        : `<div class="coupon-grid">${coupons
             .map(
               (c, i) =>
                 `<div class="coupon-card">
+                  <span class="coupon-num">#${i + 1}</span>
                   <strong>${escapeHtml(c.label)}</strong>
-                  <span class="coupon-xp">${c.xp} XP</span>
-                  <span class="coupon-date">${c.date}</span>
+                  <span class="coupon-xp">${Number(c.xp || 0)} XP</span>
+                  <span class="coupon-date">${escapeHtml(formatCouponDateTime(c.date, c.purchasedAt))}</span>
                   <p class="coupon-hint">Show this to your parent to claim.</p>
                 </div>`
             )
-            .join("");
+            .join("")}</div>`;
+
+    if (progressStore && progressStore.hasClient() && !shopInFlight && shouldSync) {
+      shopInFlight = true;
+      if (syncStatus) syncStatus.textContent = "Syncing with server...";
+      Promise.resolve()
+        .then(() => progressStore.fetchShopSnapshot())
+        .then((snapshot) => {
+          const panel = document.getElementById("panel-shop");
+          if (!panel || panel.hidden) return;
+          if (applyShopSnapshot(snapshot)) saveState();
+        })
+        .finally(() => {
+          shopInFlight = false;
+          const panel = document.getElementById("panel-shop");
+          if (!panel || panel.hidden) return;
+          openShop(false);
+        });
+    }
   }
 
   document.getElementById("btn-home").onclick = () => {
@@ -3279,6 +3480,20 @@
   };
 
   document.getElementById("btn-shop").onclick = () => openShop();
+  const shopRefreshBtn = document.getElementById("btn-shop-refresh");
+  if (shopRefreshBtn) {
+    shopRefreshBtn.onclick = async () => {
+      if (!(progressStore && progressStore.hasClient())) return;
+      if (shopInFlight) return;
+      shopInFlight = true;
+      const syncStatus = document.getElementById("shop-sync-status");
+      if (syncStatus) syncStatus.textContent = "Refreshing from server...";
+      const snapshot = await progressStore.fetchShopSnapshot();
+      if (applyShopSnapshot(snapshot)) saveState();
+      shopInFlight = false;
+      openShop(false);
+    };
+  }
 
   document.getElementById("btn-close-shop").onclick = () => {
     const root = document.getElementById("modal-root");
@@ -3481,6 +3696,15 @@
       progressStore.fetchBootstrapState().then((remoteBootstrap) => {
         const pulled = mergeRemoteBootstrap(remoteBootstrap);
         if (pulled && route.view === "home") renderHome();
+      });
+      progressStore.reconcileLocalPurchases(state.purchaseLedger || []).then(() => {
+        progressStore.fetchShopSnapshot().then((snapshot) => {
+          const pulled = applyShopSnapshot(snapshot);
+          if (pulled) {
+            saveState();
+            if (!document.getElementById("panel-shop").hidden) openShop();
+          }
+        });
       });
       progressStore.migrateFromLocalState(portableState()).then(() => {
         progressStore.scheduleSnapshot(portableState());

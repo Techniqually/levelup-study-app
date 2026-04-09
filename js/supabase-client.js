@@ -231,6 +231,34 @@
     return { ok: true };
   }
 
+  async function getDailyCounts() {
+    const sb = getClient();
+    if (!sb) return null;
+    const c = await ensureContext();
+    if (!c) return null;
+    const res = await sb.rpc("study_get_daily_counts", {
+      p_project_code: c.projectCode,
+      p_student_id: c.studentId,
+      p_device_id: c.deviceId,
+    });
+    if (res.error) return null;
+    return res.data || null;
+  }
+
+  async function getShopSnapshot() {
+    const sb = getClient();
+    if (!sb) return null;
+    const c = await ensureContext();
+    if (!c) return null;
+    const res = await sb.rpc("study_get_shop_snapshot", {
+      p_project_code: c.projectCode,
+      p_student_id: c.studentId,
+      p_device_id: c.deviceId,
+    });
+    if (res.error) return null;
+    return res.data || null;
+  }
+
   async function logStateSnapshot(payload) {
     const sb = getClient();
     if (!sb) return { ok: false, reason: "disabled" };
@@ -340,6 +368,8 @@
     insertXpEntry,
     upsertTopicStats,
     insertPurchase,
+    getDailyCounts,
+    getShopSnapshot,
     logStateSnapshot,
     purchaseReward,
     fetchReportData,

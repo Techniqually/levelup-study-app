@@ -69,6 +69,12 @@
     safe(() => window.LevelupSupabase.insertXpEntry(entry));
   }
 
+  async function syncXpEntry(entry) {
+    if (!hasClient()) return { ok: false, reason: "disabled" };
+    const res = await safe(() => window.LevelupSupabase.insertXpEntry(entry));
+    return res || { ok: false, reason: state.lastError || "sync_failed" };
+  }
+
   function recordPurchase(purchase) {
     if (!hasClient()) return;
     safe(() => window.LevelupSupabase.insertPurchase(purchase));
@@ -79,10 +85,46 @@
     return window.LevelupSupabase.purchaseReward(params);
   }
 
-  async function migrateFromLocalState(localState) {
+  async function fetchDailyCounts() {
+    if (!hasClient()) return null;
+    return safe(() => window.LevelupSupabase.getDailyCounts());
+  }
+
+  async function fetchShopSnapshot() {
+    if (!hasClient()) return null;
+    return safe(() => window.LevelupSupabase.getShopSnapshot());
+  }
+
+  async function reconcileLocalPurchases(localPurchases) {
+    if (!hasClient()) return { ok: false, reason: "disabled" };
+    const snapshot = await fetchShopSnapshot();
+    const recent = Array.isArray(snapshot && snapshot.coupons_recent) ? snapshot.coupons_recent : [];
+    // If server already has purchase history, do not backfill local purchases.
+    // This avoids creating duplicate rows because purchase RPC already inserts server rows.
+    if (recent.length > 0) return { ok: true, skipped: "server_has_history" };
+    const existingIds = new Set(
+      recent
+        .map((row) => String(row && row.client_purchase_id ? row.client_purchase_id : ""))
+        .filter(Boolean)
+    );
+    const rows = Array.isArray(localPurchases) ? localPurchases : [];
+    for (const row of rows) {
+      if (!row || !row.id || existingIds.has(String(row.id))) continue;
+      await safe(() =>
+        window.LevelupSupabase.insertPurchase({
+          ...row,
+          clientPurchaseId: row.id,
+        })
+      );
+    }
+    return { ok: true };
+  }
+
+  async function migrateFromLocalState(localState, opts) {
     if (!hasClient() || !state.inited || !state.storageKey) return { ok: false, reason: "disabled" };
+    const force = !!(opts && opts.force);
     try {
-      if (localStorage.getItem(migrationKey()) === "1") return { ok: true, already: true };
+      if (!force && localStorage.getItem(migrationKey()) === "1") return { ok: true, already: true };
     } catch (_) {}
     const s = localState || {};
     const xpRows = Array.isArray(s.xpLedger) ? s.xpLedger.slice(0, 1200) : [];
@@ -99,9 +141,11 @@
       const chunk = purchases.slice(i, i + 50);
       await Promise.all(chunk.map((row) => safe(() => window.LevelupSupabase.insertPurchase(row))));
     }
-    try {
-      localStorage.setItem(migrationKey(), "1");
-    } catch (_) {}
+    if (!force) {
+      try {
+        localStorage.setItem(migrationKey(), "1");
+      } catch (_) {}
+    }
     return { ok: true };
   }
 
@@ -216,8 +260,12 @@
     scheduleSnapshot,
     scheduleTopicStats,
     recordXp,
+    syncXpEntry,
     recordPurchase,
     purchaseRewardServer,
+    fetchDailyCounts,
+    fetchShopSnapshot,
+    reconcileLocalPurchases,
     migrateFromLocalState,
     fetchReportWithFallback,
     fetchBootstrapState,
