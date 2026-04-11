@@ -9,8 +9,12 @@
     inited: false,
     snapshotTimer: null,
     topicTimer: null,
+    digestTimer: null,
+    digestHiddenTimer: null,
     lastError: "",
   };
+
+  var digestInFlight = false;
 
   function hasClient() {
     return !!(window.LevelupSupabase && window.LevelupSupabase.isEnabled());
@@ -24,6 +28,23 @@
     window.LevelupSupabase.ensureContext().catch((e) => {
       state.lastError = (e && e.message) || String(e || "ensure_context_failed");
     });
+    if (!window.__levelupReportDigestVisBound) {
+      window.__levelupReportDigestVisBound = true;
+      document.addEventListener("visibilitychange", function () {
+        if (!hasClient()) return;
+        if (document.visibilityState !== "hidden") return;
+        clearTimeout(state.digestHiddenTimer);
+        var delay =
+          typeof REPORT_DIGEST_HIDDEN_DELAY_MS === "number"
+            ? REPORT_DIGEST_HIDDEN_DELAY_MS
+            : 2000;
+        state.digestHiddenTimer = setTimeout(function () {
+          state.digestHiddenTimer = null;
+          if (document.visibilityState !== "hidden") return;
+          flushReportDigest("hidden");
+        }, delay);
+      });
+    }
     return true;
   }
 
@@ -218,6 +239,121 @@
     return { report, source: "supabase" };
   }
 
+  function digestMetaKey() {
+    return (state.storageKey || "levelup_unknown") + "_report_digest_v1";
+  }
+
+  function digestFingerprintFromPortable(ps) {
+    if (!ps || typeof ps !== "object") return "";
+    return [
+      Number(ps.xp || 0),
+      Array.isArray(ps.xpLedger) ? ps.xpLedger.length : 0,
+      ps.topicStats ? Object.keys(ps.topicStats).length : 0,
+      Array.isArray(ps.purchaseLedger) ? ps.purchaseLedger.length : 0,
+    ].join("|");
+  }
+
+  function localCalendarDateKey() {
+    var d = new Date();
+    return (
+      d.getFullYear() +
+      "-" +
+      String(d.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(d.getDate()).padStart(2, "0")
+    );
+  }
+
+  async function tryUploadStudyReportDigest(reason) {
+    if (!hasClient() || digestInFlight) return null;
+    if (typeof window.LevelupSupabase.logStudyReportDigest !== "function") return null;
+    if (typeof buildStudyReport !== "function" || typeof buildStudyReportText !== "function") return null;
+    if (typeof portableState !== "function") return null;
+    var ps = portableState();
+    var fp = digestFingerprintFromPortable(ps);
+    var today = localCalendarDateKey();
+    var metaKey = digestMetaKey();
+    var meta = {};
+    try {
+      meta = JSON.parse(localStorage.getItem(metaKey) || "{}") || {};
+    } catch (_) {
+      meta = {};
+    }
+    if (meta.date !== today) meta = { date: today, lastFp: "", uploads: 0 };
+    if (meta.date === today && meta.lastFp === fp && meta.uploads >= 1) {
+      return { ok: true, skipped: "same_fingerprint_today" };
+    }
+    var cap =
+      typeof REPORT_DIGEST_MAX_UPLOADS_PER_DAY === "number"
+        ? REPORT_DIGEST_MAX_UPLOADS_PER_DAY
+        : 3;
+    if (meta.date === today && Number(meta.uploads || 0) >= cap) {
+      return { ok: true, skipped: "daily_upload_cap" };
+    }
+
+    digestInFlight = true;
+    try {
+      var report = buildStudyReport();
+      var resolver =
+        typeof getTopicMeta === "function"
+          ? getTopicMeta
+          : function () {
+              return null;
+            };
+      var merged = await fetchReportWithFallback(report, resolver);
+      var r = merged && merged.report ? merged.report : report;
+      var fullText = buildStudyReportText(r);
+      var max =
+        typeof REPORT_DIGEST_TEXT_MAX_CHARS === "number"
+          ? REPORT_DIGEST_TEXT_MAX_CHARS
+          : 6000;
+      var text = String(fullText || "").slice(0, max);
+      var sid = typeof SUBJECT_ID !== "undefined" ? SUBJECT_ID : state.subjectId;
+      var stitle = typeof SUBJECT_TITLE !== "undefined" ? SUBJECT_TITLE : "";
+      var res = await window.LevelupSupabase.logStudyReportDigest({
+        text: text,
+        fp: fp,
+        reason: String(reason || "unknown"),
+        subjectId: sid,
+        subjectTitle: stitle,
+        generatedAt: new Date().toISOString(),
+      });
+      if (res && res.ok) {
+        meta.date = today;
+        meta.lastFp = fp;
+        meta.uploads = Number(meta.uploads || 0) + 1;
+        try {
+          localStorage.setItem(metaKey, JSON.stringify(meta));
+        } catch (_) {}
+      }
+      return res;
+    } finally {
+      digestInFlight = false;
+    }
+  }
+
+  function scheduleReportDigest(reason) {
+    if (!hasClient()) return;
+    clearTimeout(state.digestTimer);
+    var ms =
+      typeof REPORT_DIGEST_DEBOUNCE_MS === "number" ? REPORT_DIGEST_DEBOUNCE_MS : 45000;
+    state.digestTimer = setTimeout(function () {
+      state.digestTimer = null;
+      safe(function () {
+        return tryUploadStudyReportDigest(reason || "debounced");
+      });
+    }, ms);
+  }
+
+  function flushReportDigest(reason) {
+    if (!hasClient()) return;
+    clearTimeout(state.digestTimer);
+    state.digestTimer = null;
+    safe(function () {
+      return tryUploadStudyReportDigest(reason || "flush");
+    });
+  }
+
   async function fetchBootstrapState() {
     if (!hasClient()) return null;
     const remote = await safe(() => window.LevelupSupabase.fetchReportData(state.subjectId));
@@ -258,6 +394,8 @@
     init,
     hasClient,
     scheduleSnapshot,
+    scheduleReportDigest,
+    flushReportDigest,
     scheduleTopicStats,
     recordXp,
     syncXpEntry,

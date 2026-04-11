@@ -1,0 +1,37 @@
+
+function showExplain(title, body, then, note) {
+    const root = document.getElementById("modal-root");
+    const panelExplain = document.getElementById("panel-explain");
+    const panelSettings = document.getElementById("panel-settings");
+    const panelShop = document.getElementById("panel-shop");
+    panelSettings.hidden = true;
+    if (panelShop) panelShop.hidden = true;
+    document.getElementById("explain-title").textContent = title;
+    const explainBody = document.getElementById("explain-body");
+    explainBody.innerHTML = `${renderMiniMarkdown(body)}${
+      note ? `<span class="explain-note">${escapeHtml(note)}</span>` : ""
+    }`;
+    renderMathWhenReady(explainBody, 0);
+    panelExplain.hidden = false;
+    root.hidden = false;
+    root.setAttribute("aria-hidden", "false");
+    const ok = document.getElementById("btn-explain-ok");
+    const once = () => {
+      ok.removeEventListener("click", once);
+      panelExplain.hidden = true;
+      closeModalRoot(root);
+      then();
+    };
+    ok.addEventListener("click", once);
+  }
+
+  function closeModalRoot(root) {
+    if (!root) return;
+    const active = document.activeElement;
+    if (active && root.contains(active) && typeof active.blur === "function") {
+      active.blur();
+    }
+    root.hidden = true;
+    root.setAttribute("aria-hidden", "true");
+  }
+

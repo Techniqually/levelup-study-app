@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-levelup-build="2026-04-13-2">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,7 +15,9 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
     />
-    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Cache bust: bump js/shell/asset-version.js only -->
+    <script src="js/shell/asset-version.js"></script>
+    <script src="js/shell/subject-head-assets.js"></script>
   </head>
   <body>
     <div id="app">
@@ -29,6 +31,7 @@
           LevelUp!
         </button>
         <div class="topbar-stats">
+          <span class="pill user" id="stat-user" title="">Student</span>
           <span class="pill xp" id="stat-xp">0 XP</span>
           <span class="pill streak" id="stat-streak">🔥 0 day</span>
           <span
@@ -68,6 +71,7 @@
       </nav>
     </div>
 
+    <!-- ── Modals ────────────────────────────────────────────────────────────── -->
     <div
       class="modal-overlay"
       id="modal-root"
@@ -202,192 +206,57 @@
       </div>
     </div>
 
-    <script>
-      (function () {
-        const params = new URLSearchParams(window.location.search);
-        const KNOWN_SUBJECTS = ["chemistry", "physics", "geography"];
-        const LAST_SUBJECT_KEY = "LEVELUP_LAST_SUBJECT";
+    <!-- ── HTML Templates (cloned by JS for dynamic UI) ─────────────────────── -->
 
-        function normalizeSubject(value) {
-          const normalized = (value || "").trim().toLowerCase();
-          return KNOWN_SUBJECTS.includes(normalized) ? normalized : "";
-        }
+    <!-- Flashcard session wrapper — cloned by startFlash() -->
+    <template id="tpl-flash-panel">
+      <div class="panel active" data-panel="flash">
+        <p class="flash-progress" id="flash-progress">Tap card to flip · <span id="flash-count"></span></p>
+        <div class="flash-area">
+          <div class="flash-card" id="flash-card">
+            <div class="flash-face flash-front" id="flash-front"></div>
+            <div class="flash-face flash-back"  id="flash-back"></div>
+          </div>
+        </div>
+        <div class="flash-actions">
+          <button type="button" class="btn danger-outline" id="flash-review">Need review</button>
+          <button type="button" class="btn primary"        id="flash-got">Got it ✓</button>
+        </div>
+      </div>
+    </template>
 
-        function detectSubjectFromPathname() {
-          const parts = window.location.pathname
-            .split("/")
-            .filter(Boolean)
-            .map((p) => p.toLowerCase());
-          for (let i = parts.length - 1; i >= 0; i -= 1) {
-            const found = normalizeSubject(parts[i]);
-            if (found) return found;
-          }
-          return "";
-        }
+    <!-- Quiz timer bar row — cloned per question by runQuiz() -->
+    <template id="tpl-quiz-meta">
+      <div class="quiz-meta">
+        <div class="timer-bar-wrap"><div class="timer-bar" id="q-timer"></div></div>
+        <span class="combo" id="q-combo"></span>
+        <div class="health-bar" id="q-health"></div>
+      </div>
+    </template>
 
-        const fromQuery = normalizeSubject(params.get("subject"));
-        const fromHash = normalizeSubject(window.location.hash.replace(/^#/, ""));
-        const fromPath = detectSubjectFromPathname();
-        const fromStorage = normalizeSubject(localStorage.getItem(LAST_SUBJECT_KEY));
-        const subjectId =
-          fromQuery || fromHash || fromPath || fromStorage || "chemistry";
-        localStorage.setItem(LAST_SUBJECT_KEY, subjectId);
-        const titles = {
-          chemistry: "O-Level Chemistry",
-          physics: "O-Level Physics",
-          geography: "O-Level Geography",
-        };
-        const subjectTitle = titles[subjectId] || subjectId;
+    <!-- Question confidence widget — used by renderQuestionConfidenceHtml() -->
+    <template id="tpl-question-confidence">
+      <div class="question-confidence">
+        <div class="question-confidence-head">
+          <span class="question-confidence-label"></span>
+          <span class="question-confidence-pct"></span>
+        </div>
+        <div class="question-confidence-bar">
+          <div class="question-confidence-fill"></div>
+        </div>
+        <div class="question-confidence-reason"></div>
+      </div>
+    </template>
 
-        window.SUBJECT_ID = subjectId;
-        window.SUBJECT_TITLE = subjectTitle;
-        window.APP_VERSION = window.APP_VERSION || "2026-04-10-purchase-xp-double-fix-1";
-        window.SUPABASE_PROJECT_CODE = window.SUPABASE_PROJECT_CODE || "study-app";
-        const STUDENT_ID_KEY = "LEVELUP_STUDENT_ID";
-        const STUDENT_NAME_KEY = "LEVELUP_STUDENT_NAME";
-
-        const SUPABASE_SKIP_KEY = "SUPABASE_SETUP_SKIPPED_V1";
-        function setupSupabaseKeysPrompt(force) {
-          const existingUrl = localStorage.getItem("SUPABASE_URL") || "";
-          const existingAnon = localStorage.getItem("SUPABASE_ANON_KEY") || "";
-          if (!force && existingUrl && existingAnon) return;
-
-          const shouldAsk =
-            force ||
-            (window.location.search.includes("setupSupabase=1")
-              ? true
-              : localStorage.getItem(SUPABASE_SKIP_KEY) !== "1");
-          if (!shouldAsk) return;
-
-          const proceed = window.confirm(
-            "Configure Supabase now? You can skip and continue local-only mode."
-          );
-          if (!proceed) {
-            if (!force) localStorage.setItem(SUPABASE_SKIP_KEY, "1");
-            return;
-          }
-
-          const url = window
-            .prompt("Supabase Project URL (https://xxxx.supabase.co):", existingUrl)
-            ?.trim();
-          if (!url) return;
-
-          const anon = window
-            .prompt("Supabase Publishable (anon) key:", existingAnon)
-            ?.trim();
-          if (!anon) return;
-
-          localStorage.setItem("SUPABASE_URL", url);
-          localStorage.setItem("SUPABASE_ANON_KEY", anon);
-          localStorage.removeItem(SUPABASE_SKIP_KEY);
-          alert("Supabase config saved. Reloading...");
-          window.location.reload();
-        }
-
-        window.configureSupabaseKeys = () => setupSupabaseKeysPrompt(true);
-        setupSupabaseKeysPrompt(false);
-
-        function setupStudentProfilePrompt(force) {
-          const existingId = (localStorage.getItem(STUDENT_ID_KEY) || "").trim();
-          const existingName = (localStorage.getItem(STUDENT_NAME_KEY) || "").trim();
-          if (!force && existingId && existingName) return;
-          const shouldAsk = force || window.location.search.includes("setupStudent=1");
-          if (!shouldAsk && (existingId || existingName)) return;
-
-          const name = window
-            .prompt(
-              "Student display name (for parent reports / Supabase profile):",
-              existingName || ""
-            )
-            ?.trim();
-          if (!name) return;
-          const seed = name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-+|-+$/g, "")
-            .slice(0, 24);
-          const generatedId = seed || "student";
-          const studentId = window
-            .prompt(
-              "Student ID (short unique id, e.g. carol-1):",
-              existingId || generatedId
-            )
-            ?.trim();
-          if (!studentId) return;
-          localStorage.setItem(STUDENT_ID_KEY, studentId);
-          localStorage.setItem(STUDENT_NAME_KEY, name);
-        }
-
-        window.configureStudentProfile = () => setupStudentProfilePrompt(true);
-        setupStudentProfilePrompt(false);
-        window.LEVELUP_STUDENT_ID =
-          window.LEVELUP_STUDENT_ID || localStorage.getItem(STUDENT_ID_KEY) || "";
-        window.LEVELUP_STUDENT_NAME =
-          window.LEVELUP_STUDENT_NAME || localStorage.getItem(STUDENT_NAME_KEY) || "";
-
-        window.SUPABASE_URL =
-          window.SUPABASE_URL || localStorage.getItem("SUPABASE_URL") || "";
-        window.SUPABASE_ANON_KEY =
-          window.SUPABASE_ANON_KEY ||
-          localStorage.getItem("SUPABASE_ANON_KEY") ||
-          "";
-      })();
-    </script>
-
+    <!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+    <!-- KaTeX loaded deferred — renderMathWhenReady() polls until it arrives -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
     ></script>
 
-    <script>
-      (function () {
-        const v = encodeURIComponent(window.APP_VERSION || "dev");
-        const subjectId = window.SUBJECT_ID;
-
-        const mkV = (src) =>
-          src + (src.includes("?") ? "&" : "?") + "v=" + v;
-
-        // Avoid console noise for subjects that don't have infographics-images.js.
-        function tryExists(src) {
-          if (!src) return false;
-          if (window.location.protocol === "file:") return true;
-          try {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", src, false);
-            xhr.send(null);
-            return xhr.status >= 200 && xhr.status < 300;
-          } catch (_) {
-            return false;
-          }
-        }
-
-        const scripts = [
-          "data/subjects/" + subjectId + "/topics-manifest.js",
-        ];
-
-        const maybeMap = "data/subjects/" + subjectId + "/infographics-images.js";
-        if (tryExists(maybeMap)) scripts.push(maybeMap);
-
-        const maybeExtraQuiz = "data/subjects/" + subjectId + "/extra-quiz.js";
-        if (tryExists(maybeExtraQuiz)) scripts.push(maybeExtraQuiz);
-
-        // Needs to run before js/app.js so renderVisuals can synchronously look up markdown.
-        scripts.push("js/infographics-info-loader.js");
-        scripts.push("data/shop-rewards.js");
-        scripts.push("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
-        scripts.push("js/supabase-client.js");
-        scripts.push("js/progress-store.js");
-        scripts.push("js/app.js");
-
-        scripts.forEach((src) => {
-          const s = document.createElement("script");
-          s.src = mkV(src);
-          s.async = false;
-          document.body.appendChild(s);
-        });
-      })();
-    </script>
+    <!-- Shell scripts emitted with ?v=APP_VERSION (see write-subject-tail-scripts.js) -->
+    <script src="js/shell/write-subject-tail-scripts.js"></script>
   </body>
 </html>
-

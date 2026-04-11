@@ -284,6 +284,34 @@
     return { ok: true };
   }
 
+  async function logStudyReportDigest(payload) {
+    const sb = getClient();
+    if (!sb) return { ok: false, reason: "disabled" };
+    const c = await ensureContext();
+    if (!c) return { ok: false, reason: "no_context" };
+    const p = payload || {};
+    const max =
+      typeof REPORT_DIGEST_TEXT_MAX_CHARS === "number" ? REPORT_DIGEST_TEXT_MAX_CHARS : 6000;
+    const text = String(p.text || "").slice(0, max);
+    const { error } = await sb.from("event_log").insert({
+      project_id: c.projectId,
+      profile_id: c.profileId,
+      source_app: SOURCE_APP,
+      event_type: "study_report_digest",
+      event_data: {
+        subject_id: String(p.subjectId || ""),
+        subject_title: String(p.subjectTitle || ""),
+        generated_at: String(p.generatedAt || new Date().toISOString()),
+        fp: String(p.fp || ""),
+        reason: String(p.reason || ""),
+        text,
+        text_length: text.length,
+      },
+    });
+    if (error) throw error;
+    return { ok: true };
+  }
+
   async function purchaseReward(params) {
     const sb = getClient();
     if (!sb) return { ok: false, reason: "disabled" };
@@ -371,6 +399,7 @@
     getDailyCounts,
     getShopSnapshot,
     logStateSnapshot,
+    logStudyReportDigest,
     purchaseReward,
     fetchReportData,
     testConnection,

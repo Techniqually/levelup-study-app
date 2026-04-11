@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-levelup-build="2026-04-13-2">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -134,12 +134,19 @@
       border-color: var(--accent);
       color: var(--accent);
     }
+    .hub-identity {
+      margin: -12px 0 18px;
+      font-size: 0.88rem;
+      color: var(--accent2);
+    }
+    .hub-identity[hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <div class="shell">
     <h1>LevelUp! Study Hub</h1>
     <p class="lead">Choose a subject. Each keeps its own XP, streaks, shop coupons, and boss badges.</p>
+    <p class="hub-identity" id="hub-identity" hidden></p>
     <div id="setup-banner" class="setup">
       <span class="msg" id="setup-msg"></span>
       <div class="actions">
@@ -181,123 +188,8 @@
       <a class="parent-link" href="parent.html">Parent Dashboard</a>
     </div>
   </div>
-  <script>
-    (function () {
-      const SUPABASE_SKIP_KEY = "SUPABASE_SETUP_SKIPPED_V1";
-      const STUDENT_ID_KEY = "LEVELUP_STUDENT_ID";
-      const STUDENT_NAME_KEY = "LEVELUP_STUDENT_NAME";
-      const LAST_SUBJECT_KEY = "LEVELUP_LAST_SUBJECT";
-
-      function setupSupabaseKeysPrompt(force) {
-        const existingUrl = localStorage.getItem("SUPABASE_URL") || "";
-        const existingAnon = localStorage.getItem("SUPABASE_ANON_KEY") || "";
-        if (!force && existingUrl && existingAnon) return true;
-        const shouldAsk =
-          force ||
-          (window.location.search.includes("setupSupabase=1")
-            ? true
-            : localStorage.getItem(SUPABASE_SKIP_KEY) !== "1");
-        if (!shouldAsk) return false;
-        const proceed = window.confirm(
-          "Configure Supabase now? You can skip and continue local-only mode."
-        );
-        if (!proceed) {
-          if (!force) localStorage.setItem(SUPABASE_SKIP_KEY, "1");
-          return false;
-        }
-        const url = window
-          .prompt("Supabase Project URL (https://xxxx.supabase.co):", existingUrl)
-          ?.trim();
-        if (!url) return false;
-        const anon = window
-          .prompt("Supabase Publishable (anon) key:", existingAnon)
-          ?.trim();
-        if (!anon) return false;
-        localStorage.setItem("SUPABASE_URL", url);
-        localStorage.setItem("SUPABASE_ANON_KEY", anon);
-        localStorage.removeItem(SUPABASE_SKIP_KEY);
-        return true;
-      }
-
-      function setupStudentProfilePrompt(force) {
-        const existingId = (localStorage.getItem(STUDENT_ID_KEY) || "").trim();
-        const existingName = (localStorage.getItem(STUDENT_NAME_KEY) || "").trim();
-        if (!force && existingId && existingName) return true;
-        const shouldAsk = force || window.location.search.includes("setupStudent=1");
-        if (!shouldAsk && (existingId || existingName)) return false;
-        const name = window
-          .prompt(
-            "Student display name (for parent reports / Supabase profile):",
-            existingName || ""
-          )
-          ?.trim();
-        if (!name) return false;
-        const seed = name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "")
-          .slice(0, 24);
-        const generatedId = seed || "student";
-        const studentId = window
-          .prompt("Student ID (short unique id, e.g. carol-1):", existingId || generatedId)
-          ?.trim();
-        if (!studentId) return false;
-        localStorage.setItem(STUDENT_ID_KEY, studentId);
-        localStorage.setItem(STUDENT_NAME_KEY, name);
-        return true;
-      }
-
-      function refreshBanner() {
-        const hasSupabase = !!(
-          (localStorage.getItem("SUPABASE_URL") || "").trim() &&
-          (localStorage.getItem("SUPABASE_ANON_KEY") || "").trim()
-        );
-        const hasStudent = !!(
-          (localStorage.getItem(STUDENT_ID_KEY) || "").trim() &&
-          (localStorage.getItem(STUDENT_NAME_KEY) || "").trim()
-        );
-        const banner = document.getElementById("setup-banner");
-        const msg = document.getElementById("setup-msg");
-        if (!banner || !msg) return;
-        if (hasSupabase && hasStudent) {
-          banner.classList.remove("show");
-          return;
-        }
-        const missing = [];
-        if (!hasSupabase) missing.push("Supabase");
-        if (!hasStudent) missing.push("student profile");
-        msg.textContent = `Before picking subjects, finish setup: ${missing.join(" + ")}.`;
-        banner.classList.add("show");
-      }
-
-      window.configureSupabaseKeys = () => {
-        setupSupabaseKeysPrompt(true);
-        refreshBanner();
-      };
-      window.configureStudentProfile = () => {
-        setupStudentProfilePrompt(true);
-        refreshBanner();
-      };
-
-      document.getElementById("btn-setup-supabase").onclick = window.configureSupabaseKeys;
-      document.getElementById("btn-setup-student").onclick = window.configureStudentProfile;
-
-      document.querySelectorAll("a.card[data-subject]").forEach((card) => {
-        card.addEventListener("click", () => {
-          const subject = card.getAttribute("data-subject");
-          if (!subject) return;
-          localStorage.setItem(LAST_SUBJECT_KEY, subject);
-        });
-      });
-
-      // First-step gate on landing before subject selection.
-      const hasSupabaseNow = setupSupabaseKeysPrompt(false);
-      const hasStudentNow = setupStudentProfilePrompt(false);
-      if (hasSupabaseNow && !hasStudentNow) setupStudentProfilePrompt(true);
-
-      refreshBanner();
-    })();
-  </script>
+  <script src="js/shell/asset-version.js"></script>
+  <script src="js/shell/write-hub-tail-scripts.js"></script>
 </body>
 </html>
 

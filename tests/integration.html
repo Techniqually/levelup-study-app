@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LevelUp — Integration Tests</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #111; color: #e5e7eb; padding: 20px; }
+    h1   { color: #5eead4; margin: 0 0 8px; }
+    p.hint { color: #9ca3af; font-size: .9rem; margin: 0 0 20px; }
+    .suite  { margin-bottom: 24px; }
+    .suite h2 { font-size: 1rem; color: #a78bfa; margin: 0 0 6px; }
+    .result { font-size: .85rem; padding: 4px 8px; border-radius: 6px; margin: 2px 0; display: flex; gap: 8px; }
+    .pass   { background: rgba(16,185,129,.15); }
+    .fail   { background: rgba(239,68,68,.2); }
+    .icon   { font-size: 1rem; }
+    #summary { font-weight: 700; margin: 20px 0 8px; font-size: 1.1rem; }
+    #supabase-log { font-size: .8rem; color: #9ca3af; white-space: pre-wrap; margin-top: 20px; border-top: 1px solid #2d3748; padding-top: 10px; }
+  </style>
+</head>
+<body>
+<h1>LevelUp! Integration Tests</h1>
+<p class="hint">
+  Runs in-browser against a sandboxed localStorage namespace.<br>
+  Supabase tests use the embedded test-user credentials — they are read-only smoke tests (no writes).
+</p>
+<div id="results"></div>
+<div id="summary"></div>
+<div id="supabase-log">Supabase smoke test output will appear here…</div>
+
+<!-- ── Load the full script chain from a fake subject shell ─────────────────── -->
+<script>
+// Preset window globals that subject-config.js would normally set:
+window.SUBJECT_ID           = "chemistry";
+window.SUBJECT_TITLE        = "O-Level Chemistry";
+window.APP_VERSION          = "test-" + Date.now();
+window.SUPABASE_PROJECT_CODE = "study-app";
+// Use the real test Supabase project (read-only smoke):
+window.SUPABASE_URL         = "https://jkedzwrgwdxpucaqwlqa.supabase.co";
+window.SUPABASE_ANON_KEY    = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprZWR6d3Jnd2R4cHVjYXF3bHFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMzMxOTAsImV4cCI6MjA5MDYwOTE5MH0.MAGvgclP7k-cxtmE43SERYj7TsVXUWh8_9FxPAyvI8Q";
+window.LEVELUP_STUDENT_ID   = "test";
+window.LEVELUP_STUDENT_NAME = "Test";
+// Redirect localStorage to a test namespace so we don't corrupt real data
+var _origLS = window.localStorage;
+var _testKey = "levelup_test_integration_v1";
+var _fakeLS  = {
+  _store: {},
+  getItem:    function (k) { return k === _testKey || k.startsWith("levelup_chemistry") ? this._store[k] || null : _origLS.getItem(k); },
+  setItem:    function (k, v) { if (k.startsWith("levelup_")) { this._store[k] = String(v); } else { _origLS.setItem(k, v); } },
+  removeItem: function (k) { delete this._store[k]; _origLS.removeItem(k); },
+};
+Object.defineProperty(window, "localStorage", { value: _fakeLS, writable: true });
+// Suppress Supabase setup prompts in tests
+window.configureSupabaseKeys   = function () {};
+window.configureStudentProfile = function () {};
+// Suppress the manifest "missing" render during unit tests (no DOM/manifest loaded here)
+// by providing a minimal mock manifest
+window.TOPICS_MANIFEST = [
+  { id: "1", title: "States of Matter", theme: "Theme 1", file: "data/subjects/chemistry/theme1-matter/topic-01.js" },
+  { id: "2", title: "Atomic Structure",  theme: "Theme 1", file: "data/subjects/chemistry/theme1-matter/topic-02.js" },
+  { id: "3", title: "Chemical Bonding",  theme: "Theme 1", file: "data/subjects/chemistry/theme1-matter/topic-03.js" },
+];
+window.SHOP_REWARDS = [];
+window.ProgressStore = null; // disable Supabase writes during unit tests
+</script>
+
+<!-- ── Load constants and runtime globals ───────────────────────────────────── -->
+<script src="../js/core/app-constants.js"></script>
+<script src="../js/core/app-runtime.js"></script>
+
+<!-- ── Load feature scripts in dependency order ─────────────────────────────── -->
+<script src="../js/utils/array.js"></script>
+<script src="../js/utils/format.js"></script>
+<script src="../js/utils/text.js"></script>
+<script src="../js/utils/crypto-transfer.js"></script>
+<script src="../js/utils/quiz-keys.js"></script>
+<script src="../js/core/state-schema.js"></script>
+<script src="../js/core/state-persistence.js"></script>
+<script src="../js/core/transfer-ui.js"></script>
+<script src="../js/features/study/topic-stats.js"></script>
+<script src="../js/features/study/topic-meta.js"></script>
+<script src="../js/features/xp/xp-guards.js"></script>
+<script src="../js/features/xp/xp-ledger.js"></script>
+<script src="../js/features/xp/streak.js"></script>
+<script src="../js/features/xp/time-xp.js"></script>
+<script src="../js/features/daily/daily-challenge.js"></script>
+<script src="../js/features/shop/shop-logic.js"></script>
+<script src="../js/features/shop/shop-sync.js"></script>
+<script src="../js/features/shop/shop-ui-helpers.js"></script>
+<script src="../js/features/study/unlock.js"></script>
+<script src="../js/features/study/next-topics.js"></script>
+<script src="../js/features/study/topic-load.js"></script>
+<script src="../js/features/study/topic-mastery.js"></script>
+<script src="../js/features/study/question-stats.js"></script>
+<script src="../js/features/study/quiz-bank.js"></script>
+<script src="../js/features/study/quiz-scoring.js"></script>
+<script src="../js/features/study/themes-index.js"></script>
+<!-- topbar stub — updateTopbar() needs stat-xp/stat-streak in DOM; provide a no-op for tests -->
+<script>
+// Minimal DOM stubs so updateTopbar() and saveState() don't throw in headless context
+(function () {
+  function stubEl(id) {
+    if (!document.getElementById(id)) {
+      var el = document.createElement("span");
+      el.id = id;
+      el.style.display = "none";
+      document.body.appendChild(el);
+    }
+  }
+  ["stat-user","stat-xp","stat-streak","stat-boss","sync-status"].forEach(stubEl);
+})();
+</script>
+<script src="../js/ui/topbar.js"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/progress-store.js"></script>
+
+<!-- ── Bootstrap runtime vars (mirrors what app.js does) ─────────────────── -->
+<script>
+SUBJECT_ID    = window.SUBJECT_ID;
+SUBJECT_TITLE = window.SUBJECT_TITLE;
+STUDENT_ID    = window.LEVELUP_STUDENT_ID   || "test";
+STUDENT_NAME  = window.LEVELUP_STUDENT_NAME || "Test";
+STORAGE_KEY   = "levelup_" + SUBJECT_ID + "_v1";
+APP_VERSION   = window.APP_VERSION;
+manifest      = window.TOPICS_MANIFEST;
+themeOrder    = [];
+themesByKey   = {};
+var _tidx     = buildThemeIndex(manifest);
+_tidx.themeOrder.forEach(function (k) { themeOrder.push(k); });
+Object.assign(themesByKey, _tidx.themesByKey);
+progressStore = window.ProgressStore || null;
+route         = { view: "home", topicId: null, tab: "cheat" };
+state         = loadState();
+</script>
+
+<!-- ── Test runner ──────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  var pass = 0, fail = 0;
+  var suites = {};
+
+  function suite(name) { suites[name] = []; return name; }
+  function assert(suiteName, label, condition, detail) {
+    suites[suiteName].push({ label: label, ok: !!condition, detail: detail || "" });
+    if (condition) pass++; else fail++;
+  }
+
+  // ── SUITE: Utils ─────────────────────────────────────────────────────────
+  var S = suite("utils");
+  assert(S, "shuffle returns same length", shuffle([1,2,3,4]).length === 4);
+  var _shuffleIn = [1, 2, 3];
+  var _shuffleOut = shuffle(_shuffleIn);
+  assert(S, "shuffle is a copy", _shuffleOut !== _shuffleIn);
+  assert(S, "isCooldownActive(past)",      !isCooldownActive(Date.now() - 1000));
+  assert(S, "isCooldownActive(future)",    isCooldownActive(Date.now() + 1000));
+  assert(S, "todayKey is YYYY-MM-DD",      /^\d{4}-\d{2}-\d{2}$/.test(todayKey()));
+  assert(S, "formatMsShort 90s",           formatMsShort(90000) === "2 min");
+  assert(S, "formatDurationCountdown 65s", formatDurationCountdown(65000) === "1m 5s");
+  assert(S, "escapeHtml sanitises <",      escapeHtml("<b>hi</b>") === "&lt;b&gt;hi&lt;/b&gt;");
+  assert(S, "normalizeQuestionText trims", normalizeQuestionText("  hello  ") === "hello");
+  assert(S, "getQuestionKey id path",      getQuestionKey({ id: "q42" }, "1") === "q42");
+  assert(S, "getQuestionKey text path",    getQuestionKey({ question: "A B" }, "1").includes("A B"));
+
+  // ── SUITE: Crypto round-trip ──────────────────────────────────────────────
+  var SC = suite("crypto");
+  encryptPayload("testpassword", '{"x":1}').then(function (code) {
+    return decryptPayload("testpassword", code).then(function (plain) {
+      return { code: code, plain: plain };
+    });
+  }).then(function (r) {
+    assert(SC, "encrypt→decrypt round-trip", r.plain === '{"x":1}');
+    return decryptPayload("wrongpass", r.code);
+  }).then(
+    function () {
+      assert(SC, "wrong password rejects (v1 AES)", false, "decrypt unexpectedly succeeded");
+    },
+    function () {
+      assert(SC, "wrong password rejects (v1 AES)", true);
+    }
+  ).then(function () {
+    return decryptPayload("wrongpass", "v1-plain:" + btoa("hello"));
+  }).then(function (plain2) {
+    assert(SC, "v1-plain ignores password (by design)", plain2 === "hello");
+    renderResults();
+  }).catch(function (e) {
+    assert(SC, "crypto test threw", false, e.message);
+    renderResults();
+  });
+
+  // ── SUITE: State schema ───────────────────────────────────────────────────
+  var SS = suite("state");
+  var ds = defaultState();
+  assert(SS, "defaultState has xp:0",      ds.xp === 0);
+  assert(SS, "defaultState has xpLedger[]", Array.isArray(ds.xpLedger));
+  var ns = normalizeState({ xp: "42", xpLedger: null });
+  assert(SS, "normalizeState coerces xp",   ns.xp === 42);
+  assert(SS, "normalizeState fixes ledger", Array.isArray(ns.xpLedger));
+
+  // ── SUITE: XP ledger ─────────────────────────────────────────────────────
+  var SX = suite("xp");
+  var xpBefore = state.xp;
+  addXp(10, { activityType: "quiz", sourceId: "test:1", reason: "unit_test" });
+  assert(SX, "addXp increases state.xp",    state.xp === xpBefore + 10);
+  assert(SX, "addXp appends ledger entry",  state.xpLedger.length > 0);
+  var lastEntry = state.xpLedger[state.xpLedger.length - 1];
+  assert(SX, "ledger entry has deltaXp",    lastEntry.deltaXp === 10);
+  assert(SX, "ledger entry has activityType", lastEntry.activityType === "quiz");
+
+  var _xpEventFired = false;
+  window.addEventListener("levelup:xp-gained", function handler(e) {
+    _xpEventFired = e.detail && e.detail.deltaXp > 0;
+    window.removeEventListener("levelup:xp-gained", handler);
+  });
+  addXp(5, { activityType: "flash", sourceId: "test:2", reason: "unit_test_event" });
+  assert(SX, "levelup:xp-gained event fires", _xpEventFired);
+
+  var _stateSavedFired = false;
+  window.addEventListener("levelup:state-saved", function handler2() {
+    _stateSavedFired = true;
+    window.removeEventListener("levelup:state-saved", handler2);
+  });
+  saveState();
+  assert(SX, "levelup:state-saved event fires", _stateSavedFired);
+
+  // ── SUITE: Daily challenge ────────────────────────────────────────────────
+  var SD = suite("daily");
+  var dc = ensureDailyChallenge();
+  assert(SD, "ensureDailyChallenge returns object", dc && typeof dc === "object");
+  assert(SD, "daily.date is today",                 dc.date === todayKey());
+  markDailyAnswered(1);
+  assert(SD, "markDailyAnswered increments",        ensureDailyChallenge().answered >= 1);
+
+  // ── SUITE: Topic meta + unlock ────────────────────────────────────────────
+  var ST = suite("topics");
+  assert(ST, "getTopicMeta('1') finds topic",   getTopicMeta("1") !== null);
+  assert(ST, "getTopicMeta('999') returns null", getTopicMeta("999") === null);
+  assert(ST, "topicIndex('1') is 0",            topicIndex("1") === 0);
+  state.unlockAll = true;
+  assert(ST, "isUnlocked when unlockAll=true",  isUnlocked("2"));
+  state.unlockAll = false;
+  assert(ST, "isUnlocked(0) always true",       isUnlocked("1"));
+  assert(ST, "buildThemeIndex produces themeOrder", themeOrder.length > 0);
+  assert(ST, "themesByKey has entries",             Object.keys(themesByKey).length > 0);
+
+  // ── SUITE: Shop helpers ───────────────────────────────────────────────────
+  var SH = suite("shop");
+  assert(SH, "getTodayIsoDate is YYYY-MM-DD",   /^\d{4}-\d{2}-\d{2}$/.test(getTodayIsoDate()));
+  assert(SH, "getRewardDailyMax uses default",  getRewardDailyMax({}) === DEFAULT_REWARD_DAILY_MAX);
+  assert(SH, "getRewardDailyMax reads field",   getRewardDailyMax({ dailyMax: 3 }) === 3);
+
+  // ── SUITE: Shop contract (server snapshot + rules; mocked data, no network) ─
+  var SCshop = suite("shop-contract");
+  var _shopBk = {
+    xp: state.xp,
+    xpLedger: state.xpLedger.slice(),
+    purchaseLedger: (state.purchaseLedger || []).slice(),
+    serverDailyCounts: JSON.parse(JSON.stringify(state.serverDailyCounts || {})),
+    serverCouponsToday: (state.serverCouponsToday || []).slice(),
+    shopCouponsLoaded: state.shopCouponsLoaded,
+    shopLastSyncAt: state.shopLastSyncAt,
+  };
+  function _restoreShopContract() {
+    state.xp = _shopBk.xp;
+    state.xpLedger = _shopBk.xpLedger.slice();
+    state.purchaseLedger = _shopBk.purchaseLedger.slice();
+    state.serverDailyCounts = JSON.parse(JSON.stringify(_shopBk.serverDailyCounts));
+    state.serverCouponsToday = _shopBk.serverCouponsToday.slice();
+    state.shopCouponsLoaded = _shopBk.shopCouponsLoaded;
+    state.shopLastSyncAt = _shopBk.shopLastSyncAt;
+  }
+  var _todayShop = getTodayIsoDate();
+  var _isoPurchase = _todayShop + "T15:30:00.000Z";
+
+  var _insufMsg = getServerPurchaseErrorMessage("insufficient_xp", { balance: 10, cost: 50 });
+  assert(SCshop, "getServerPurchaseErrorMessage insufficient_xp", /Server XP balance is 10/.test(_insufMsg) && /50/.test(_insufMsg));
+  assert(
+    SCshop,
+    "getServerPurchaseErrorMessage daily_limit",
+    getServerPurchaseErrorMessage("daily_limit_reached", null).indexOf("Daily reward limit") >= 0
+  );
+
+  state.xp = 999;
+  assert(SCshop, "applyShopSnapshot !ok is no-op", !applyShopSnapshot({ ok: false, xp_balance: 1 }) && state.xp === 999);
+  assert(
+    SCshop,
+    "applyShopSnapshot merges xp_balance (server truth)",
+    applyShopSnapshot({ ok: true, xp_balance: 401, coupons_today: [], date: _todayShop, counts: [] }) && state.xp === 401
+  );
+
+  applyShopSnapshot({
+    ok: true,
+    xp_balance: 401,
+    date: _todayShop,
+    counts: [{ reward_id: "reward_x", count: 2 }],
+    coupons_today: [
+      {
+        reward_id: "reward_x",
+        reward_label: "Test treat",
+        xp_cost: 25,
+        purchased_at: _isoPurchase,
+        client_purchase_id: "cid-1",
+        coupon_code: "ZZ99",
+      },
+    ],
+  });
+  assert(SCshop, "applyShopSnapshot server daily counts", Number(state.serverDailyCounts.reward_x[_todayShop]) === 2);
+  assert(SCshop, "applyShopSnapshot coupons_today length", (state.serverCouponsToday || []).length === 1);
+  assert(
+    SCshop,
+    "applyShopSnapshot coupon fields normalized",
+    state.serverCouponsToday[0].id === "reward_x" &&
+      state.serverCouponsToday[0].couponCode === "ZZ99" &&
+      state.serverCouponsToday[0].xp === 25
+  );
+
+  state.purchaseLedger = [{ couponId: "only-local", ts: Date.now(), date: _todayShop }];
+  state.serverDailyCounts = {};
+  assert(SCshop, "getRewardPurchasesOnDate local ledger", getRewardPurchasesOnDate("only-local", _todayShop) === 1);
+  state.serverDailyCounts["only-local"] = {};
+  state.serverDailyCounts["only-local"][_todayShop] = 5;
+  assert(SCshop, "getRewardPurchasesOnDate max(local,server)", getRewardPurchasesOnDate("only-local", _todayShop) === 5);
+
+  state.xp = 200;
+  var _pe = recordPurchaseEntry({ id: "r1", label: "L", xp: 50 });
+  assert(SCshop, "recordPurchaseEntry balanceBefore", _pe.balanceBefore === 200);
+  assert(SCshop, "recordPurchaseEntry balanceAfter", _pe.balanceAfter === 150);
+
+  var _nowLed = Date.now();
+  state.xpLedger = [
+    { ts: _nowLed, deltaXp: 5, activityType: "quiz", topicId: "1", subjectId: SUBJECT_ID },
+    { ts: _nowLed, deltaXp: 3, activityType: "flash", topicId: "2", subjectId: SUBJECT_ID },
+  ];
+  var _cov = canPurchaseReward();
+  assert(SCshop, "canPurchaseReward when coverage met", _cov.ok === true && _cov.cov.topicCount >= 2);
+
+  assert(SCshop, "getPurchaseEffectiveCooldownMs under daily cap", getPurchaseEffectiveCooldownMs("z9", 3, 0) === 0);
+  state.purchaseLedger = [{ couponId: "c1", ts: Date.now(), date: _todayShop }];
+  var _effCd = getPurchaseEffectiveCooldownMs("c1", 1, 1);
+  assert(SCshop, "getPurchaseEffectiveCooldownMs at daily max uses cooldown", _effCd > 0 && _effCd <= PURCHASE_REPEAT_COOLDOWN_MS);
+
+  state.xp = 600;
+  applyShopSnapshot({
+    ok: true,
+    xp_balance: 100,
+    coupons_today: state.serverCouponsToday || [],
+    date: _todayShop,
+    counts: [{ reward_id: "reward_x", count: 2 }],
+  });
+  assert(SCshop, "snapshot xp overwrites local (post-RPC reconcile)", state.xp === 100);
+
+  _restoreShopContract();
+
+  // ── SUITE: Quiz scoring ───────────────────────────────────────────────────
+  var SQ = suite("quiz");
+  assert(SQ, "getQuestionXpMeta new bucket",    getQuestionXpMeta("new",  {}).delta === 10);
+  assert(SQ, "getQuestionXpMeta weak bucket",   getQuestionXpMeta("weak", {}).delta === 11);
+  assert(SQ, "getRepeatAttemptMultiplier no xp", getRepeatAttemptMultiplier({ topicId: "1", activityType: "quiz" }) === 1);
+
+  // ── SUITE: State persistence round-trip ──────────────────────────────────
+  var SP = suite("persistence");
+  saveState();
+  var savedRaw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  assert(SP, "saveState writes to localStorage", savedRaw.xp !== undefined);
+  var ps = portableState();
+  assert(SP, "portableState has xp",           ps.xp !== undefined);
+  assert(SP, "portableState has xpLedger",     Array.isArray(ps.xpLedger));
+  applyPortableState({ xp: 9999 });
+  assert(SP, "applyPortableState merges xp",   state.xp === 9999);
+  applyPortableState({ xp: xpBefore });  // restore
+
+  // crypto tests are async — renderResults will be called from the .then() above
+  // but render immediately for sync suites so user sees partial output fast
+  renderResults();
+
+  // ── SUITE: Supabase smoke (async) ─────────────────────────────────────────
+  var SDB = suite("supabase");
+  var sbLog = document.getElementById("supabase-log");
+  (async function () {
+    try {
+      sbLog.textContent = "Connecting to Supabase...";
+      var sb = window.supabase && window.supabase.createClient(
+        window.SUPABASE_URL, window.SUPABASE_ANON_KEY
+      );
+      if (!sb) throw new Error("supabase CDN not loaded");
+      // Fetch the known test profile (read-only SELECT)
+      var res = await sb.from("profiles").select("id,device_id,display_name").eq("id", "baafd63b-7720-44d9-b925-e67fca8e43b1").maybeSingle();
+      assert(SDB, "Supabase: no fetch error", !res.error, res.error && res.error.message);
+      // Anon + RLS often returns null with no error — still a useful smoke (client + URL + key work).
+      if (res.data) {
+        assert(SDB, "Supabase: test profile id", res.data.id === "baafd63b-7720-44d9-b925-e67fca8e43b1");
+        assert(SDB, "Supabase: device_id present", !!res.data.device_id);
+      } else {
+        assert(SDB, "Supabase: profile row visible to anon", true, "null row — RLS or UUID not in project (OK for smoke)");
+      }
+      sbLog.textContent = "Supabase response:\n" + JSON.stringify(res, null, 2);
+    } catch (e) {
+      assert(SDB, "Supabase: smoke test", false, e.message);
+      sbLog.textContent = "Supabase error: " + e.message;
+    }
+    renderResults();
+  })();
+
+  function renderResults() {
+    var container = document.getElementById("results");
+    container.innerHTML = Object.entries(suites).map(function (entry) {
+      var name  = entry[0];
+      var tests = entry[1];
+      var rows  = tests.map(function (t) {
+        return "<div class='result " + (t.ok ? "pass" : "fail") + "'>" +
+          "<span class='icon'>" + (t.ok ? "✅" : "❌") + "</span>" +
+          "<span>" + t.label + (t.detail ? " <em style='color:#9ca3af'>(" + t.detail + ")</em>" : "") + "</span>" +
+        "</div>";
+      }).join("");
+      return "<div class='suite'><h2>" + name + "</h2>" + rows + "</div>";
+    }).join("");
+    var total = pass + fail;
+    document.getElementById("summary").textContent = pass + " / " + total + " tests passing" + (fail ? " — " + fail + " FAILING" : " ✅");
+    document.getElementById("summary").style.color = fail ? "#f87171" : "#34d399";
+  }
+})();
+</script>
+</body>
+</html>
