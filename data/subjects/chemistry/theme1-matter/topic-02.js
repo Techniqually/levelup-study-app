@@ -169,6 +169,62 @@
     {id:"chem-T2-309",question:"Capsaicin (chilli compound) dissolves better in oil than in water. To extract it from chilli, a student could use:",options:["Filtration with water","Solvent extraction with a non-polar/organic solvent","Fractional distillation","Electrolysis"],correctIndex:1,explanation:"Like dissolves like: capsaicin (non-polar) dissolves into non-polar solvents (oil) preferentially. Solvent extraction applies."},
     {id:"chem-T2-310",question:"To obtain pure salt crystals from a salt solution, which sequence is correct?",options:["Filter → distil → cool","Evaporate solution to concentrate → allow to cool → filter off crystals → dry","Electrolyse → heat → filter","Chromatograph → distil"],correctIndex:1,explanation:"Crystallisation: heat to evaporate water (not to dryness to avoid decomposition) → cool → crystals form → filter and dry."}
     ],
+    extendedQuestions: [
+      {
+        id: "chem-T2-E01",
+        commandWord: "Explain",
+        marks: 4,
+        syllabusNote: "5070 separation techniques — distillation; fractionating column.",
+        prompt: "A mixture consists of two **miscible liquids** whose boiling points differ by only **6 °C**.\n\nExplain why **fractional distillation** is more suitable than **simple distillation** for separating them in the school laboratory.",
+        rubric: [
+          "States that boiling points are **close** / similar volatility.",
+          "**Fractionating column** (or packing) provides **large surface area** for repeated **evaporation–condensation** cycles (or **reflux** / theoretical plates idea in words).",
+          "**Vapour enrichment** — each cycle increases difference in composition between the two liquids in the vapour.",
+          "Simple distillation **does not** give enough **separation** / one pass is insufficient when bp are close — contrast stated."
+        ],
+        modelAnswer: "When boiling points are **close**, a single **simple distillation** gives vapour that is still a **mixture** of both liquids, so you cannot collect **pure** fractions easily.\n**Fractional distillation** uses a **fractionating column** packed with glass beads (or similar). Rising vapour **condenses** and **re-evaporates** many times; the component with the **lower boiling point** tends to stay richer in the vapour moving up, while the higher-bp liquid returns down. This **concentrates** the separation so you can collect **fractions** of higher purity."
+      },
+      {
+        id: "chem-T2-E02",
+        commandWord: "Describe",
+        marks: 5,
+        syllabusNote: "Paper chromatography; $R_f$ definition (syllabus practical).",
+        prompt: "You are given **chromatography paper**, a **pencil**, **two dye solutions (A and B)**, a **reference dye**, a **suitable solvent**, and a **tank with a lid**.\n\nDescribe how you would carry out **paper chromatography** to compare A and B with the reference, and how you would measure the **$R_f$ value** of each spot.",
+        rubric: [
+          "Draw **baseline in pencil** (not ink) and keep baseline **above** solvent level when placing paper in tank.",
+          "Spot small amounts of **A, B and reference** on the baseline; label in pencil.",
+          "Add solvent below baseline, **seal lid**, allow solvent to run until near top; remove and **mark solvent front** (pencil).",
+          "**Dry** (optional mention), locate spots.",
+          "$R_f$ = **distance moved by spot** (centre) ÷ **distance moved by solvent front**, both measured from baseline — **same units**."
+        ],
+        modelAnswer: "1) Rule a faint **pencil baseline** near the bottom; do **not** use ink (it would run).\n2) Spot **tiny** drops of A, B and reference on the baseline and label lightly in pencil.\n3) Pour solvent into the tank to **below** the baseline, stand the paper so only the paper tip touches solvent, **cover** the tank.\n4) When the front is near the top, remove paper, **mark the solvent front** in pencil, let it dry.\n5) Measure distance from baseline to **centre of each spot** ($d_s$) and baseline to solvent front ($d_f$). Calculate $R_f = d_s / d_f$ (no units)."
+      },
+      {
+        id: "chem-T2-E03",
+        commandWord: "Explain",
+        marks: 3,
+        syllabusNote: "Measurement — precision of glassware; titration context.",
+        prompt: "In a **titration**, a student measures **25.0 cm³** of aqueous sodium hydroxide into a conical flask using a **measuring cylinder** instead of a **pipette**.\n\nExplain **one** way this choice could affect the **reliability** of the titre volume obtained from the burette.",
+        rubric: [
+          "Measuring cylinder has **lower precision** / larger **percentage uncertainty** than a **volumetric pipette** (25.0 cm³).",
+          "Random variation in the **end-point volume** is larger because the **initial moles of alkali** are less reproducible — **reliability** suffers.",
+          "Alternative valid: **parallax** / **meniscus** errors worse with wide cylinder — still links to inconsistent titre."
+        ],
+        modelAnswer: "A **measuring cylinder** is only read to about **±1 cm³** (or coarse increments), whereas a **pipette** delivers **25.0 cm³** with much smaller uncertainty. The **amount of NaOH** in the flask therefore varies more between repeats, so the **burette titre** needed to neutralise it **fluctuates** more — results are **less reliable** (greater scatter) even if you read the burette carefully."
+      },
+      {
+        id: "chem-T2-E04",
+        commandWord: "State",
+        marks: 2,
+        syllabusNote: "Chromatography practical setup.",
+        prompt: "In paper chromatography, the **baseline** (where samples are spotted) must be drawn **above** the level of the solvent in the developing tank when the paper is first placed in.\n\nState **two** reasons why this is important.",
+        rubric: [
+          "Spots would **dissolve into the bulk solvent** / smear at the start (not carried by ascending solvent as intended).",
+          "**$R_f$** / separation would be meaningless or spots would not **move properly** / **no true run**."
+        ],
+        modelAnswer: "1) If the baseline were **below** the solvent surface, the samples would **wash off** into the solvent pool instead of **travelling with the solvent front**.\n2) You would **not get a proper chromatogram** — spots may smear and **$R_f$** cannot be measured fairly."
+      }
+    ],
     trueFalse: [
     {statement:"Rf can be greater than 1.",correct:false,explain:"By definition ratio ≤ 1."},
     {statement:"Same compound always has same Rf if solvent and temperature unchanged.",correct:true,explain:"Characteristic under fixed conditions."},

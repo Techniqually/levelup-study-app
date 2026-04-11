@@ -118,6 +118,17 @@ function formatCheatPoint(p) {
       </div>`;
   }
 
+  function renderWrittenPanel(t) {
+    const has = Array.isArray(t.extendedQuestions) && t.extendedQuestions.length > 0;
+    if (!has) {
+      return `<div class="panel active" data-panel="written"><p class="empty-state">No Paper 2–style written prompts in this topic yet.</p></div>`;
+    }
+    if (typeof LevelupExtendedQuiz !== "undefined" && LevelupExtendedQuiz && LevelupExtendedQuiz.renderWrittenShell) {
+      return LevelupExtendedQuiz.renderWrittenShell(t);
+    }
+    return `<div class="panel active" data-panel="written"><p class="empty-state">Written module failed to load.</p></div>`;
+  }
+
   function renderGamePanel(t) {
     const hasSeq = t.orderGame && t.orderGame.length;
     const hasTF = t.trueFalse && t.trueFalse.length >= 6;
@@ -152,6 +163,11 @@ function formatCheatPoint(p) {
   function bindPanelHandlers(t) {
     if (route.tab === "flash") startFlash(t);
     if (route.tab === "quiz") bindQuiz(t);
+    if (route.tab === "written") {
+      if (typeof LevelupExtendedQuiz !== "undefined" && LevelupExtendedQuiz && LevelupExtendedQuiz.bindWritten) {
+        LevelupExtendedQuiz.bindWritten(t);
+      }
+    }
     if (route.tab === "game") bindGames(t);
   }
 

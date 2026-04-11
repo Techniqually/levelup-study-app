@@ -1,0 +1,11 @@
+# From repo: cd api && docker compose up --build
+# (compose file + .env must live in the same directory so env_file is loaded)
+services:
+  levelup-llm-proxy:
+    build: .
+    ports:
+      - "8081:8000"
+    # Optional: copy .env.example → .env (see README). required: false so compose works before .env exists.
+    env_file:
+      - path: .env
+        required: false

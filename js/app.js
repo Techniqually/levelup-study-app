@@ -41,6 +41,35 @@ if (!manifest || !manifest.length) {
 
   // ─── 5. DOM event listeners ────────────────────────────────────────────────
 
+  function refreshLlmProxyStatusLine() {
+    var el = document.getElementById("llm-proxy-status");
+    if (!el || !window.LevelupLlmConfig) return;
+    if (window.LevelupLlmConfig.isQuizExplainEnabled()) {
+      var u = window.LevelupLlmConfig.getClientConfig();
+      el.textContent =
+        "LLM: quiz “Why?” on · " + (u && u.proxyBaseUrl ? u.proxyBaseUrl : "");
+      return;
+    }
+    var c = window.LevelupLlmConfig.get();
+    if (!c) {
+      el.textContent = "LLM: not configured.";
+      return;
+    }
+    if (c.enabled && !window.LevelupLlmConfig.isProxyReady()) {
+      el.textContent = "LLM: enabled — add proxy URL and app token.";
+      return;
+    }
+    if (c.enabled && c.features && c.features.quizExplain === false) {
+      el.textContent = "LLM: proxy OK; quiz “Why?” is disabled.";
+      return;
+    }
+    if (c.enabled) {
+      el.textContent = "LLM: enabled (finish URL + token for quiz “Why?”).";
+      return;
+    }
+    el.textContent = "LLM: off.";
+  }
+
   document.getElementById("btn-home").onclick = function () {
     if (window.SUBJECT_ID) { window.location.href = "index.html"; return; }
     route = { view: "home" };
@@ -88,10 +117,31 @@ if (!manifest || !manifest.length) {
     if (_pReport) _pReport.hidden = true;
     document.getElementById("opt-unlock-all").checked = state.unlockAll;
     document.getElementById("opt-challenge").checked  = state.challengeMode;
+    refreshLlmProxyStatusLine();
     document.getElementById("panel-settings").hidden = false;
     _root.hidden = false;
     _root.setAttribute("aria-hidden", "false");
   };
+
+  var _llmSetupBtn = document.getElementById("btn-llm-proxy-setup");
+  if (_llmSetupBtn && window.LevelupLlmSetupForms) {
+    _llmSetupBtn.onclick = function () {
+      window.LevelupLlmSetupForms.openLlmProxySetup().then(function () {
+        refreshLlmProxyStatusLine();
+      });
+    };
+  }
+
+  var _sbSetupBtn = document.getElementById("btn-supabase-setup");
+  if (_sbSetupBtn && typeof window.configureSupabaseKeys === "function") {
+    _sbSetupBtn.onclick = function () {
+      var _root = document.getElementById("modal-root");
+      document.getElementById("panel-settings").hidden = true;
+      closeModalRoot(_root);
+      if (route.view === "home") renderHome();
+      window.configureSupabaseKeys();
+    };
+  }
 
   document.getElementById("btn-close-settings").onclick = function () {
     state.unlockAll     = document.getElementById("opt-unlock-all").checked;

@@ -1,5 +1,8 @@
 
-function showExplain(title, body, then, note) {
+function showExplain(title, body, then, note, llmWhyPayload) {
+    if (window.LevelupLlmQuizWhy && typeof window.LevelupLlmQuizWhy.prepareExplainModal === "function") {
+      window.LevelupLlmQuizWhy.prepareExplainModal(null);
+    }
     const root = document.getElementById("modal-root");
     const panelExplain = document.getElementById("panel-explain");
     const panelSettings = document.getElementById("panel-settings");
@@ -12,12 +15,18 @@ function showExplain(title, body, then, note) {
       note ? `<span class="explain-note">${escapeHtml(note)}</span>` : ""
     }`;
     renderMathWhenReady(explainBody, 0);
+    if (window.LevelupLlmQuizWhy && typeof window.LevelupLlmQuizWhy.prepareExplainModal === "function") {
+      window.LevelupLlmQuizWhy.prepareExplainModal(llmWhyPayload || null);
+    }
     panelExplain.hidden = false;
     root.hidden = false;
     root.setAttribute("aria-hidden", "false");
     const ok = document.getElementById("btn-explain-ok");
     const once = () => {
       ok.removeEventListener("click", once);
+      if (window.LevelupLlmQuizWhy && typeof window.LevelupLlmQuizWhy.prepareExplainModal === "function") {
+        window.LevelupLlmQuizWhy.prepareExplainModal(null);
+      }
       panelExplain.hidden = true;
       closeModalRoot(root);
       then();

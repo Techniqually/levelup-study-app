@@ -35,6 +35,7 @@ function defaultState() {
         completed: false,
         bonusAwarded: false,
       },
+      writtenClaims: {},
     };
   }
 
@@ -68,5 +69,7 @@ function defaultState() {
       ...(next.dailyChallenge || {}),
       weakTopics: (next.dailyChallenge && next.dailyChallenge.weakTopics) || {},
     };
+    next.writtenClaims =
+      next.writtenClaims && typeof next.writtenClaims === "object" ? next.writtenClaims : {};
     return next;
   }
