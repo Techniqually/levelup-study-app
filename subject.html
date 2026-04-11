@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-levelup-build="2026-04-13-2">
+<html lang="en" data-levelup-build="2026-04-13-9">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -67,6 +67,7 @@
         <button type="button" data-tab="visual">Visuals</button>
         <button type="button" data-tab="flash">Cards</button>
         <button type="button" data-tab="quiz">Quiz</button>
+        <button type="button" data-tab="written">Written</button>
         <button type="button" data-tab="game">Games</button>
       </nav>
     </div>
@@ -78,8 +79,19 @@
       hidden
       aria-hidden="true"
     >
-      <div class="modal" id="panel-settings" hidden>
+      <div class="modal modal-settings" id="panel-settings" hidden>
         <h2>Settings</h2>
+        <p class="hint settings-lead">
+          <strong>AI quiz “Why?”</strong> — use <em>Configure LLM proxy…</em> below. You only enter the
+          <strong>proxy URL</strong> and <strong>app token</strong> (same as <code>APP_TOKEN</code> on your server).
+          OpenAI / provider API keys live in the server <code>.env</code>, not in this app.
+        </p>
+        <p class="hint">
+          <strong>Cloud sync (Supabase)</strong> — URL and anon key are usually set the first time you open the app or from the subject hub. To change them later, use the button here or open the hub’s setup.
+        </p>
+        <button type="button" class="btn" id="btn-supabase-setup">
+          Change Supabase / cloud sync…
+        </button>
         <label class="check-row">
           <input type="checkbox" id="opt-unlock-all" />
           <span>Unlock all topics (free study)</span>
@@ -92,6 +104,17 @@
           Uncheck "Unlock all" for guided path: Topic 1 open, then pass
           threshold on each topic to unlock the next.
         </p>
+        <div class="export-block">
+          <h3 class="export-title">AI quiz explanations (optional)</h3>
+          <p class="hint">
+            Connect your self-hosted LLM proxy — API keys stay on the server only.
+            See <code>api/README.md</code>.
+          </p>
+          <button type="button" class="btn" id="btn-llm-proxy-setup">
+            Configure LLM proxy…
+          </button>
+          <p class="hint" id="llm-proxy-status"></p>
+        </div>
         <div class="export-block">
           <h3 class="export-title">Transfer progress between browsers</h3>
           <p class="hint">
@@ -156,6 +179,12 @@
       <div class="modal explain-modal" id="panel-explain" hidden>
         <h2 id="explain-title">Let's fix that</h2>
         <p id="explain-body"></p>
+        <div id="explain-llm-wrap" class="explain-llm-wrap" hidden>
+          <button type="button" class="btn" id="btn-explain-llm-why">
+            Why? (AI tutor)
+          </button>
+          <div id="explain-llm-body" class="explain-llm-body" hidden></div>
+        </div>
         <button type="button" class="btn primary" id="btn-explain-ok">
           Got it — continue
         </button>

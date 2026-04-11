@@ -2,6 +2,8 @@
 
 Vanilla **HTML + CSS + JS** (no bundler). Three entry pages: **`index.html`** (subject hub), **`subject.html`** (per-subject app), **`parent.html`** (parent dashboard).
 
+Optional **LLM proxy:** **`api/`** — FastAPI + Docker Compose; provider keys stay server-side (`OPENAI_API_KEY` in `.env`). See **`api/README.md`** and **`docs/llm-integration-plan.md`**.
+
 ## Cache busting (central)
 
 - **Production bump:** set **`data-levelup-build`** on the `<html>` tag in **`subject.html`**, **`index.html`**, and **`parent.html`** (same value on all three). That value becomes `APP_VERSION` even if **`asset-version.js`** is still an older cached file (HTML is usually revalidated sooner than long‑cached JS).
@@ -35,10 +37,12 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 |------|------|------|
 | Core | `js/core/app-constants.js`, `app-runtime.js`, `state-schema.js`, `state-persistence.js` | Tunables, mutable `var` globals (`state`, `route`, …), `defaultState` / `normalizeState`, `saveState` / `loadState` |
 | Shell | **`asset-version.js`**, **`subject-head-assets.js`**, **`write-*-tail-scripts.js`**, `subject-config.js`, `subject-script-chain.js`, `hub-setup.js`, `setup-forms.js` | Version stamp, busted static includes, subject resolution, ordered loading, hub banner, setup modals |
-| Features | `js/features/study/*`, `js/features/xp/*`, `js/features/shop/*`, `js/features/daily/*` | Topic/quiz/shop/XP/daily logic (mostly plain functions + `state`) |
+| Features | `js/features/study/*`, `js/features/xp/*`, `js/features/shop/*`, `js/features/daily/*`, `js/features/llm/*` | Topic/quiz/shop/XP/daily/LLM proxy client (`LEVELUP_LLM_CONFIG_JSON`) |
 | UI | `js/ui/topbar.js`, `modals.js`, … | DOM updates |
 | Data | `data/subjects/<subject>/topics-manifest.js`, topic JS, `data/shop-rewards.js` | Manifest + per-topic content |
 | Sync | `js/supabase-client.js`, `js/progress-store.js` | Supabase client + `ProgressStore` API |
+
+**Structured (long) answers:** optional `extendedQuestions` on a topic (command word, marks, `prompt`, `rubric[]`, `modelAnswer`, optional `syllabusNote`, optional `minCharsForModel`). UI: **`Written`** tab in `subject.html` dock (`route.tab === "written"`); `topic-panels.js` → `renderWrittenPanel` / `LevelupExtendedQuiz.renderWrittenShell` + `bindWritten`. One question at a time (step in `sessionStorage`). **XP:** `state.writtenClaims` (once per question per local UTC day) + `addXp` `activityType: "written_practice"` after mark scheme + model viewed + heuristic quality (`app-constants.js` `WRITTEN_CLAIM_*`). Script: `quiz-extended.js` before `quiz-engine.js`.
 
 ## Identity & storage keys
 

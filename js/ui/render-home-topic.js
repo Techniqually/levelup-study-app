@@ -144,8 +144,16 @@ function renderHome() {
     // Topic is ready; finalize previous timing segment (if any).
     stopAndAwardTime();
     dock.hidden = false;
-    dock.querySelectorAll("button").forEach((b) => {
+    const hasWritten = Array.isArray(t.extendedQuestions) && t.extendedQuestions.length > 0;
+    if (route.tab === "written" && !hasWritten) {
+      route.tab = "cheat";
+    }
+    dock.querySelectorAll("button[data-tab]").forEach((b) => {
       b.classList.toggle("active", b.dataset.tab === route.tab);
+      if (b.dataset.tab === "written") {
+        b.hidden = !hasWritten;
+        b.disabled = !hasWritten;
+      }
     });
 
     let body = "";
@@ -153,6 +161,7 @@ function renderHome() {
     else if (route.tab === "visual") body = renderVisuals(t);
     else if (route.tab === "flash") body = renderFlashPanel(t);
     else if (route.tab === "quiz") body = renderQuizPanel(t);
+    else if (route.tab === "written") body = renderWrittenPanel(t);
     else if (route.tab === "game") body = renderGamePanel(t);
 
     const idx = topicIndex(t.id);

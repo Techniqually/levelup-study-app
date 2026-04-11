@@ -290,11 +290,17 @@ function bindQuiz(t) {
             return;
           }
         }
-        showExplain("Time's up", q.explanation, () => {
-          combo = 0;
-          qi++;
-          renderQ();
-        }, `${confidenceMeta.label} · ${confidenceMeta.reason}`);
+        showExplain(
+          "Time's up",
+          q.explanation,
+          () => {
+            combo = 0;
+            qi++;
+            renderQ();
+          },
+          `${confidenceMeta.label} · ${confidenceMeta.reason}`,
+          null
+        );
         return;
       }
       markDailyAnswered(1);
@@ -335,6 +341,9 @@ function bindQuiz(t) {
         const confidence = document.getElementById("quiz-confidence");
         if (confidence) {
           confidence.innerHTML = renderQuestionConfidenceHtml(q, t.id);
+          if (window.LevelupLlmQuizWhy && typeof window.LevelupLlmQuizWhy.attachBelowConfidence === "function") {
+            window.LevelupLlmQuizWhy.attachBelowConfidence(q, t, q.correctIndex);
+          }
         }
         setTimeout(() => {
           qi++;
@@ -373,7 +382,18 @@ function bindQuiz(t) {
             "Not quite",
             q.explanation,
             next,
-            `${confidenceMeta.label} · ${confidenceMeta.reason} · No XP for wrong answer${timedOutCurrent ? " (answered after time)" : ""}, but this question will show up again for practice.`
+            `${confidenceMeta.label} · ${confidenceMeta.reason} · No XP for wrong answer${timedOutCurrent ? " (answered after time)" : ""}, but this question will show up again for practice.`,
+            clickedBtn
+              ? {
+                  q: q,
+                  topicId: t.id,
+                  chosenIndex: Number(clickedBtn.dataset.idx),
+                  subjectId: typeof SUBJECT_ID !== "undefined" ? SUBJECT_ID : "",
+                  subjectTitle: typeof SUBJECT_TITLE !== "undefined" ? SUBJECT_TITLE : "",
+                  topicTitle: t.title || "",
+                  level: "O-Level",
+                }
+              : null
           );
         }
       }

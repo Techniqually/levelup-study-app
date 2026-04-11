@@ -178,6 +178,63 @@
     {id:"chem-T1-309",question:"In a chromatography experiment, substance V remains on the start line. This means:",options:["V moved the fastest","V is the most soluble in the solvent","V did not dissolve in (or was not carried by) the solvent used — Rf = 0","V is a pure substance"],correctIndex:2,explanation:"Rf = 0 means no movement; the substance is insoluble in or does not interact with the solvent."},
     {id:"chem-T1-310",question:"'Accuracy' in a measurement means:",options:["Getting the same reading every time","How close the measurement is to the true/accepted value","Taking many measurements","Having no random error ever"],correctIndex:1,explanation:"Accuracy = closeness to true value. Precision = reproducibility (same result each time, but may be consistently wrong)."}
     ],
+    extendedQuestions: [
+      {
+        id: "chem-T1-E01",
+        commandWord: "Explain",
+        marks: 4,
+        syllabusNote: "Theme: experimental design — variables & fair test (5070/5073 practical skills).",
+        prompt: "A student investigates how **temperature** affects the **rate** of reaction between marble chips and dilute hydrochloric acid. They measure the **volume of carbon dioxide** collected in the first minute at different water-bath temperatures.\n\nExplain why the **concentration of the acid**, **mass or size of marble chips**, and **volume of acid** should be kept constant in this investigation.",
+        rubric: [
+          "States that these are **control variables** (or equivalent: kept the same for a fair test).",
+          "Explains that if concentration / acid volume / marble amount or surface area changed, it would also affect the rate — so you could not tell if a change in gas volume was due to **temperature** alone.",
+          "Links idea of **one independent variable** (temperature) while others are controlled — valid/fair comparison.",
+          "Quality: clear cause–effect (confounding) reasoning in the context of reaction rate."
+        ],
+        modelAnswer: "- **Control variables** are factors kept constant so they do not affect the outcome.\n- **Concentration** and **volume of acid** change the amount of reactant per unit time; **mass or size of chips** changes surface area — all alter rate.\n- If they changed together with temperature, any difference in gas volume could be due to those factors **or** temperature, so the conclusion about temperature would **not be valid** (not a fair test)."
+      },
+      {
+        id: "chem-T1-E02",
+        commandWord: "Describe",
+        marks: 4,
+        syllabusNote: "Reliability, random error, repeats — practical measurement.",
+        prompt: "The same student collects **carbon dioxide** by **downward delivery** into a **measuring cylinder** over water, recording the **gas volume** at 60 s for each temperature.\n\nDescribe **two** practical steps they could take to improve the **reliability** of the volume readings (reduce the effect of random error).",
+        rubric: [
+          "**Repeat** the whole experiment at each temperature (or repeat readings) and **average** — mentions random scatter reduced.",
+          "Same **procedure** each time (same delay before starting timer, same way of sealing the flask, same eye level for reading meniscus).",
+          "Reduce **leaks** / ensure apparatus airtight / wait for steady collection if relevant — practical consistency.",
+          "Any valid second distinct strategy (e.g. larger gas sample if method allows, consistent **room pressure** awareness) if clearly linked to reliability."
+        ],
+        modelAnswer: "1) **Repeat** each temperature **at least two or three times** and calculate a **mean** volume — random errors tend to average out.\n2) Use a **consistent method** for starting the clock and reading the **bottom of the meniscus** at eye level on the measuring cylinder each time.\n3) (Optional third) Check joints are **airtight** so gas loss does not differ between runs."
+      },
+      {
+        id: "chem-T1-E03",
+        commandWord: "State",
+        marks: 2,
+        syllabusNote: "5096/5070 distinction between accuracy and precision.",
+        prompt: "A thermometer gives readings that are **always 2 °C higher** than the true temperature, but the readings are **very close to each other** when repeated.\n\nState what this shows about **accuracy** and **precision** of this thermometer.",
+        rubric: [
+          "**Precision** — readings are close together / repeatable (low scatter).",
+          "**Accuracy** — readings are **not** accurate / systematically high / **systematic error** (offset from true value)."
+        ],
+        modelAnswer: "- **Precision** is good (readings are reproducible and cluster tightly).\n- **Accuracy** is poor because there is a **systematic error** — a constant +2 °C bias from the true value."
+      },
+      {
+        id: "chem-T1-E04",
+        commandWord: "Explain",
+        marks: 5,
+        syllabusNote: "Validity of conclusions; fair test; controlled variables.",
+        prompt: "Two groups compare **which metal** gives the **higher temperature rise** when the same mass of metal powder is added to **25 cm³** of **copper(II) sulfate solution** of the **same concentration**. Group A uses **polystyrene cups** as calorimeters; Group B uses **glass beakers** with no lid.\n\nExplain whether a simple comparison of **final temperature** between the two groups would be **valid** for deciding which metal is **more reactive** in this practical.",
+        rubric: [
+          "Recognises **different apparatus / insulation** → different **heat loss** to surroundings.",
+          "Explains that **greater heat loss** lowers the measured temperature rise — not a fair comparison between groups.",
+          "Suggests **controlling** calorimeter type, **lid**, **stirring**, **starting temperature**, **same volume and concentration** of solution for a valid comparison.",
+          "Uses idea of **fair test** / **control variables** explicitly.",
+          "Conclusion: comparison **as described** is **not valid** (or only valid if same setup) — clear judgement."
+        ],
+        modelAnswer: "It would **not be a valid** comparison because the **calorimeter** differs: polystyrene is a better **insulator** than an open glass beaker, so Group B loses **more heat** to the air. That **systematically reduces** the measured temperature rise even if the metal is equally reactive.\nFor a **fair test**, both groups should use the **same type** of insulated cup (or same beaker + lid), **same stirring**, and the **same initial conditions**. Then temperature rise reflects the reaction more reliably."
+      }
+    ],
     trueFalse: [
     {statement:"More repeats always remove systematic error.",correct:false,explain:"Repeats reduce random error; systematic needs calibration/fix."},
     {statement:"You can change two independent variables and still claim which caused the effect.",correct:false,explain:"Confounded variables — unclear cause."},

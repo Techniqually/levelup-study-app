@@ -45,8 +45,8 @@ var _origLS = window.localStorage;
 var _testKey = "levelup_test_integration_v1";
 var _fakeLS  = {
   _store: {},
-  getItem:    function (k) { return k === _testKey || k.startsWith("levelup_chemistry") ? this._store[k] || null : _origLS.getItem(k); },
-  setItem:    function (k, v) { if (k.startsWith("levelup_")) { this._store[k] = String(v); } else { _origLS.setItem(k, v); } },
+  getItem:    function (k) { return k === _testKey || k.startsWith("levelup_chemistry") || k.indexOf("LEVELUP_LLM") === 0 ? this._store[k] || null : _origLS.getItem(k); },
+  setItem:    function (k, v) { if (k.startsWith("levelup_") || k.indexOf("LEVELUP_LLM") === 0) { this._store[k] = String(v); } else { _origLS.setItem(k, v); } },
   removeItem: function (k) { delete this._store[k]; _origLS.removeItem(k); },
 };
 Object.defineProperty(window, "localStorage", { value: _fakeLS, writable: true });
@@ -72,8 +72,12 @@ window.ProgressStore = null; // disable Supabase writes during unit tests
 <script src="../js/utils/array.js"></script>
 <script src="../js/utils/format.js"></script>
 <script src="../js/utils/text.js"></script>
+<script src="../js/features/study/quiz-extended.js"></script>
 <script src="../js/utils/crypto-transfer.js"></script>
 <script src="../js/utils/quiz-keys.js"></script>
+<script src="../js/features/llm/llm-config.js"></script>
+<script src="../js/features/llm/llm-cache.js"></script>
+<script src="../js/features/llm/llm-client.js"></script>
 <script src="../js/core/state-schema.js"></script>
 <script src="../js/core/state-persistence.js"></script>
 <script src="../js/core/transfer-ui.js"></script>
@@ -356,6 +360,132 @@ state         = loadState();
   assert(SQ, "getQuestionXpMeta new bucket",    getQuestionXpMeta("new",  {}).delta === 10);
   assert(SQ, "getQuestionXpMeta weak bucket",   getQuestionXpMeta("weak", {}).delta === 11);
   assert(SQ, "getRepeatAttemptMultiplier no xp", getRepeatAttemptMultiplier({ topicId: "1", activityType: "quiz" }) === 1);
+  assert(SQ, "LevelupExtendedQuiz written shell empty", LevelupExtendedQuiz.renderWrittenShell({ id: "z", extendedQuestions: [] }).indexOf("No written questions") >= 0);
+  var _exHtml = LevelupExtendedQuiz.renderWrittenShell({
+    id: "t9",
+    extendedQuestions: [
+      {
+        id: "e1",
+        commandWord: "State",
+        marks: 2,
+        prompt: "Hello **bold**",
+        rubric: ["one point"],
+        modelAnswer: "Ans line",
+      },
+    ],
+  });
+  assert(
+    SQ,
+    "written shell html",
+    _exHtml.indexOf("data-panel=\"written\"") >= 0 &&
+      _exHtml.indexOf("written-step-root") >= 0 &&
+      _exHtml.indexOf("State") >= 0 &&
+      _exHtml.indexOf("extended-q-textarea") >= 0 &&
+      _exHtml.indexOf("extended-q-rubric-btn") >= 0 &&
+      _exHtml.indexOf("extended-q-model-btn") >= 0 &&
+      _exHtml.indexOf("data-min-model=") >= 0
+  );
+  var _goodPara =
+    "Laboratory investigation systematically measures temperature concentration apparatus methodology observations recording reproducible measurements throughout experimental procedure documentation analysis validity reliability precision accuracy consistently yields trustworthy scientific conclusions documented thoroughly.";
+  assert(SQ, "written heuristic accepts solid draft", LevelupExtendedQuiz.qualifyWrittenOnlyHeuristic(_goodPara, 60000) === true);
+  assert(SQ, "written heuristic rejects short", LevelupExtendedQuiz.qualifyWrittenOnlyHeuristic("too short", 60000) === false);
+  assert(SQ, "written heuristic rejects repeat spam", LevelupExtendedQuiz.qualifyWrittenOnlyHeuristic(new Array(80).join("a"), 60000) === false);
+
+  // ── SUITE: LLM client + cache (mock fetch) ─────────────────────────────────
+  var SL = suite("llm");
+  var _fetchCalls = 0;
+  var _realFetch = window.fetch;
+
+  LevelupLlmConfig.save(
+    LevelupLlmConfig.defaultConfig({
+      enabled: true,
+      proxyBaseUrl: "http://127.0.0.1:8080",
+      appToken: "test-token",
+      features: { quizExplain: true },
+      cache: { maxEntries: 50, ttlDays: 60 },
+    })
+  );
+  assert(SL, "LevelupLlmConfig.isProxyReady", LevelupLlmConfig.isProxyReady() === true);
+  assert(SL, "LevelupLlmConfig.isQuizExplainEnabled", LevelupLlmConfig.isQuizExplainEnabled() === true);
+
+  var _q = { id: "q-llm-1", question: "Why?", options: ["A", "B"], correctIndex: 1, explanation: "hint" };
+  var _ck = LevelupLlmQuizCache.makeQuizKey(_q, "9", 1, 0, "test-ver");
+  assert(SL, "llm cache key stable", _ck.indexOf("q-llm-1") >= 0 && _ck.indexOf("|c1|s0|") >= 0);
+
+  LevelupLlmQuizCache._clearForTests();
+  var _cfg = LevelupLlmConfig.get();
+  assert(SL, "cache miss first", LevelupLlmQuizCache.get(_cfg, _ck) === null);
+
+  window.fetch = function () {
+    return Promise.resolve({
+      ok: false,
+      status: 401,
+      text: function () {
+        return Promise.resolve("{}");
+      },
+    });
+  };
+  LevelupLlmClient.quizExplain(LevelupLlmConfig.getClientConfig(), {
+    question: _q.question,
+    options: _q.options,
+    correct_index: 1,
+    chosen_index: 0,
+  }).then(function (ru) {
+    assert(SL, "401 → unauthorized + token hint", ru.code === "unauthorized" && ru.message.indexOf("token") >= 0);
+    _fetchCalls = 0;
+    window.fetch = function (url, init) {
+      var u = String(url || "");
+      if (u.indexOf("/llm/quiz-explain") >= 0) {
+        _fetchCalls++;
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          text: function () {
+            return Promise.resolve(
+              JSON.stringify({
+                ok: true,
+                parsed: {
+                  wrong_choice_explained: "Because energy is conserved.",
+                  correct_logic: "Use the mark scheme.",
+                  examiners_phrase: "State the law.",
+                  try_again_question: null,
+                },
+                raw_content: "{}",
+                parse_error: null,
+              })
+            );
+          },
+        });
+      }
+      if (typeof _realFetch === "function") return _realFetch.apply(this, arguments);
+      return Promise.reject(new Error("no fetch"));
+    };
+    return LevelupLlmClient.quizExplain(LevelupLlmConfig.getClientConfig(), {
+      question: _q.question,
+      options: _q.options,
+      correct_index: 1,
+      chosen_index: 0,
+      canonical_hint: "hint",
+    });
+  }).then(function (r1) {
+    assert(SL, "quizExplain ok", r1.ok === true && r1.data && r1.data.parsed);
+    assert(SL, "fetch called once", _fetchCalls === 1);
+    LevelupLlmQuizCache.set(_cfg, _ck, r1.data);
+    assert(SL, "cache stores API payload", LevelupLlmQuizCache.get(_cfg, _ck).parsed.wrong_choice_explained.length > 0);
+    var _small = LevelupLlmConfig.defaultConfig({ cache: { maxEntries: 2, ttlDays: 60 } });
+    LevelupLlmQuizCache._clearForTests();
+    LevelupLlmQuizCache.set(_small, "k1", { n: 1 });
+    LevelupLlmQuizCache.set(_small, "k2", { n: 2 });
+    LevelupLlmQuizCache.set(_small, "k3", { n: 3 });
+    assert(SL, "LRU evicts oldest", LevelupLlmQuizCache.get(_small, "k1") === null);
+    assert(SL, "LRU keeps newest", LevelupLlmQuizCache.get(_small, "k3").n === 3);
+    window.fetch = _realFetch;
+    renderResults();
+  }).catch(function (e) {
+    assert(SL, "llm async suite", false, e.message);
+    window.fetch = _realFetch;
+    renderResults();
+  });
 
   // ── SUITE: State persistence round-trip ──────────────────────────────────
   var SP = suite("persistence");
