@@ -13,6 +13,9 @@ function loadState() {
     if (progressStore && progressStore.hasClient()) {
       progressStore.scheduleSnapshot(portableState());
       progressStore.scheduleTopicStats(state.topicStats || {});
+      if (progressStore.scheduleReportDigest) {
+        progressStore.scheduleReportDigest("save");
+      }
     }
     updateTopbar();
     window.dispatchEvent(new CustomEvent("levelup:state-saved", { detail: { xp: state.xp, streak: state.streak } }));

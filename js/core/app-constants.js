@@ -60,3 +60,9 @@ var TOPIC_FARM_LOCK_WINDOW_MS    = Number(_TOPIC_FARM_LOCK_POLICY.windowMs  || 1
 var TOPIC_FARM_LOCK_TRIGGER_XP   = Number(_TOPIC_FARM_LOCK_POLICY.triggerXp || 140);
 var TOPIC_FARM_LOCK_MS           = Number(_TOPIC_FARM_LOCK_POLICY.lockMs    || 1000 * 60 * 30);
 var ENABLE_ACTIVITY_XP_CAP       = !!_XP_POLICY.enableActivityXpCap;
+
+// Parent-readable study report digest → event_log (see progress-store + supabase-client)
+var REPORT_DIGEST_DEBOUNCE_MS         = 45000; // coalesce with saveState / activity
+var REPORT_DIGEST_HIDDEN_DELAY_MS     = 2000;  // tab background: flush after short delay
+var REPORT_DIGEST_MAX_UPLOADS_PER_DAY = 3;     // per subject + device (local calendar day)
+var REPORT_DIGEST_TEXT_MAX_CHARS      = 6000;  // cap plain-text payload size

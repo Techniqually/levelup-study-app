@@ -6,6 +6,12 @@
   var projectCode  = document.getElementById("project-code");
   var parentCode   = document.getElementById("parent-code");
   var rememberCode = document.getElementById("remember-code");
+  var summaryModal = document.getElementById("study-summary-modal");
+  var summaryBody  = document.getElementById("study-summary-body");
+  var summaryFoot  = document.getElementById("study-summary-foot");
+  var summaryClose = document.getElementById("study-summary-close");
+  /** Last successful `study_parent_student_overview_token` student rows (for summary modal). */
+  var lastStudents = [];
 
   var TOKEN_KEY     = "PARENT_DASH_TOKEN_V1";
   var TOKEN_EXP_KEY = "PARENT_DASH_TOKEN_EXP_V1";
@@ -98,8 +104,136 @@
     }).join("");
   }
 
+  function jsonArr(x) {
+    if (Array.isArray(x)) return x;
+    if (x == null) return [];
+    try {
+      var p = typeof x === "string" ? JSON.parse(x) : x;
+      return Array.isArray(p) ? p : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /** Readable summary from the same RPC payload as the dashboard (no new backend). */
+  function formatStudentStudySummary(s) {
+    var areasAll = jsonArr(s.areas_overall).map(function (a) { return esc(String(a)); }).filter(Boolean);
+    var areasWk  = jsonArr(s.areas_week).map(function (a) { return esc(String(a)); }).filter(Boolean);
+    var subs     = jsonArr(s.subject_stats);
+    var coupons  = jsonArr(s.recent_coupons);
+    var parts    = [];
+    parts.push("<p><strong>" + esc(s.student_name || "Student") + "</strong> · ID <code>" + esc(s.student_id || "-") + "</code></p>");
+    parts.push("<p class='hint'>Last activity: " + fmt(s.last_activity) + "</p>");
+    parts.push("<h3>Overview</h3><ul>");
+    parts.push("<li>XP balance: " + Number(s.xp_balance || 0) + "</li>");
+    parts.push("<li>Positive XP events (lifetime): " + Number(s.xp_events || 0) + "</li>");
+    parts.push(
+      "<li>Topics with stats: " +
+        Number(s.studied_topics || 0) +
+        " · Chapters with activity: " +
+        Number(s.chapters_covered || 0) +
+        "</li>"
+    );
+    parts.push("<li>Shop purchases: " + Number(s.purchases || 0) + "</li>");
+    parts.push(
+      "<li>Last 7 days: +" +
+        Number(s.xp_last_7d || 0) +
+        " XP · " +
+        Number(s.xp_events_last_7d || 0) +
+        " positive events</li>"
+    );
+    parts.push("</ul>");
+    if (subs.length) {
+      parts.push("<h3>By subject</h3><ul>");
+      subs.forEach(function (row) {
+        parts.push(
+          "<li><strong>" +
+            esc(String((row && row.subject_id) || "general")) +
+            "</strong> — " +
+            Number((row && row.xp) || 0) +
+            " XP · " +
+            Number((row && row.events) || 0) +
+            " events (7d: +" +
+            Number((row && row.xp_last_7d) || 0) +
+            " XP / " +
+            Number((row && row.events_last_7d) || 0) +
+            " ev)</li>"
+        );
+      });
+      parts.push("</ul>");
+    }
+    if (areasAll.length) {
+      parts.push("<h3>Themes touched (overall)</h3><p>" + areasAll.join(", ") + "</p>");
+    }
+    if (areasWk.length) {
+      parts.push("<h3>Themes touched (last 7 days)</h3><p>" + areasWk.join(", ") + "</p>");
+    }
+    parts.push("<h3>Strong topics (mastery ≥ 80)</h3>");
+    parts.push("<p>" + topicList(s.strong_topics, "mastery") + "</p>");
+    parts.push("<h3>Weak topics (mastery &lt; 55, seen &gt; 0)</h3>");
+    parts.push("<p>" + topicList(s.weak_topics, "mastery") + "</p>");
+    parts.push("<h3>Recent shop coupons</h3>");
+    if (!coupons.length) {
+      parts.push("<p class='hint'>None in the last fetch window.</p>");
+    } else {
+      parts.push("<ul>");
+      coupons.slice(0, 12).forEach(function (r) {
+        var claimed = r.claimed_at ? " · claimed " + fmt(r.claimed_at) : " · active";
+        parts.push(
+          "<li>" +
+            esc(r.reward_label || r.reward_id || "reward") +
+            " — " +
+            Number(r.xp_cost || 0) +
+            " XP · " +
+            fmt(r.purchased_at) +
+            esc(claimed) +
+            " · code " +
+            esc(r.coupon_code || "-") +
+            "</li>"
+        );
+      });
+      parts.push("</ul>");
+    }
+    return parts.join("");
+  }
+
+  function openStudySummary(studentId) {
+    if (!summaryModal || !summaryBody) return;
+    var sid = String(studentId || "").trim();
+    var s   = lastStudents.find(function (row) {
+      return String((row && row.student_id) || "").trim() === sid;
+    });
+    if (!s) return;
+    summaryBody.innerHTML = formatStudentStudySummary(s);
+    if (summaryFoot) {
+      summaryFoot.textContent =
+        "This summary uses the same synced data as the cards above. " +
+        "The full study report (per subject, study time by tab, question misses, anomaly hints) " +
+        "opens in the LevelUp app on the student’s device: Settings → Parent study report.";
+    }
+    summaryModal.hidden = false;
+  }
+
+  function closeStudySummary() {
+    if (summaryModal) summaryModal.hidden = true;
+  }
+
+  if (summaryClose) summaryClose.onclick = closeStudySummary;
+  if (summaryModal) {
+    summaryModal.addEventListener("click", function (e) {
+      if (e.target === summaryModal) closeStudySummary();
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && summaryModal && !summaryModal.hidden) closeStudySummary();
+  });
+
   function studentDetailBlocks(s) {
-    return "<div class='actions-row'>" +
+    return (
+      "<button type='button' class='btn-summary btn-study-summary' data-student-id='" +
+      esc(s.student_id || "") +
+      "'>Study summary</button>" +
+      "<div class='actions-row'>" +
       "<div class='menu-wrap'>" +
         "<button type='button' class='menu-btn student-menu-toggle' aria-haspopup='true' aria-expanded='false' title='More actions'>\u22EE</button>" +
         "<div class='menu-panel' hidden>" +
@@ -116,7 +250,8 @@
       "<div class='mini'><h4>Weak topics</h4><div class='chips'>"   + topicList(s.weak_topics,   "mastery") + "</div></div>" +
       "<div class='mini'><h4>Subjects</h4><div class='chips'>"      + subjectList(s.subject_stats)         + "</div></div>" +
       "<div class='mini'><h4>Recent coupons (verification)</h4><div class='chips'>" + recentCouponList(s.recent_coupons) + "</div></div>" +
-    "</div>";
+    "</div>"
+    );
   }
 
   async function loadData() {
@@ -146,7 +281,9 @@
       if (rememberCode.checked && token) saveToken(token);
       if (!rememberCode.checked) clearToken();
       var students = Array.isArray(data.students) ? data.students : [];
+      lastStudents = students;
       if (!students.length) {
+        lastStudents = [];
         if (studentCards) studentCards.innerHTML = "<p class='hint'>No student rows yet.</p>";
         status.textContent = "Loaded. No students found yet.";
         return;
@@ -174,6 +311,13 @@
               "<span class='chip'>Purchases " + Number(s.purchases || 0) + "</span>" +
             "</div>" + studentDetailBlocks(s) + "</div></section>";
         }).join("");
+
+        studentCards.querySelectorAll(".btn-study-summary").forEach(function (btn) {
+          btn.addEventListener("click", function (evt) {
+            evt.stopPropagation();
+            openStudySummary(btn.getAttribute("data-student-id"));
+          });
+        });
 
         studentCards.querySelectorAll(".student-toggle").forEach(function (btn) {
           btn.addEventListener("click", function () {
