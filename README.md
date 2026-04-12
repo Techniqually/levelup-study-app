@@ -154,7 +154,8 @@ From the console (opens the same package UI):
 To simplify parent/student setup, use the **Setup package** tool (Hub / Subject Settings / Parent pages).
 
 - **Generate** builds a full JSON template (every key we embed: Supabase, student, `llm`; empty strings where nothing is stored yet) and the matching Base64 string, so you can edit blanks and share.
-- **Apply** accepts either Base64 string **or raw JSON**.
+- **Encode JSON → Base64** (after editing the JSON preview) refreshes the one-line package for the student. **Decode → JSON** fills JSON from a pasted string and also refreshes the Base64 field to match.
+- **Apply** accepts either field; on success, both stay in sync.
 - This is convenience only (not security/encryption).
 
 Recommended JSON shape:

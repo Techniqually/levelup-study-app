@@ -314,15 +314,17 @@
         "<div class='lu-panel' style='width:min(700px,100%)'>" +
         "<h2>Setup package (copy/paste)</h2>" +
         "<p class='lu-lead'>Use one Base64 package string for Supabase, optional LLM proxy, and optional student fields. Parent dashboard still uses project/parent codes on <code>parent.html</code>. This is convenience, not encryption. " +
-        "<strong>Generate</strong> fills the JSON preview with every key we embed here (blanks where missing). " +
-        "Subjects unlock only after Supabase (or offline skip) <em>and</em> student ID + name are applied — fill those or use hub Offline defaults. " +
-        "<code>llm</code> is stored only if both proxy URL and app token are set, or if <code>\"enabled\": false</code>. " +
-        "Legacy <code>parent</code> in pasted JSON is still applied.</p>" +
+        "<strong>Generate</strong> fills both fields from this browser. Edit the JSON, then <strong>Encode JSON → Base64</strong> to refresh the one-line package for the student (two-way). " +
+        "<strong>Decode</strong> fills JSON from the string. <strong>Apply</strong> saves from either field and updates both when successful. " +
+        "Subjects unlock only after Supabase (or offline skip) <em>and</em> student ID + name — or hub Offline defaults. " +
+        "<code>llm</code> is stored only if both proxy URL and app token are set, or <code>\"enabled\": false</code>. " +
+        "Legacy <code>parent</code> in JSON is still applied.</p>" +
         "<label for='lu-pkg-str'>Package string (Base64 URL-safe) or raw JSON</label>" +
         "<textarea id='lu-pkg-str' rows='4' style='width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid #2a3344;background:#0c0e12;color:#e8ecf4;font-size:.88rem;margin-bottom:8px;resize:vertical'></textarea>" +
         "<div class='lu-actions' style='justify-content:flex-start;margin:0 0 8px 0'>" +
         "<button type='button' id='lu-pkg-generate' class='lu-primary'>Generate from current settings</button>" +
-        "<button type='button' id='lu-pkg-decode'>Decode</button>" +
+        "<button type='button' id='lu-pkg-decode'>Decode → JSON</button>" +
+        "<button type='button' id='lu-pkg-encode'>Encode JSON → Base64</button>" +
         "<button type='button' id='lu-pkg-apply'>Apply package</button>" +
         "</div>" +
         "<label for='lu-pkg-json'>Decoded JSON preview</label>" +
@@ -341,6 +343,28 @@
         errEl.hidden = !msg;
       }
 
+      function encodeJsonEditorToString() {
+        var raw = (jsonEl.value || "").trim();
+        if (!raw) {
+          setErr("JSON preview is empty — paste or edit JSON first.");
+          return;
+        }
+        var obj;
+        try {
+          obj = JSON.parse(raw);
+        } catch (e) {
+          setErr("Invalid JSON: " + ((e && e.message) || String(e)));
+          return;
+        }
+        if (!obj || typeof obj !== "object" || Array.isArray(obj)) {
+          setErr("JSON must be a single object (not an array).");
+          return;
+        }
+        strEl.value = encodeConfigPayload(obj);
+        jsonEl.value = JSON.stringify(obj, null, 2);
+        setErr("");
+      }
+
       overlay.querySelector("#lu-pkg-generate").onclick = function () {
         var payload = readSetupPackageTemplatePayload();
         jsonEl.value = JSON.stringify(payload, null, 2);
@@ -355,7 +379,12 @@
           return;
         }
         jsonEl.value = JSON.stringify(parsed.value, null, 2);
+        strEl.value = encodeConfigPayload(parsed.value);
         setErr("");
+      };
+
+      overlay.querySelector("#lu-pkg-encode").onclick = function () {
+        encodeJsonEditorToString();
       };
 
       overlay.querySelector("#lu-pkg-apply").onclick = function () {
@@ -365,6 +394,7 @@
           return;
         }
         jsonEl.value = JSON.stringify(parsed.value, null, 2);
+        strEl.value = encodeConfigPayload(parsed.value);
         var applied = applyConfigPayload(parsed.value);
         if (!applied.length) {
           setErr(

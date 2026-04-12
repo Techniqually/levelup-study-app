@@ -22,7 +22,8 @@
 <h1>LevelUp! Integration Tests</h1>
 <p class="hint">
   Runs in-browser against a sandboxed localStorage namespace.<br>
-  Supabase tests use the embedded test-user credentials — they are read-only smoke tests (no writes).
+  <code>progressStore</code> is forced off so <code>saveState()</code> does not upsert Supabase profiles (avoids 409 noise).<br>
+  Supabase suite uses the embedded credentials for a read-only <code>profiles</code> smoke <code>select</code> only.
 </p>
 <div id="results"></div>
 <div id="summary"></div>
@@ -135,7 +136,8 @@ themesByKey   = {};
 var _tidx     = buildThemeIndex(manifest);
 _tidx.themeOrder.forEach(function (k) { themeOrder.push(k); });
 Object.assign(themesByKey, _tidx.themesByKey);
-progressStore = window.ProgressStore || null;
+// Real ProgressStore syncs profiles → 409 noise + side effects; smoke test uses its own client at end.
+progressStore = null;
 route         = { view: "home", topicId: null, tab: "cheat" };
 state         = loadState();
 </script>
@@ -225,6 +227,9 @@ state         = loadState();
   var _pkgB64 = LevelupSetupForms.encodeConfigPayload(_pkgObj);
   var _pkgParsed = LevelupSetupForms.parseConfigPackage(_pkgB64);
   assert(SSP, "parse package ok", _pkgParsed.ok === true);
+  var _reB64 = LevelupSetupForms.encodeConfigPayload(JSON.parse(JSON.stringify(_pkgParsed.value)));
+  var _reParsed = LevelupSetupForms.parseConfigPackage(_reB64);
+  assert(SSP, "JSON → Base64 → parse round-trip", _reParsed.ok && _reParsed.value.SUPABASE_URL === "https://example.supabase.co");
   assert(SSP, "parse package fields", _pkgParsed.ok && _pkgParsed.value.SUPABASE_URL === "https://example.supabase.co");
   var _applied = LevelupSetupForms.applyConfigPayload(_pkgParsed.value);
   assert(SSP, "apply package writes keys", Array.isArray(_applied) && _applied.length >= 4);
@@ -400,29 +405,38 @@ state         = loadState();
   assert(SQ, "getQuestionXpMeta weak bucket",   getQuestionXpMeta("weak", {}).delta === 11);
   assert(SQ, "getRepeatAttemptMultiplier no xp", getRepeatAttemptMultiplier({ topicId: "1", activityType: "quiz" }) === 1);
   assert(SQ, "LevelupExtendedQuiz written shell empty", LevelupExtendedQuiz.renderWrittenShell({ id: "z", extendedQuestions: [] }).indexOf("No written questions") >= 0);
+  var _writtenQ = {
+    id: "e1",
+    commandWord: "State",
+    marks: 2,
+    prompt: "Hello **bold**",
+    rubric: ["one point"],
+    modelAnswer: "Ans line",
+  };
   var _exHtml = LevelupExtendedQuiz.renderWrittenShell({
     id: "t9",
-    extendedQuestions: [
-      {
-        id: "e1",
-        commandWord: "State",
-        marks: 2,
-        prompt: "Hello **bold**",
-        rubric: ["one point"],
-        modelAnswer: "Ans line",
-      },
-    ],
+    extendedQuestions: [_writtenQ],
   });
   assert(
     SQ,
     "written shell html",
-    _exHtml.indexOf("data-panel=\"written\"") >= 0 &&
+    _exHtml.indexOf('data-panel="written"') >= 0 &&
       _exHtml.indexOf("written-step-root") >= 0 &&
-      _exHtml.indexOf("State") >= 0 &&
-      _exHtml.indexOf("extended-q-textarea") >= 0 &&
-      _exHtml.indexOf("extended-q-rubric-btn") >= 0 &&
-      _exHtml.indexOf("extended-q-model-btn") >= 0 &&
-      _exHtml.indexOf("data-min-model=") >= 0
+      _exHtml.indexOf("Written (Paper 2)") >= 0 &&
+      _exHtml.indexOf("written-step-total") >= 0 &&
+      _exHtml.indexOf(">1</span>") >= 0 &&
+      _exHtml.indexOf("written-next") >= 0
+  );
+  var _cardHtml = LevelupExtendedQuiz.renderWrittenQuestionHtml(_writtenQ, 0, "t9");
+  assert(
+    SQ,
+    "written question card html",
+    _cardHtml.indexOf("extended-q-card") >= 0 &&
+      _cardHtml.indexOf("State") >= 0 &&
+      _cardHtml.indexOf("extended-q-textarea") >= 0 &&
+      _cardHtml.indexOf("extended-q-rubric-btn") >= 0 &&
+      _cardHtml.indexOf("extended-q-model-btn") >= 0 &&
+      _cardHtml.indexOf("data-min-model=") >= 0
   );
   var _goodPara =
     "Laboratory investigation systematically measures temperature concentration apparatus methodology observations recording reproducible measurements throughout experimental procedure documentation analysis validity reliability precision accuracy consistently yields trustworthy scientific conclusions documented thoroughly.";
@@ -447,6 +461,9 @@ state         = loadState();
   assert(SL, "LevelupLlmConfig.isProxyReady", LevelupLlmConfig.isProxyReady() === true);
   assert(SL, "LevelupLlmConfig.isQuizExplainEnabled", LevelupLlmConfig.isQuizExplainEnabled() === true);
   assert(SL, "LevelupLlmKeepalive available", !!window.LevelupLlmKeepalive && typeof window.LevelupLlmKeepalive.poke === "function");
+  if (window.LevelupLlmKeepalive && typeof window.LevelupLlmKeepalive.stop === "function") {
+    window.LevelupLlmKeepalive.stop();
+  }
 
   var _q = { id: "q-llm-1", question: "Why?", options: ["A", "B"], correctIndex: 1, explanation: "hint" };
   var _ck = LevelupLlmQuizCache.makeQuizKey(_q, "9", 1, 0, "test-ver");
@@ -456,7 +473,17 @@ state         = loadState();
   var _cfg = LevelupLlmConfig.get();
   assert(SL, "cache miss first", LevelupLlmQuizCache.get(_cfg, _ck) === null);
 
-  window.fetch = function () {
+  window.fetch = function (url) {
+    var u = String(url || "");
+    if (u.indexOf("/health") >= 0) {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: function () {
+          return Promise.resolve("{}");
+        },
+      });
+    }
     return Promise.resolve({
       ok: false,
       status: 401,
@@ -475,6 +502,15 @@ state         = loadState();
     _fetchCalls = 0;
     window.fetch = function (url, init) {
       var u = String(url || "");
+      if (u.indexOf("/health") >= 0) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          text: function () {
+            return Promise.resolve("{}");
+          },
+        });
+      }
       if (u.indexOf("/llm/quiz-explain") >= 0) {
         _fetchCalls++;
         return Promise.resolve({

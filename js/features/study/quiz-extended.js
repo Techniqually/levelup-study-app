@@ -227,7 +227,7 @@
       '<div class="extended-q-model"><h4 class="extended-q-subhd">Model answer (outline)</h4>' +
       '<div class="extended-q-model-body">' +
       modelHtml +
-      "</div></div></article>"
+      "</div></div></div></article>"
     );
   }
 
@@ -374,6 +374,11 @@
         '<button type="button" class="btn primary" id="written-next">Next →</button>' +
         "</div></div>"
       );
+    },
+
+    /** Same markup as bindWritten mounts into #written-step-root (tests / tooling). */
+    renderWrittenQuestionHtml: function (q, index, topicId) {
+      return renderOneCard(q, Number(index) || 0, String(topicId || "topic"));
     },
 
     bindWritten: function (t) {
