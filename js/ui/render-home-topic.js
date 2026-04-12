@@ -144,7 +144,12 @@ function renderHome() {
     // Topic is ready; finalize previous timing segment (if any).
     stopAndAwardTime();
     dock.hidden = false;
-    const hasWritten = Array.isArray(t.extendedQuestions) && t.extendedQuestions.length > 0;
+    const hasWritten =
+      typeof LevelupExtendedQuiz !== "undefined" &&
+      LevelupExtendedQuiz &&
+      typeof LevelupExtendedQuiz.hasQuestionsForTopic === "function"
+        ? LevelupExtendedQuiz.hasQuestionsForTopic(t)
+        : Array.isArray(t.extendedQuestions) && t.extendedQuestions.length > 0;
     if (route.tab === "written" && !hasWritten) {
       route.tab = "cheat";
     }

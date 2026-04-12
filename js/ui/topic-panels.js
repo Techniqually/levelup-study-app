@@ -119,7 +119,12 @@ function formatCheatPoint(p) {
   }
 
   function renderWrittenPanel(t) {
-    const has = Array.isArray(t.extendedQuestions) && t.extendedQuestions.length > 0;
+    const has =
+      typeof LevelupExtendedQuiz !== "undefined" &&
+      LevelupExtendedQuiz &&
+      typeof LevelupExtendedQuiz.hasQuestionsForTopic === "function"
+        ? LevelupExtendedQuiz.hasQuestionsForTopic(t)
+        : Array.isArray(t.extendedQuestions) && t.extendedQuestions.length > 0;
     if (!has) {
       return `<div class="panel active" data-panel="written"><p class="empty-state">No Paper 2–style written prompts in this topic yet.</p></div>`;
     }

@@ -31,6 +31,8 @@
 
   var maybeExtraQuiz = "data/subjects/" + subjectId + "/extra-quiz.js";
   if (tryExists(maybeExtraQuiz)) scripts.push(maybeExtraQuiz);
+  var maybeWrittenQuestions = "data/subjects/" + subjectId + "/extended-questions.js";
+  if (tryExists(maybeWrittenQuestions)) scripts.push(maybeWrittenQuestions);
 
   scripts.push(
     "js/infographics-info-loader.js",

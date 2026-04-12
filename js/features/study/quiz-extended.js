@@ -13,7 +13,21 @@
   })();
 
   function extendedList(t) {
-    return t && Array.isArray(t.extendedQuestions) ? t.extendedQuestions : [];
+    var local = t && Array.isArray(t.extendedQuestions) ? t.extendedQuestions : [];
+    var byTopic = window.SUBJECT_WRITTEN_QUESTIONS_BY_TOPIC || {};
+    var extra = byTopic[String((t && t.id) || "")] || [];
+    if (!local.length) return Array.isArray(extra) ? extra.slice() : [];
+    if (!Array.isArray(extra) || !extra.length) return local;
+    var seen = {};
+    var merged = [];
+    local.concat(extra).forEach(function (item) {
+      if (!item || typeof item !== "object") return;
+      var id = String(item.id || "");
+      if (id && seen[id]) return;
+      if (id) seen[id] = 1;
+      merged.push(item);
+    });
+    return merged;
   }
 
   function stepStorageKey(topicId) {
@@ -336,6 +350,10 @@
     },
 
     bind: function () {},
+
+    hasQuestionsForTopic: function (t) {
+      return extendedList(t).length > 0;
+    },
 
     renderWrittenShell: function (t) {
       var list = extendedList(t);

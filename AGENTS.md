@@ -39,7 +39,7 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 | Shell | **`asset-version.js`**, **`subject-head-assets.js`**, **`write-*-tail-scripts.js`**, `subject-config.js`, `subject-script-chain.js`, `hub-setup.js`, `setup-forms.js` | Version stamp, busted static includes, subject resolution, ordered loading, hub banner, setup modals |
 | Features | `js/features/study/*`, `js/features/xp/*`, `js/features/shop/*`, `js/features/daily/*`, `js/features/llm/*` | Topic/quiz/shop/XP/daily/LLM proxy client (`LEVELUP_LLM_CONFIG_JSON`) |
 | UI | `js/ui/topbar.js`, `modals.js`, … | DOM updates |
-| Data | `data/subjects/<subject>/topics-manifest.js`, topic JS, `data/shop-rewards.js` | Manifest + per-topic content |
+| Data | `data/subjects/<subject>/topics-manifest.js`, topic JS, optional `extended-questions.js`, `data/shop-rewards.js` | Manifest + per-topic content |
 | Sync | `js/supabase-client.js`, `js/progress-store.js` | Supabase client + `ProgressStore` API |
 
 **Structured (long) answers:** optional `extendedQuestions` on a topic (command word, marks, `prompt`, `rubric[]`, `modelAnswer`, optional `syllabusNote`, optional `minCharsForModel`). UI: **`Written`** tab in `subject.html` dock (`route.tab === "written"`); `topic-panels.js` → `renderWrittenPanel` / `LevelupExtendedQuiz.renderWrittenShell` + `bindWritten`. One question at a time (step in `sessionStorage`). **XP:** `state.writtenClaims` (once per question per local UTC day) + `addXp` `activityType: "written_practice"` after mark scheme + model viewed + heuristic quality (`app-constants.js` `WRITTEN_CLAIM_*`). Script: `quiz-extended.js` before `quiz-engine.js`.
