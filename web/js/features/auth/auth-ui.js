@@ -35,18 +35,12 @@
       overlay.id = "levelup-auth-overlay";
       overlay.innerHTML =
         "<div class='lu-panel'>" +
-        "<h2>Sign in</h2>" +
-        "<p class='lu-lead'>Use your Supabase account. For POC monetization, chemistry opens only after entitlement is granted.</p>" +
-        "<label for='lu-auth-email'>Email</label>" +
-        "<input id='lu-auth-email' type='email' autocomplete='email' placeholder='you@example.com'/>" +
-        "<label for='lu-auth-pass'>Password</label>" +
-        "<input id='lu-auth-pass' type='password' autocomplete='current-password' placeholder='Password'/>" +
+        "<h2>Welcome to LevelUp!</h2>" +
+        "<p class='lu-lead'>Sign in with your Google account to access your subjects and track your progress.</p>" +
         "<div id='lu-auth-err' class='lu-err' hidden></div>" +
         "<div class='lu-actions'>" +
         "<button type='button' id='lu-auth-cancel'>Cancel</button>" +
-        "<button type='button' id='lu-auth-google'>Google</button>" +
-        "<button type='button' id='lu-auth-signup'>Sign up</button>" +
-        "<button type='button' id='lu-auth-signin' class='lu-primary'>Sign in</button>" +
+        "<button type='button' id='lu-auth-google' class='lu-primary'>Continue with Google</button>" +
         "</div></div>";
 
       function done(result) {
@@ -60,43 +54,8 @@
         err.hidden = !msg;
       }
 
-      function values() {
-        return {
-          email: String(overlay.querySelector("#lu-auth-email").value || "").trim(),
-          pass: String(overlay.querySelector("#lu-auth-pass").value || ""),
-        };
-      }
-
       overlay.querySelector("#lu-auth-cancel").onclick = function () {
         done({ action: "cancel" });
-      };
-
-      overlay.querySelector("#lu-auth-signin").onclick = async function () {
-        try {
-          var v = values();
-          if (!v.email || !v.pass) {
-            setErr("Email and password are required.");
-            return;
-          }
-          await global.LevelupAuth.signInWithPassword(v.email, v.pass);
-          done({ action: "signin" });
-        } catch (e) {
-          setErr((e && e.message) || "Sign in failed.");
-        }
-      };
-
-      overlay.querySelector("#lu-auth-signup").onclick = async function () {
-        try {
-          var v = values();
-          if (!v.email || !v.pass) {
-            setErr("Email and password are required.");
-            return;
-          }
-          await global.LevelupAuth.signUpWithPassword(v.email, v.pass);
-          done({ action: "signup" });
-        } catch (e) {
-          setErr((e && e.message) || "Sign up failed.");
-        }
       };
 
       overlay.querySelector("#lu-auth-google").onclick = async function () {

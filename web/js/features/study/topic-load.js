@@ -11,13 +11,6 @@ function loadTopicScript(id) {
     }
     loadScriptPromises[key] = new Promise((resolve, reject) => {
       const s = document.createElement("script");
-      const sep = meta.file.includes("?") ? "&" : "?";
-      const localSrc = meta.file + sep + "v=" + encodeURIComponent(APP_VERSION);
-      const useRemoteStorage =
-        String(window.SUBJECT_ID || "").toLowerCase() === "chemistry" &&
-        window.LevelupAuth &&
-        typeof window.LevelupAuth.getClient === "function";
-
       function attachAndWait(src, revokeAfterLoad) {
         s.src = src;
         s.async = true;
@@ -34,20 +27,19 @@ function loadTopicScript(id) {
         document.head.appendChild(s);
       }
 
-      if (!useRemoteStorage) {
-        attachAndWait(localSrc, false);
+      if (!window.LevelupAuth || typeof window.LevelupAuth.getClient !== "function") {
+        reject(new Error("storage_client_missing"));
         return;
       }
-
       const sb = window.LevelupAuth.getClient();
       if (!sb || !sb.storage || !sb.storage.from) {
-        attachAndWait(localSrc, false);
+        reject(new Error("storage_client_unavailable"));
         return;
       }
       const match = String(meta.file || "").match(/^data\/subjects\/(.+)$/);
       const storagePath = match ? match[1] : "";
       if (!storagePath) {
-        attachAndWait(localSrc, false);
+        reject(new Error("invalid_manifest_file_path:" + String(meta.file || "")));
         return;
       }
       sb.storage
@@ -55,11 +47,6 @@ function loadTopicScript(id) {
         .download(storagePath)
         .then(({ data, error }) => {
           if (error || !data) {
-            // Localhost fallback keeps dev usable until storage assets are uploaded.
-            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-              attachAndWait(localSrc, false);
-              return;
-            }
             reject(new Error("storage download failed for " + storagePath));
             return;
           }

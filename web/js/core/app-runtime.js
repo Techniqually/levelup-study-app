@@ -36,6 +36,6 @@ var flashSession = null;
 var main;
 var dock;
 
-// Topic registry: populated by data/subjects/{id}/topic-*.js files.
+// Topic registry: populated by topic scripts loaded from storage objects.
 // Initialize here so topic-load.js can safely read it before any topic loads.
 window.__topicRegistry = window.__topicRegistry || {};

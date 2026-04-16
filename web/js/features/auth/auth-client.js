@@ -44,21 +44,7 @@
     return session && session.access_token ? String(session.access_token) : "";
   }
 
-  async function signInWithPassword(email, password) {
-    var sb = getClient();
-    if (!sb) throw new Error("Supabase client unavailable.");
-    var res = await sb.auth.signInWithPassword({ email: email, password: password });
-    if (res.error) throw res.error;
-    return res.data;
-  }
-
-  async function signUpWithPassword(email, password) {
-    var sb = getClient();
-    if (!sb) throw new Error("Supabase client unavailable.");
-    var res = await sb.auth.signUp({ email: email, password: password });
-    if (res.error) throw res.error;
-    return res.data;
-  }
+  // Password auth removed for commercial PoC (Google-only)
 
   async function signInWithGoogle(redirectTo) {
     var sb = getClient();
@@ -105,7 +91,7 @@
     if (!forceRefresh && entitlementsCache && cachedForUserId === uid) return entitlementsCache.slice();
     var q = await sb
       .from("user_entitlements")
-      .select("entitlements")
+      .select("entitlements, access_to")
       .eq("user_id", uid)
       .maybeSingle();
     if (q.error || !q.data) {
@@ -114,6 +100,9 @@
       return [];
     }
     var list = Array.isArray(q.data.entitlements) ? q.data.entitlements : [];
+    if (q.data.access_to && new Date(q.data.access_to).getTime() < Date.now()) {
+      list = []; // expired
+    }
     entitlementsCache = list.map(function (x) {
       return String(x);
     });
@@ -125,7 +114,7 @@
     var sid = String(subjectId || "").toLowerCase();
     if (!sid) return false;
     var needed = ENTITLEMENT_MAP[sid];
-    if (!needed) return true;
+    if (!needed) return false;
     var ents = await fetchEntitlements(false);
     return ents.indexOf("olevel_all") !== -1 || ents.indexOf(needed) !== -1;
   }
@@ -140,8 +129,6 @@
     getClient: getClient,
     getSession: getSession,
     getAccessToken: getAccessToken,
-    signInWithPassword: signInWithPassword,
-    signUpWithPassword: signUpWithPassword,
     signInWithGoogle: signInWithGoogle,
     signOut: signOut,
     onAuthStateChange: onAuthStateChange,

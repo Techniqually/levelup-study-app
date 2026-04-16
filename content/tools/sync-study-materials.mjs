@@ -8,6 +8,7 @@ import vm from "node:vm";
 const SCRIPT_FILE = fileURLToPath(import.meta.url);
 const ROOT = path.resolve(path.dirname(SCRIPT_FILE), "..", "..");
 const DATA_SUBJECTS_DIR = path.join(ROOT, "content", "data", "subjects");
+const SHOP_REWARDS_PATH = path.join(ROOT, "content", "data", "shop-rewards.js");
 
 function parseArgs(argv) {
   const out = {
@@ -141,6 +142,14 @@ async function main() {
     buf: manifestJson,
     hash: sha256(manifestJson),
     contentType: "application/json; charset=utf-8",
+  };
+
+  // Shared runtime data required by subject bootstrap.
+  const shopRewards = await fs.readFile(SHOP_REWARDS_PATH);
+  uploadMap["shared/shop-rewards.js"] = {
+    buf: shopRewards,
+    hash: sha256(shopRewards),
+    contentType: contentTypeFor(SHOP_REWARDS_PATH),
   };
 
   // Optional free preview copy (e.g. --free-topic theme1-matter/topic-01.js).

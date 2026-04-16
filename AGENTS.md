@@ -13,7 +13,7 @@ Optional **LLM proxy:** **`api/`** — FastAPI + Docker Compose; provider keys s
 - **Study report digest:** `saveState` → `progressStore.scheduleReportDigest("save")` (debounced). Tab hidden → `flushReportDigest("hidden")` after `REPORT_DIGEST_HIDDEN_DELAY_MS`. Uploads capped per local day (`REPORT_DIGEST_MAX_UPLOADS_PER_DAY`); skips if fingerprint unchanged. Inserts `event_log` rows with `event_type = study_report_digest` (`text` capped, `event_data` JSON). Tunables in `app-constants.js`.
 - **Subject:** `subject.html` loads `asset-version.js` + **`subject-head-assets.js`** (injects `link` for `css/styles.css?v=…`), then **`write-subject-tail-scripts.js`** (chains Supabase CDN → `auth-client` → `setup-forms` → `subject-config` → `remote-manifest` → `subject-script-chain` via `onload`, no `document.write`).
 - **Hub / parent:** `write-hub-tail-scripts.js` loads Supabase CDN → `auth-client.js` → `auth-ui.js` → `setup-forms.js` → `hub-setup.js`; **`write-parent-tail-scripts.js`** loads `setup-forms.js` → `parent-dashboard.js`.
-- **Optional files** probed by `tryExists()` use the same `?v=` as real loads (`subject-script-chain.js`).
+- **Subject runtime data source:** production POC uses Supabase Storage (`study-materials`) only; `subject-script-chain.js` hard-fails if remote bootstrap is missing/invalid.
 - HTML entry URLs are usually fine without a query; use server `Cache-Control` on `.html` if needed.
 
 **Do not** use a rolling calendar date as the **production** default: it would bust every visitor’s cache every day even when no code changed.
@@ -22,8 +22,8 @@ Optional **LLM proxy:** **`api/`** — FastAPI + Docker Compose; provider keys s
 
 1. **`js/shell/asset-version.js`** then **`subject-head-assets.js`** (in `<head>`).
 2. **`js/shell/write-subject-tail-scripts.js`** (end of `<body>`) → Supabase CDN, **`js/features/auth/auth-client.js`**, **`setup-forms.js`**, **`subject-config.js`**, **`js/features/study/remote-manifest.js`**, **`subject-script-chain.js`** (each with `?v=APP_VERSION` where applicable).
-3. **`subject-config.js`** — if **`LevelupSetupForms.isClientSetupComplete()`** is false, **`location.replace("index.html?needsSetup=1")`** (subject links on the hub are also blocked until then). Otherwise sets `window.SUBJECT_ID`, `SUBJECT_TITLE`, assigns **`window.__LEVELUP_SUBJECT_SETUP`** (mirrors `LEVELUP_STUDENT_*` / `SUPABASE_*` from `localStorage`). Setup is via **Setup package** (or hub **Offline defaults**).
-4. **`subject-script-chain.js`** — waits on `__LEVELUP_SUBJECT_SETUP`, then appends scripts in a fixed order (manifest → features → **`js/app.js`** last).
+3. **`subject-config.js`** — sets `window.SUBJECT_ID` / `SUBJECT_TITLE`, mirrors local storage setup to `window`, requires Supabase session, and enforces entitlement checks before app bootstrap.
+4. **`subject-script-chain.js`** — waits on `__LEVELUP_SUBJECT_SETUP`, then calls `LevelupRemoteManifest.loadSubjectBootstrap(subjectId)` (loads `topics-manifest.json`, optional subject JS, `shared/shop-rewards.js`, optional `infographics-info.md`), then appends feature scripts with **`js/app.js`** last.
 
 If you add globals consumed in `app.js`, load their script **before** `app.js` in `subject-script-chain.js`.
 
@@ -39,7 +39,7 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 | Shell | **`asset-version.js`**, **`subject-head-assets.js`**, **`write-*-tail-scripts.js`**, `subject-config.js`, `subject-script-chain.js`, `hub-setup.js`, `setup-forms.js` | Version stamp, busted static includes, subject resolution, ordered loading, hub banner, setup modals |
 | Features | `js/features/study/*`, `js/features/xp/*`, `js/features/shop/*`, `js/features/daily/*`, `js/features/llm/*` | Topic/quiz/shop/XP/daily/LLM proxy client (`LEVELUP_LLM_CONFIG_JSON`) + keepalive pings (`llm-keepalive.js`) |
 | UI | `js/ui/topbar.js`, `modals.js`, … | DOM updates |
-| Data | `data/subjects/<subject>/topics-manifest.js`, topic JS, optional `extended-questions.js`, `data/shop-rewards.js` | Manifest + per-topic content |
+| Data | `content/data/subjects/<subject>/*` + `content/data/shop-rewards.js` (synced to Storage) | Source content for storage-backed runtime |
 | Sync | `js/supabase-client.js`, `js/progress-store.js` | Supabase client + `ProgressStore` API |
 
 **Structured (long) answers:** optional `extendedQuestions` on a topic (command word, marks, `prompt`, `rubric[]`, `modelAnswer`, optional `syllabusNote`, optional `minCharsForModel`). UI: **`Written`** tab in `subject.html` dock (`route.tab === "written"`); `topic-panels.js` → `renderWrittenPanel` / `LevelupExtendedQuiz.renderWrittenShell` + `bindWritten`. One question at a time (step in `sessionStorage`). **XP:** `state.writtenClaims` (once per question per local UTC day) + `addXp` `activityType: "written_practice"` after mark scheme + model viewed + heuristic quality (`app-constants.js` `WRITTEN_CLAIM_*`). Script: `quiz-extended.js` before `quiz-engine.js`.

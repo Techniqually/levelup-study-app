@@ -2,46 +2,12 @@
   const subjectId = window.SUBJECT_ID;
   if (!subjectId) return;
 
-  // Browsers block XHR/fetch from `file://` in many configurations.
-  // In that case, the app can still render images, but the "extra info" won't load.
-  if (typeof window.location !== "undefined" && window.location.protocol === "file:") {
-    console.warn(
-      "Infographics extra-info requires running the app via http:// (local server)."
-    );
-    return;
-  }
-
   window.INFO_MD_BY_TOPIC_AND_FILE =
     window.INFO_MD_BY_TOPIC_AND_FILE || {};
-
-  // Try both relative locations:
-  // - root subject shells (study.html): data/subjects/...
-  // - nested subject shells (physics/index.html): ../data/subjects/...
-  const candidates = [
-    `data/subjects/${subjectId}/infographics-info.md`,
-    `../data/subjects/${subjectId}/infographics-info.md`,
-  ];
-
-  let md = "";
-  let lastStatus = null;
-  for (const url of candidates) {
-    try {
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", url, false); // sync by design; renderVisuals is sync
-      xhr.send(null);
-      lastStatus = xhr.status;
-      if (xhr.status === 200 && xhr.responseText) {
-        md = xhr.responseText;
-        break;
-      }
-    } catch (_) {}
-  }
+  const md = String(window.__LEVELUP_INFO_MD_TEXT || "");
 
   if (!md) {
-    console.warn(
-      "Infographics extra-info markdown failed to load.",
-      { candidates, lastStatus }
-    );
+    console.warn("Infographics extra-info markdown missing from remote bootstrap.");
     return;
   }
 

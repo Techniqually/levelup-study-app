@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     supabase_url: str = Field(default="", validation_alias="SUPABASE_URL")
     supabase_service_role_key: str = Field(default="", validation_alias="SUPABASE_SERVICE_ROLE_KEY")
     supabase_jwt_secret: str = Field(default="", validation_alias="SUPABASE_JWT_SECRET")
+    supabase_anon_key_public: str = Field(default="", validation_alias="SUPABASE_ANON_KEY_PUBLIC")
     stripe_secret_key: str = Field(default="", validation_alias="STRIPE_SECRET_KEY")
     stripe_webhook_secret: str = Field(default="", validation_alias="STRIPE_WEBHOOK_SECRET")
     stripe_default_entitlement: str = Field(
@@ -152,6 +153,18 @@ class QuizExplainBody(BaseModel):
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/config")
+async def get_client_config() -> dict[str, str]:
+    """
+    Returns public Supabase config for the frontend to bootstrap itself.
+    The anon key is intentionally public — it has no elevated permissions.
+    """
+    return {
+        "supabaseUrl": settings.supabase_url,
+        "supabaseAnonKey": settings.supabase_anon_key_public,
+    }
 
 
 @app.post("/llm/quiz-explain")

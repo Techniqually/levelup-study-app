@@ -1,30 +1,40 @@
 (function () {
   var v = encodeURIComponent(window.APP_VERSION || "dev");
-  var paths = [
+  var corePaths = [
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
     "js/features/auth/auth-client.js",
-    "js/shell/setup-forms.js",
     "js/shell/subject-config.js",
     "js/features/study/remote-manifest.js",
     "js/shell/subject-script-chain.js",
   ];
   var parent = (document.currentScript && document.currentScript.parentNode) || document.body;
-  var i = 0;
-  function next() {
-    if (i >= paths.length) return;
-    var s = document.createElement("script");
-    s.src = paths[i] + "?v=" + v;
-    s.async = false;
-    s.onload = function () {
-      i += 1;
-      next();
-    };
-    s.onerror = function () {
-      console.error("LevelUp: failed to load script", paths[i]);
-      i += 1;
-      next();
-    };
-    parent.appendChild(s);
+
+  function loadChain(list, onComplete) {
+    var i = 0;
+    function next() {
+      if (i >= list.length) return onComplete && onComplete();
+      var s = document.createElement("script");
+      var path = list[i];
+      s.src = path.indexOf("http") === 0 ? path : path + "?v=" + v;
+      s.async = false;
+      s.onload = function () { i++; next(); };
+      s.onerror = function () { 
+        console.error("LevelUp: failed to load script", path);
+        i++; next(); 
+      };
+      parent.appendChild(s);
+    }
+    next();
   }
-  next();
+
+  function startApp() {
+    loadChain(corePaths);
+  }
+
+  if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+    startApp();
+  } else {
+    document.addEventListener("levelup:config-ready", startApp);
+    loadChain(["js/shell/api-config.js", "js/shell/bootstrap.js"]);
+  }
 })();

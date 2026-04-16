@@ -1,43 +1,14 @@
 (function () {
   var v = encodeURIComponent(window.APP_VERSION || "dev");
   var subjectId = window.SUBJECT_ID || "chemistry";
-  var defaultManifestScript = "data/subjects/" + subjectId + "/topics-manifest.js";
 
   function mkV(src) {
     return src + (src.includes("?") ? "&" : "?") + "v=" + v;
   }
 
-  // Synchronous probe — avoids console 404 noise for optional files (same ?v= as chain loads).
-  function tryExists(src) {
-    if (!src) return false;
-    if (window.location.protocol === "file:") return true;
-    var probe = /^https?:\/\//i.test(src) ? src : mkV(src);
-    try {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", probe, false);
-      xhr.send(null);
-      return xhr.status >= 200 && xhr.status < 300;
-    } catch (_) {
-      return false;
-    }
-  }
-
   var scripts = [
-    // ── Subject data (must come before app-runtime / app-constants) ──────────
-    defaultManifestScript,
-  ];
-
-  var maybeInfographics = "data/subjects/" + subjectId + "/infographics-images.js";
-  if (tryExists(maybeInfographics)) scripts.push(maybeInfographics);
-
-  var maybeExtraQuiz = "data/subjects/" + subjectId + "/extra-quiz.js";
-  if (tryExists(maybeExtraQuiz)) scripts.push(maybeExtraQuiz);
-  var maybeWrittenQuestions = "data/subjects/" + subjectId + "/extended-questions.js";
-  if (tryExists(maybeWrittenQuestions)) scripts.push(maybeWrittenQuestions);
-
-  scripts.push(
+    // Subject data and shop data are loaded from private storage before this chain.
     "js/infographics-info-loader.js",
-    "data/shop-rewards.js",
 
     // ── Supabase CDN + wrappers ───────────────────────────────────────────────
     "js/supabase-client.js",
@@ -113,8 +84,8 @@
     "js/ui/report.js",
 
     // ── Bootstrap (must be last) ──────────────────────────────────────────────
-    "js/app.js"
-  );
+    "js/app.js",
+  ];
 
   function appendScripts(list) {
     list.forEach(function (src) {
@@ -125,33 +96,35 @@
     });
   }
 
+  function renderFatalLoadError(reason) {
+    var safe = String(reason || "storage_bootstrap_failed");
+    document.body.innerHTML =
+      '<main style="max-width:720px;margin:48px auto;padding:24px;font-family:system-ui,sans-serif;">' +
+      "<h1>Content load failed</h1>" +
+      "<p>This subject now requires study data in Supabase Storage.</p>" +
+      "<p><code>" +
+      safe.replace(/[<>&]/g, "") +
+      "</code></p>" +
+      "</main>";
+  }
+
   function runChain() {
-    if (
-      subjectId === "chemistry" &&
-      window.LevelupRemoteManifest &&
-      typeof window.LevelupRemoteManifest.loadForSubject === "function"
-    ) {
-      window.LevelupRemoteManifest
-        .loadForSubject(subjectId)
-        .then(function (res) {
-          var loaded = !!(res && res.ok);
-          if (!loaded) {
-            appendScripts(scripts);
-            return;
-          }
-          // Remove local manifest script if remote manifest is loaded from private storage.
-          appendScripts(
-            scripts.filter(function (src) {
-              return src !== defaultManifestScript;
-            })
-          );
-        })
-        .catch(function () {
-          appendScripts(scripts);
-        });
+    if (!window.LevelupRemoteManifest || typeof window.LevelupRemoteManifest.loadSubjectBootstrap !== "function") {
+      renderFatalLoadError("remote_manifest_loader_missing");
       return;
     }
-    appendScripts(scripts);
+    window.LevelupRemoteManifest
+      .loadSubjectBootstrap(subjectId)
+      .then(function (res) {
+        if (!res || !res.ok) {
+          renderFatalLoadError((res && res.reason) || "storage_bootstrap_failed");
+          return;
+        }
+        appendScripts(scripts);
+      })
+      .catch(function (err) {
+        renderFatalLoadError((err && err.message) || "storage_bootstrap_failed");
+      });
   }
 
   var boot = window.__LEVELUP_SUBJECT_SETUP;
