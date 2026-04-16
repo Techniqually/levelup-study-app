@@ -37,6 +37,24 @@ Topic scripts must call `window.__registerTopic({ id, title, ... })`.
 node scripts/build-all.mjs
 ```
 
+## Sync subject data to Supabase Storage (repeatable)
+
+For monetized delivery, upload a subject from `content/data/subjects/<subject>/` into private bucket `study-materials`.
+
+```bash
+SUPABASE_URL=http://127.0.0.1:54321 \
+SUPABASE_SERVICE_ROLE_KEY=... \
+node content/tools/sync-study-materials.mjs --subject chemistry --free-topic theme1-matter/topic-01.js
+```
+
+The script:
+- uploads all files under `data/subjects/<subject>/` to `<subject>/...` in the bucket
+- generates and uploads `<subject>/topics-manifest.json` from `topics-manifest.js`
+- optionally writes a free preview copy to `<subject>/free/<topic-file>`
+- keeps incremental hash state in `<subject>/.upload-manifest.json` (changed files only on future runs)
+
+Use the same script for local and remote Supabase by changing only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+
 ## Infographics extra-info (generic)
 
 Each subject may have *per-infographic* markdown text stored here:
@@ -126,9 +144,9 @@ This app supports hybrid persistence:
 
 ### 1) Create/run database schema
 
-Run this script in Supabase SQL Editor:
+Run all SQL files in order from:
 
-- `supabase/study_app_phase1.sql`
+- `supabase/migrations/*.sql`
 
 The script includes:
 - core tables + study tables
@@ -136,6 +154,8 @@ The script includes:
 - student identity (`student_id`) support
 - idempotent event/purchase upsert indexes
 - reward purchase RPC
+- monetization POC entitlements + Stripe webhook idempotency tables
+- private `study-materials` storage policies
 - parent dashboard RPC + parent code setup function
 - profile data clear function
 
@@ -143,7 +163,7 @@ The script includes:
 
 Use the **Setup package** tool (subject hub, subject Settings, or parent page): paste a Base64 string or JSON with `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and optional `LEVELUP_STUDENT_*`, `llm`, `parent`, etc. Values are stored in `localStorage`.
 
-On the hub you can also use **Offline defaults** to skip cloud sync (when no Supabase keys are set yet) and fill a placeholder student for local-only use.
+For monetization POC, use real Supabase keys and login; offline defaults are not part of the paid-access path.
 
 From the console (opens the same package UI):
 - `window.configureConfigPackage()` (hub)
@@ -171,7 +191,6 @@ Recommended JSON shape:
     "enabled": true,
     "mode": "fastapi",
     "proxyBaseUrl": "https://your-render-app.onrender.com",
-    "appToken": "same-as-APP_TOKEN",
     "features": { "quizExplain": true },
     "cache": { "maxEntries": 200, "ttlDays": 60 }
   }
@@ -184,12 +203,13 @@ Compatibility notes:
 - `fastapi` is accepted as an alias for `llm` when importing.
 - `LEVELUP_STUDENT_NAME` is optional on import (omit if you only need to refresh other keys).
 - Legacy pastes may still include a `parent` object; **Apply** will still write those keys if present.
-- **`llm`**: a block with `enabled: true` but empty `proxyBaseUrl` / `appToken` is **not** written (avoids “I applied the template” with no Supabase/student yet). Use `"enabled": false` to persist a disabled stub, or set both URL and token.
+- **`llm`**: a block with `enabled: true` but empty `proxyBaseUrl` is **not** written. Use `"enabled": false` to persist a disabled stub, or set the URL.
 - Only known keys are applied; unknown fields are ignored.
 
 Important:
 - Do **not** use DB connection string or service role in browser.
 - Use only Project URL + anon/public key.
+- FastAPI verifies Supabase JWTs server-side with `SUPABASE_JWT_SECRET`; browser only sends the normal Supabase access token.
 
 ### 3) Student identity
 

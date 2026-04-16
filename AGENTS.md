@@ -11,8 +11,8 @@ Optional **LLM proxy:** **`api/`** — FastAPI + Docker Compose; provider keys s
 - **Local dev:** without `data-levelup-build`, `localhost` / `127.0.0.1` use **UTC `YYYYMMDD-dev`**. Tests may set `window.APP_VERSION` before `asset-version.js` runs (then this file does nothing).
 - **Who reads `APP_VERSION`:** `subject-script-chain.js` (`mkV`), `subject-head-assets.js`, `write-*-tail-scripts.js`, `topic-load.js`, `app.js`. `subject-config.js` only sets `window.APP_VERSION` if still unset (`|| "dev"`).
 - **Study report digest:** `saveState` → `progressStore.scheduleReportDigest("save")` (debounced). Tab hidden → `flushReportDigest("hidden")` after `REPORT_DIGEST_HIDDEN_DELAY_MS`. Uploads capped per local day (`REPORT_DIGEST_MAX_UPLOADS_PER_DAY`); skips if fingerprint unchanged. Inserts `event_log` rows with `event_type = study_report_digest` (`text` capped, `event_data` JSON). Tunables in `app-constants.js`.
-- **Subject:** `subject.html` loads `asset-version.js` + **`subject-head-assets.js`** (injects `link` for `css/styles.css?v=…`), then **`write-subject-tail-scripts.js`** (chains `setup-forms` → `subject-config` → `subject-script-chain` via `onload`, no `document.write`).
-- **Hub / parent:** `write-hub-tail-scripts.js` loads `setup-forms.js` → `hub-setup.js`; **`write-parent-tail-scripts.js`** loads `setup-forms.js` → `parent-dashboard.js`.
+- **Subject:** `subject.html` loads `asset-version.js` + **`subject-head-assets.js`** (injects `link` for `css/styles.css?v=…`), then **`write-subject-tail-scripts.js`** (chains Supabase CDN → `auth-client` → `setup-forms` → `subject-config` → `remote-manifest` → `subject-script-chain` via `onload`, no `document.write`).
+- **Hub / parent:** `write-hub-tail-scripts.js` loads Supabase CDN → `auth-client.js` → `auth-ui.js` → `setup-forms.js` → `hub-setup.js`; **`write-parent-tail-scripts.js`** loads `setup-forms.js` → `parent-dashboard.js`.
 - **Optional files** probed by `tryExists()` use the same `?v=` as real loads (`subject-script-chain.js`).
 - HTML entry URLs are usually fine without a query; use server `Cache-Control` on `.html` if needed.
 
@@ -21,7 +21,7 @@ Optional **LLM proxy:** **`api/`** — FastAPI + Docker Compose; provider keys s
 ## Boot order (subject)
 
 1. **`js/shell/asset-version.js`** then **`subject-head-assets.js`** (in `<head>`).
-2. **`js/shell/write-subject-tail-scripts.js`** (end of `<body>`) → **`setup-forms.js`**, **`subject-config.js`**, **`subject-script-chain.js`** (each with `?v=APP_VERSION`).
+2. **`js/shell/write-subject-tail-scripts.js`** (end of `<body>`) → Supabase CDN, **`js/features/auth/auth-client.js`**, **`setup-forms.js`**, **`subject-config.js`**, **`js/features/study/remote-manifest.js`**, **`subject-script-chain.js`** (each with `?v=APP_VERSION` where applicable).
 3. **`subject-config.js`** — if **`LevelupSetupForms.isClientSetupComplete()`** is false, **`location.replace("index.html?needsSetup=1")`** (subject links on the hub are also blocked until then). Otherwise sets `window.SUBJECT_ID`, `SUBJECT_TITLE`, assigns **`window.__LEVELUP_SUBJECT_SETUP`** (mirrors `LEVELUP_STUDENT_*` / `SUPABASE_*` from `localStorage`). Setup is via **Setup package** (or hub **Offline defaults**).
 4. **`subject-script-chain.js`** — waits on `__LEVELUP_SUBJECT_SETUP`, then appends scripts in a fixed order (manifest → features → **`js/app.js`** last).
 
@@ -29,7 +29,7 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 
 ## Boot order (hub)
 
-`index.html` loads **`asset-version.js`** then **`write-hub-tail-scripts.js`** → `setup-forms.js`, **`hub-setup.js`**.
+`index.html` loads **`asset-version.js`** then **`write-hub-tail-scripts.js`** → Supabase CDN, `auth-client.js`, `auth-ui.js`, `setup-forms.js`, **`hub-setup.js`**.
 
 ## Layout of `js/`
 
@@ -63,6 +63,12 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 - Prefer **small, focused diffs**; match existing style (`function` declarations, `var` in legacy paths, IIFEs in shell).
 - Custom events include `levelup:xp-gained`, `levelup:state-saved`, `levelup:route-changed` (see `xp-ledger.js`, `state-persistence.js`, `render-home-topic.js`).
 - Shop: server is source of truth for XP after purchase; **`applyShopSnapshot`** in `shop-sync.js` reconciles local `state.xp` and coupon lists.
+
+## Decision quality guardrail
+
+- If a user-requested suggestion/change appears to conflict with best practices, introduces notable security/maintainability risk, or creates major trade-offs, **pause and ask for explicit confirmation before applying it**.
+- In that confirmation, briefly state why it is risky and propose the safer/default alternative.
+- If the user confirms, proceed as requested and document the trade-off in the final summary.
 
 ## Cursor / AGENTS
 
