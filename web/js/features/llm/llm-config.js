@@ -1,6 +1,6 @@
 /**
  * LLM proxy config in localStorage (LEVELUP_LLM_CONFIG_JSON).
- * See docs/llm-integration-plan.md — browser holds only proxyBaseUrl + appToken.
+ * Browser holds proxyBaseUrl + feature flags. Auth token comes from Supabase session.
  */
 (function (global) {
   var STORAGE_KEY = "LEVELUP_LLM_CONFIG_JSON";
@@ -35,8 +35,7 @@
     var c = get();
     if (!c || c.enabled === false) return false;
     var url = normalizeProxyBaseUrl(c.proxyBaseUrl);
-    var tok = String(c.appToken || "").trim();
-    return !!url && !!tok;
+    return !!url;
   }
 
   function isQuizExplainEnabled() {
@@ -51,7 +50,6 @@
     if (!isProxyReady() || !c) return null;
     return {
       proxyBaseUrl: normalizeProxyBaseUrl(c.proxyBaseUrl),
-      appToken: String(c.appToken || "").trim(),
     };
   }
 
@@ -66,7 +64,6 @@
       enabled: o.enabled !== false,
       mode: o.mode || "fastapi",
       proxyBaseUrl: normalizeProxyBaseUrl(o.proxyBaseUrl),
-      appToken: String(o.appToken || "").trim(),
       features: {
         quizExplain: !(o.features && o.features.quizExplain === false),
       },

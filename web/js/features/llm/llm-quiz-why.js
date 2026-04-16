@@ -92,11 +92,20 @@
     el.textContent = "Empty response.";
   }
 
-  function runFetch(q, topicId, chosenIndex, meta, onResult) {
+  async function runFetch(q, topicId, chosenIndex, meta, onResult) {
     var cfg = global.LevelupLlmConfig.getClientConfig();
     var fullCfg = global.LevelupLlmConfig.get();
     if (!cfg || !global.LevelupLlmConfig.isQuizExplainEnabled()) {
       onResult({ ok: false, message: "LLM is not configured." });
+      return;
+    }
+    if (!global.LevelupAuth || typeof global.LevelupAuth.getAccessToken !== "function") {
+      onResult({ ok: false, message: "Auth module unavailable." });
+      return;
+    }
+    var accessToken = await global.LevelupAuth.getAccessToken();
+    if (!accessToken) {
+      onResult({ ok: false, message: "You must sign in before using AI explanations." });
       return;
     }
     meta = meta || {};
@@ -120,7 +129,15 @@
       return;
     }
     var body = buildRequestBody(q, chosenIndex, meta);
-    global.LevelupLlmClient.quizExplain(cfg, body).then(function (res) {
+    global.LevelupLlmClient
+      .quizExplain(
+        {
+          proxyBaseUrl: cfg.proxyBaseUrl,
+          accessToken: accessToken,
+        },
+        body
+      )
+      .then(function (res) {
       if (res.ok && res.data) {
         global.LevelupLlmQuizCache.set(fullCfg, key, res.data);
       }
@@ -135,7 +152,7 @@
           }
         )
       );
-    });
+      });
   }
 
   /**

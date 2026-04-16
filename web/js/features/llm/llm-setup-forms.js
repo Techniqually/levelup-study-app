@@ -1,5 +1,5 @@
 /**
- * Settings modal for LLM proxy URL + app token (LEVELUP_LLM_CONFIG_JSON).
+ * Settings modal for LLM proxy URL (LEVELUP_LLM_CONFIG_JSON).
  */
 (function (global) {
   var STYLE_ID = "levelup-llm-setup-style";
@@ -52,7 +52,6 @@
       }
 
       var url0 = String(dc.proxyBaseUrl || "").replace(/"/g, "&quot;");
-      var tok0 = String(dc.appToken || "").replace(/"/g, "&quot;");
       var en = dc.enabled !== false ? " checked" : "";
       var qz = !(dc.features && dc.features.quizExplain === false) ? " checked" : "";
 
@@ -60,7 +59,7 @@
         "<div class='lu-panel'>" +
         "<h2>LLM proxy (optional)</h2>" +
         "<p class='lu-lead'>Your OpenAI (or compatible) API key stays on the server only. " +
-        "Paste the proxy base URL and the same <strong>APP_TOKEN</strong> you set in the API <code>.env</code>.</p>" +
+        "Paste the proxy base URL. Bearer auth uses your Supabase session automatically.</p>" +
         "<form class='lu-form'>" +
         "<div class='lu-row'><input type='checkbox' id='lu-llm-en' name='enabled'" +
         en +
@@ -71,10 +70,6 @@
         "<label for='lu-llm-url'>Proxy base URL</label>" +
         "<input id='lu-llm-url' name='url' type='url' autocomplete='off' placeholder='http://127.0.0.1:8080' value='" +
         url0 +
-        "' />" +
-        "<label for='lu-llm-tok'>App token</label>" +
-        "<input id='lu-llm-tok' name='token' type='password' autocomplete='off' placeholder='Same as APP_TOKEN on server' value='" +
-        tok0 +
         "' />" +
         "<div class='lu-err' id='lu-llm-err' hidden></div>" +
         "<div class='lu-actions'>" +
@@ -91,15 +86,9 @@
         var enabled = overlay.querySelector("#lu-llm-en").checked;
         var quizEx = overlay.querySelector("#lu-llm-quiz").checked;
         var url = (overlay.querySelector("#lu-llm-url").value || "").trim();
-        var tok = (overlay.querySelector("#lu-llm-tok").value || "").trim();
         if (enabled) {
           if (!url || url.indexOf("http") !== 0) {
             errEl.textContent = "Proxy URL must start with http:// or https://";
-            errEl.hidden = false;
-            return;
-          }
-          if (!tok) {
-            errEl.textContent = "App token is required when LLM is enabled.";
             errEl.hidden = false;
             return;
           }
@@ -107,7 +96,6 @@
         var next = global.LevelupLlmConfig.defaultConfig({
           enabled: enabled,
           proxyBaseUrl: url,
-          appToken: tok,
           features: { quizExplain: quizEx },
           cache: (existing && existing.cache) || {},
         });

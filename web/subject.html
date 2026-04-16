@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" data-levelup-build="2026-04-13-22">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LevelUp! — Subject</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    />
+    <!-- Cache bust: bump js/shell/asset-version.js only -->
+    <script src="js/shell/asset-version.js"></script>
+    <script src="js/shell/subject-head-assets.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <button
+          type="button"
+          class="logo-btn"
+          id="btn-home"
+          aria-label="Home"
+        >
+          LevelUp!
+        </button>
+        <div class="topbar-stats">
+          <span class="pill user" id="stat-user" title="">Student</span>
+          <span class="pill xp" id="stat-xp">0 XP</span>
+          <span class="pill streak" id="stat-streak">🔥 0 day</span>
+          <span
+            class="pill badge-boss"
+            id="stat-boss"
+            hidden
+            title="Theme boss beaten"
+            >🏆</span
+          >
+          <button
+            type="button"
+            class="pill pill-shop"
+            id="btn-shop"
+            title="Rewards shop"
+          >
+            🛒 Shop
+          </button>
+        </div>
+        <button
+          type="button"
+          class="icon-btn"
+          id="btn-settings"
+          title="Settings"
+        >
+          ⚙
+        </button>
+      </header>
+
+      <main id="main"></main>
+
+      <nav class="dock" id="dock" hidden>
+        <button type="button" data-tab="cheat">Notes</button>
+        <button type="button" data-tab="visual">Visuals</button>
+        <button type="button" data-tab="flash">Cards</button>
+        <button type="button" data-tab="quiz">Quiz</button>
+        <button type="button" data-tab="written">Written</button>
+        <button type="button" data-tab="game">Games</button>
+      </nav>
+    </div>
+
+    <!-- ── Modals ────────────────────────────────────────────────────────────── -->
+    <div
+      class="modal-overlay"
+      id="modal-root"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="modal modal-settings" id="panel-settings" hidden>
+        <h2>Settings</h2>
+        <p class="hint settings-lead">
+          <strong>AI quiz “Why?”</strong> — use <em>Configure LLM proxy…</em> below. You only enter the
+          <strong>proxy URL</strong>. Authorization uses your signed-in Supabase session automatically.
+          OpenAI / provider API keys live in the server <code>.env</code>, not in this app.
+        </p>
+        <p class="hint">
+          <strong>Cloud sync &amp; student ID</strong> — use <em>Open setup package tool</em> below (paste the string from a parent, or generate/edit JSON there).
+        </p>
+        <label class="check-row">
+          <input type="checkbox" id="opt-unlock-all" />
+          <span>Unlock all topics (free study)</span>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="opt-challenge" />
+          <span>Hard mode: 80% (not 70%) on previous topic to unlock next</span>
+        </label>
+        <p class="hint">
+          Uncheck "Unlock all" for guided path: Topic 1 open, then pass
+          threshold on each topic to unlock the next.
+        </p>
+        <div class="export-block">
+          <h3 class="export-title">AI quiz explanations (optional)</h3>
+          <p class="hint">
+            Connect your self-hosted LLM proxy — API keys stay on the server only.
+            See <code>api/README.md</code>.
+          </p>
+          <button type="button" class="btn" id="btn-llm-proxy-setup">
+            Configure LLM proxy…
+          </button>
+          <p class="hint" id="llm-proxy-status"></p>
+        </div>
+        <div class="export-block">
+          <h3 class="export-title">Setup package (quick copy/paste)</h3>
+          <p class="hint">
+            Generate or apply one Base64 setup string for Supabase, optional LLM proxy config,
+            and optional student fields.
+          </p>
+          <button type="button" class="btn" id="btn-config-package-setup">
+            Open setup package tool…
+          </button>
+        </div>
+        <div class="export-block">
+          <h3 class="export-title">Transfer progress between browsers</h3>
+          <p class="hint">
+            Set a short password, export to get a code, then import on another
+            browser with the <em>same</em> password. Optional if Supabase sync is connected; useful as backup/restore.
+          </p>
+          <label class="export-row">
+            <span>Password</span>
+            <input
+              type="password"
+              id="export-password"
+              autocomplete="off"
+            />
+          </label>
+          <button
+            type="button"
+            class="btn"
+            id="btn-export-progress"
+          >
+            Export → code
+          </button>
+          <textarea
+            id="export-output"
+            class="progress-code"
+            rows="3"
+            readonly
+            placeholder="Encrypted code will appear here. Copy it somewhere safe."
+          ></textarea>
+          <label class="export-row">
+            <span>Import password</span>
+            <input
+              type="password"
+              id="import-password"
+              autocomplete="off"
+            />
+          </label>
+          <textarea
+            id="import-input"
+            class="progress-code"
+            rows="3"
+            placeholder="Paste encrypted code here to import."
+          ></textarea>
+          <button type="button" class="btn primary" id="btn-import-progress">
+            Import progress
+          </button>
+          <p class="hint" id="sync-status"></p>
+        </div>
+        <div class="export-block">
+          <h3 class="export-title">Parent study report</h3>
+          <p class="hint">
+            View a readable study audit or export the raw local data.
+          </p>
+          <button type="button" class="btn" id="btn-open-report">
+            Open study report
+          </button>
+        </div>
+        <button type="button" class="btn primary" id="btn-close-settings">
+          Done
+        </button>
+      </div>
+
+      <div class="modal explain-modal" id="panel-explain" hidden>
+        <h2 id="explain-title">Let's fix that</h2>
+        <p id="explain-body"></p>
+        <div id="explain-llm-wrap" class="explain-llm-wrap" hidden>
+          <button type="button" class="btn" id="btn-explain-llm-why">
+            Why? (AI tutor)
+          </button>
+          <div id="explain-llm-body" class="explain-llm-body" hidden></div>
+        </div>
+        <button type="button" class="btn primary" id="btn-explain-ok">
+          Got it — continue
+        </button>
+      </div>
+
+      <div class="modal modal-shop" id="panel-shop" hidden>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+          <h2 style="margin:0">🛒 Rewards Shop</h2>
+          <button type="button" class="btn primary" id="btn-close-shop">Done</button>
+        </div>
+        <div class="shop-toolbar">
+          <button type="button" class="btn" id="btn-shop-refresh">Refresh</button>
+          <span class="hint" id="shop-sync-status">Not synced yet.</span>
+        </div>
+        <p class="hint" style="margin-top:0">Spend XP on rewards. Show the coupon to your parent to claim.</p>
+        <div class="shop-layout">
+          <div class="shop-rewards-col">
+            <div id="shop-rewards-list"></div>
+          </div>
+          <div class="shop-coupons-col">
+            <h3 class="shop-sub" id="shop-coupons-heading">My coupons today</h3>
+            <div id="shop-coupons-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal modal-report" id="panel-report" hidden>
+        <h2>Study Report</h2>
+        <div id="report-body"></div>
+        <div class="report-actions">
+          <button type="button" class="btn" id="btn-report-text">
+            Export text summary
+          </button>
+          <button type="button" class="btn" id="btn-report-json">
+            Export JSON
+          </button>
+          <button type="button" class="btn primary" id="btn-close-report">
+            Done
+          </button>
+        </div>
+        <textarea
+          id="report-export-output"
+          class="progress-code report-export"
+          rows="8"
+          readonly
+          placeholder="Report export will appear here."
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- ── HTML Templates (cloned by JS for dynamic UI) ─────────────────────── -->
+
+    <!-- Flashcard session wrapper — cloned by startFlash() -->
+    <template id="tpl-flash-panel">
+      <div class="panel active" data-panel="flash">
+        <p class="flash-progress" id="flash-progress">Tap card to flip · <span id="flash-count"></span></p>
+        <div class="flash-area">
+          <div class="flash-card" id="flash-card">
+            <div class="flash-face flash-front" id="flash-front"></div>
+            <div class="flash-face flash-back"  id="flash-back"></div>
+          </div>
+        </div>
+        <div class="flash-actions">
+          <button type="button" class="btn danger-outline" id="flash-review">Need review</button>
+          <button type="button" class="btn primary"        id="flash-got">Got it ✓</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Quiz timer bar row — cloned per question by runQuiz() -->
+    <template id="tpl-quiz-meta">
+      <div class="quiz-meta">
+        <div class="timer-bar-wrap"><div class="timer-bar" id="q-timer"></div></div>
+        <span class="combo" id="q-combo"></span>
+        <div class="health-bar" id="q-health"></div>
+      </div>
+    </template>
+
+    <!-- Question confidence widget — used by renderQuestionConfidenceHtml() -->
+    <template id="tpl-question-confidence">
+      <div class="question-confidence">
+        <div class="question-confidence-head">
+          <span class="question-confidence-label"></span>
+          <span class="question-confidence-pct"></span>
+        </div>
+        <div class="question-confidence-bar">
+          <div class="question-confidence-fill"></div>
+        </div>
+        <div class="question-confidence-reason"></div>
+      </div>
+    </template>
+
+    <!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+    <!-- KaTeX loaded deferred — renderMathWhenReady() polls until it arrives -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    ></script>
+
+    <!-- Shell scripts emitted with ?v=APP_VERSION (see write-subject-tail-scripts.js) -->
+    <script src="js/shell/write-subject-tail-scripts.js"></script>
+  </body>
+</html>

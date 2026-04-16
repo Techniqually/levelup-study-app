@@ -1,6 +1,7 @@
 (function () {
   var v = encodeURIComponent(window.APP_VERSION || "dev");
   var subjectId = window.SUBJECT_ID || "chemistry";
+  var defaultManifestScript = "data/subjects/" + subjectId + "/topics-manifest.js";
 
   function mkV(src) {
     return src + (src.includes("?") ? "&" : "?") + "v=" + v;
@@ -23,7 +24,7 @@
 
   var scripts = [
     // ── Subject data (must come before app-runtime / app-constants) ──────────
-    "data/subjects/" + subjectId + "/topics-manifest.js",
+    defaultManifestScript,
   ];
 
   var maybeInfographics = "data/subjects/" + subjectId + "/infographics-images.js";
@@ -39,7 +40,6 @@
     "data/shop-rewards.js",
 
     // ── Supabase CDN + wrappers ───────────────────────────────────────────────
-    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
     "js/supabase-client.js",
     "js/progress-store.js",
 
@@ -116,13 +116,42 @@
     "js/app.js"
   );
 
-  function runChain() {
-    scripts.forEach(function (src) {
+  function appendScripts(list) {
+    list.forEach(function (src) {
       var s = document.createElement("script");
       s.src = mkV(src);
       s.async = false;
       document.body.appendChild(s);
     });
+  }
+
+  function runChain() {
+    if (
+      subjectId === "chemistry" &&
+      window.LevelupRemoteManifest &&
+      typeof window.LevelupRemoteManifest.loadForSubject === "function"
+    ) {
+      window.LevelupRemoteManifest
+        .loadForSubject(subjectId)
+        .then(function (res) {
+          var loaded = !!(res && res.ok);
+          if (!loaded) {
+            appendScripts(scripts);
+            return;
+          }
+          // Remove local manifest script if remote manifest is loaded from private storage.
+          appendScripts(
+            scripts.filter(function (src) {
+              return src !== defaultManifestScript;
+            })
+          );
+        })
+        .catch(function () {
+          appendScripts(scripts);
+        });
+      return;
+    }
+    appendScripts(scripts);
   }
 
   var boot = window.__LEVELUP_SUBJECT_SETUP;

@@ -158,7 +158,6 @@
       enabled: o.enabled !== false,
       mode: o.mode || "fastapi",
       proxyBaseUrl: String(o.proxyBaseUrl || "").trim().replace(/\/+$/g, ""),
-      appToken: String(o.appToken || "").trim(),
       features: {
         quizExplain: !(o.features && o.features.quizExplain === false),
       },
@@ -298,10 +297,9 @@
     if (llmRaw) {
       var normalizedLlm = normalizeLlmPayload(llmRaw);
       var proxyU = String(normalizedLlm.proxyBaseUrl || "").trim();
-      var tok = String(normalizedLlm.appToken || "").trim();
       var llmOff = normalizedLlm.enabled === false;
-      // Avoid saving a hollow enabled:true stub from an unfilled template (confusing + blocks no unlock).
-      if (llmOff || (proxyU && tok)) {
+      // Avoid saving a hollow enabled:true stub from an unfilled template.
+      if (llmOff || proxyU) {
         localStorage.setItem("LEVELUP_LLM_CONFIG_JSON", JSON.stringify(normalizedLlm));
         applied.push("LEVELUP_LLM_CONFIG_JSON");
       }
@@ -355,7 +353,7 @@
         "<strong>Generate</strong> fills both fields from this browser. Edit the JSON, then <strong>Encode JSON → Base64</strong> to refresh the one-line package for the student (two-way). " +
         "<strong>Decode</strong> fills JSON from the string. <strong>Apply</strong> saves from either field and updates both when successful. " +
         "Subjects unlock only after Supabase (or offline skip) <em>and</em> student ID + name — or hub Offline defaults. " +
-        "<code>llm</code> is stored only if both proxy URL and app token are set, or <code>\"enabled\": false</code>. " +
+        "<code>llm</code> is stored only if proxy URL is set, or <code>\"enabled\": false</code>. " +
         "Legacy <code>parent</code> in JSON is still applied.</p>" +
         "<label for='lu-pkg-str'>Package string (Base64 URL-safe) or raw JSON</label>" +
         "<textarea id='lu-pkg-str' rows='4' style='width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid #2a3344;background:#0c0e12;color:#e8ecf4;font-size:.88rem;margin-bottom:8px;resize:vertical'></textarea>" +
@@ -436,7 +434,7 @@
         var applied = applyConfigPayload(parsed.value);
         if (!applied.length) {
           setErr(
-            "No keys applied. Add Supabase URL+anon and/or student fields, or llm with both proxy URL and app token (or enabled:false), or legacy parent fields."
+            "No keys applied. Add Supabase URL+anon and/or student fields, or llm with proxy URL (or enabled:false), or legacy parent fields."
           );
           return;
         }

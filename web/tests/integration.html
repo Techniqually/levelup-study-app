@@ -218,7 +218,6 @@ state         = loadState();
       enabled: true,
       mode: "fastapi",
       proxyBaseUrl: "https://llm.example.com",
-      appToken: "tok-123",
       features: { quizExplain: true },
       cache: { maxEntries: 100, ttlDays: 30 },
     },
@@ -238,12 +237,12 @@ state         = loadState();
   assert(SSP, "isClientSetupComplete after apply", LevelupSetupForms.isClientSetupComplete() === true);
   var _tpl = LevelupSetupForms.readSetupPackageTemplatePayload();
   assert(SSP, "template has embedded keys (no parent block)", _tpl && _tpl.SUPABASE_URL !== undefined && _tpl.llm && !("parent" in _tpl));
-  assert(SSP, "template llm has proxy fields", _tpl.llm && "proxyBaseUrl" in _tpl.llm && "appToken" in _tpl.llm);
+  assert(SSP, "template llm has proxy field", _tpl.llm && "proxyBaseUrl" in _tpl.llm);
   var _hollowLlmOnly = LevelupSetupForms.applyConfigPayload({
     v: 2,
-    llm: { v: 2, enabled: true, proxyBaseUrl: "", appToken: "" },
+    llm: { v: 2, enabled: true, proxyBaseUrl: "" },
   });
-  assert(SSP, "hollow llm (no proxy+token) not persisted as applied keys", _hollowLlmOnly.indexOf("LEVELUP_LLM_CONFIG_JSON") === -1);
+  assert(SSP, "hollow llm (no proxy) not persisted as applied keys", _hollowLlmOnly.indexOf("LEVELUP_LLM_CONFIG_JSON") === -1);
 
   // ── SUITE: XP ledger ─────────────────────────────────────────────────────
   var SX = suite("xp");
@@ -453,7 +452,6 @@ state         = loadState();
     LevelupLlmConfig.defaultConfig({
       enabled: true,
       proxyBaseUrl: "http://127.0.0.1:8080",
-      appToken: "test-token",
       features: { quizExplain: true },
       cache: { maxEntries: 50, ttlDays: 60 },
     })

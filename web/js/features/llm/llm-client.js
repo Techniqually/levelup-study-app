@@ -1,9 +1,9 @@
 /**
- * HTTP client for LevelUp FastAPI LLM proxy (Bearer app token only).
+ * HTTP client for LevelUp FastAPI LLM proxy (Bearer Supabase access token).
  */
 (function (global) {
   /**
-   * @param {{ proxyBaseUrl: string, appToken: string }} cfg
+   * @param {{ proxyBaseUrl: string, accessToken: string }} cfg
    * @param {{ question: string, options: string[], correct_index: number, chosen_index: number, canonical_hint?: string|null }} body
    * @param {{ timeoutMs?: number }} [opt]
    * @returns {Promise<{ ok: boolean, code?: string, message?: string, data?: object, detail?: object }>}
@@ -14,11 +14,11 @@
       // Warm proxy before heavier LLM request (best-effort).
       global.LevelupLlmKeepalive.poke("quiz_explain", true);
     }
-    if (!cfg || !cfg.proxyBaseUrl || !cfg.appToken) {
+    if (!cfg || !cfg.proxyBaseUrl || !cfg.accessToken) {
       return Promise.resolve({
         ok: false,
         code: "no_config",
-        message: "LLM proxy is not configured.",
+        message: "LLM proxy or auth token is not configured.",
       });
     }
     var url = cfg.proxyBaseUrl.replace(/\/+$/, "") + "/llm/quiz-explain";
@@ -33,7 +33,7 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + cfg.appToken,
+          Authorization: "Bearer " + cfg.accessToken,
         },
         body: JSON.stringify(body),
         signal: ctrl.signal,
@@ -54,7 +54,7 @@
               ok: false,
               code: "unauthorized",
               message:
-                "The app token was rejected (401). Check Settings → LLM proxy: it must match APP_TOKEN on your server.",
+                "Auth token rejected (401). Sign in again and ensure SUPABASE_JWT_SECRET matches your Supabase project.",
               detail: data,
             };
           }

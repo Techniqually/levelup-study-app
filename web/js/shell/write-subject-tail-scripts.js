@@ -1,6 +1,13 @@
 (function () {
   var v = encodeURIComponent(window.APP_VERSION || "dev");
-  var paths = ["js/shell/setup-forms.js", "js/shell/hub-setup.js"];
+  var paths = [
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "js/features/auth/auth-client.js",
+    "js/shell/setup-forms.js",
+    "js/shell/subject-config.js",
+    "js/features/study/remote-manifest.js",
+    "js/shell/subject-script-chain.js",
+  ];
   var parent = (document.currentScript && document.currentScript.parentNode) || document.body;
   var i = 0;
   function next() {

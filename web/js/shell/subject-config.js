@@ -1,13 +1,4 @@
 (function () {
-  if (
-    window.LevelupSetupForms &&
-    typeof window.LevelupSetupForms.isClientSetupComplete === "function" &&
-    !window.LevelupSetupForms.isClientSetupComplete()
-  ) {
-    window.location.replace("index.html?needsSetup=1");
-    return;
-  }
-
   var params = new URLSearchParams(window.location.search);
   var KNOWN_SUBJECTS = ["chemistry", "physics", "geography"];
   var LAST_SUBJECT_KEY = "LEVELUP_LAST_SUBJECT";
@@ -81,8 +72,26 @@
   window.__LEVELUP_SUBJECT_SETUP = Promise.resolve()
     .then(function () {
       applyWindowFromStorage();
+      if (!window.LevelupAuth || typeof window.LevelupAuth.requireSession !== "function") {
+        throw new Error("auth_client_missing");
+      }
+      return window.LevelupAuth.requireSession();
     })
-    .catch(function () {
+    .then(function (session) {
+      if (!session || !session.user) {
+        window.location.replace("index.html?needsAuth=1");
+        throw new Error("redirected_needs_auth");
+      }
+      if (subjectId !== "chemistry") return null;
+      return window.LevelupAuth.isSubjectEntitled(subjectId).then(function (ok) {
+        if (!ok) {
+          window.location.replace("index.html?subjectLocked=" + encodeURIComponent(subjectId));
+          throw new Error("redirected_entitlement_required");
+        }
+      });
+    })
+    .catch(function (err) {
       applyWindowFromStorage();
+      throw err;
     });
 })();
