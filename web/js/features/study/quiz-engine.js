@@ -123,6 +123,42 @@ function bindQuiz(t) {
     let wrongCount = 0;
     let timedOutCurrent = false;
 
+    // Inline feedback below the quiz question (replaces distracting modal).
+    function showInlineFeedback(kind, title, body, note, onContinue, llmWhyPayload) {
+      const panel = document.getElementById("quiz-feedback");
+      if (!panel) { onContinue && onContinue(); return; }
+      const safeNote = note ? `<div class="quiz-feedback__note">${escapeHtml(note)}</div>` : "";
+      const llmSlot = llmWhyPayload ? `<div id="quiz-feedback-why"></div>` : "";
+      panel.className = `quiz-feedback quiz-feedback--${kind}`;
+      panel.innerHTML = `
+        <div class="quiz-feedback__head">
+          <span class="quiz-feedback__icon" aria-hidden="true">${kind === "wrong" ? "✕" : kind === "timeout" ? "⏱" : "✓"}</span>
+          <strong class="quiz-feedback__title">${escapeHtml(title)}</strong>
+        </div>
+        <div class="quiz-feedback__body">${renderMiniMarkdown(body || "")}</div>
+        ${safeNote}
+        ${llmSlot}
+        <div class="quiz-feedback__actions">
+          <button type="button" class="btn primary" id="quiz-feedback-ok">Continue →</button>
+        </div>
+      `;
+      panel.hidden = false;
+      renderMathWhenReady(panel, 0);
+      if (llmWhyPayload && window.LevelupLlmQuizWhy && typeof window.LevelupLlmQuizWhy.attachInlineExplain === "function") {
+        window.LevelupLlmQuizWhy.attachInlineExplain(document.getElementById("quiz-feedback-why"), llmWhyPayload);
+      }
+      const ok = document.getElementById("quiz-feedback-ok");
+      if (ok) {
+        ok.focus({ preventScroll: true });
+        ok.addEventListener("click", function handler() {
+          ok.removeEventListener("click", handler);
+          panel.hidden = true;
+          panel.innerHTML = "";
+          onContinue && onContinue();
+        });
+      }
+    }
+
     function renderQ() {
       if (qi >= qs.length) {
         const pct = Math.round((score / (qs.length * 100)) * 100);
@@ -210,6 +246,7 @@ function bindQuiz(t) {
         </div>
         <div class="quiz-q" id="quiz-question"></div>
         <div class="quiz-options" id="q-opts"></div>
+        <div class="quiz-feedback" id="quiz-feedback" hidden></div>
         <div class="quiz-score-line">Points this round: ${score}</div>
         <div id="quiz-confidence"></div>
       `;
@@ -290,15 +327,15 @@ function bindQuiz(t) {
             return;
           }
         }
-        showExplain(
+        opts.forEach((b) => {
+          if (Number(b.dataset.idx) === q.correctIndex) b.classList.add("correct");
+        });
+        showInlineFeedback(
+          "timeout",
           "Time's up",
           q.explanation,
-          () => {
-            combo = 0;
-            qi++;
-            renderQ();
-          },
           `${confidenceMeta.label} · ${confidenceMeta.reason}`,
+          () => { combo = 0; qi++; renderQ(); },
           null
         );
         return;
@@ -378,11 +415,12 @@ function bindQuiz(t) {
             renderHome();
           };
         } else {
-          showExplain(
+          showInlineFeedback(
+            "wrong",
             "Not quite",
             q.explanation,
-            next,
             `${confidenceMeta.label} · ${confidenceMeta.reason} · No XP for wrong answer${timedOutCurrent ? " (answered after time)" : ""}, but this question will show up again for practice.`,
+            next,
             clickedBtn
               ? {
                   q: q,

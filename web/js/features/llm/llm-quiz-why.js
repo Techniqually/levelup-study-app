@@ -283,9 +283,62 @@
     };
   }
 
+  /**
+   * Render the "Why? (AI tutor)" button+output into an arbitrary container
+   * (used by inline quiz feedback panel). Mirrors prepareExplainModal logic
+   * but without the modal's fixed IDs.
+   */
+  function attachInlineExplain(host, payload) {
+    if (!host) return;
+    host.innerHTML = "";
+    if (
+      !payload ||
+      !global.LevelupLlmConfig ||
+      !global.LevelupLlmConfig.isQuizExplainEnabled()
+    ) {
+      return;
+    }
+    var row = document.createElement("div");
+    row.className = "quiz-llm-why-row";
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn quiz-llm-why-btn";
+    b.textContent = "Why? (AI tutor)";
+    var out = document.createElement("div");
+    out.className = "explain-llm-body quiz-llm-why-out";
+    out.hidden = true;
+    row.appendChild(b);
+    row.appendChild(out);
+    host.appendChild(row);
+    b.onclick = function () {
+      b.disabled = true;
+      out.hidden = false;
+      out.innerHTML = "<p class='hint'>Loading…</p>";
+      runFetch(payload.q, payload.topicId, payload.chosenIndex, metaFromPayload(payload), function (res) {
+        b.disabled = false;
+        if (!res.ok) {
+          out.innerHTML =
+            "<p class='explain-llm-err'>" + esc(res.message || "Something went wrong.") + "</p>";
+          return;
+        }
+        out.innerHTML = "";
+        if (res.fromCache) {
+          var pc = document.createElement("p");
+          pc.className = "hint explain-llm-cache";
+          pc.textContent = "From cache";
+          out.appendChild(pc);
+        }
+        var innerBox = document.createElement("div");
+        out.appendChild(innerBox);
+        renderApiPayloadInto(innerBox, res.data, !!res.answerWasCorrect);
+      });
+    };
+  }
+
   global.LevelupLlmQuizWhy = {
     prepareExplainModal: prepareExplainModal,
     attachBelowConfidence: attachBelowConfidence,
+    attachInlineExplain: attachInlineExplain,
     _resetExplainSlotForTests: resetExplainSlot,
   };
 })(window);

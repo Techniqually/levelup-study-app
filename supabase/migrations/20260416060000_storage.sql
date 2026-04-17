@@ -19,9 +19,14 @@ create policy study_materials_read on storage.objects
   using (
     bucket_id = 'study-materials'
     and (
+      -- shared assets (shop rewards, etc.) available to every signed-in user
+      split_part(name, '/', 1) = 'shared'
+      -- public subject metadata: manifest + light info strings
+      or name ~ '^[a-z0-9_-]+/topics-manifest\.json$'
+      or name ~ '^[a-z0-9_-]+/infographics-info\.md$'
       -- free preview path: <subject>/free/<file>
-      split_part(name, '/', 2) = 'free'
-      -- entitled access
+      or split_part(name, '/', 2) = 'free'
+      -- entitled access to everything under the subject
       or public.user_has_entitlement(
           (select auth.uid()),
           public.required_entitlement_for_subject(split_part(name, '/', 1))

@@ -55,3 +55,20 @@
   - [x] Add `/admin/link-student` POST endpoint (creates `parent_student_links` row)
   - [x] Add `/admin/grant-entitlement` POST endpoint (upserts `user_entitlements`)
   - [x] Implement `web/admin.html` (browser UI for both endpoints)
+
+- [x] **Phase 9 — Routing + Auth UX polish**
+  - [x] Rename `web/landing.html` → `web/index.html` (public root)
+  - [x] Rename original `web/index.html` → `web/hub.html` (signed-in hub)
+  - [x] Update all cross-file references (`hub-setup.js`, `subject-config.js`, `parent-dashboard.js`, `admin.html`, `parent.html`, `app.js`, tail-script writers)
+  - [x] Auth modal: official Google G logo, better copy ("sign in = signup"), ESC/backdrop close, loading state, disabled-while-redirecting
+  - [x] `hub-setup.js`: grace period on OAuth return to avoid race-redirecting users back to landing while supabase-js is still parsing the hash
+  - [x] Strip OAuth hash/query params from URL on successful sign-in (avoid re-processing on refresh)
+  - [x] Supabase `additional_redirect_urls` switched to wildcard (`http://localhost:3000/**`) to cover hub/subject/parent paths
+
+- [ ] **Phase 10 — Production hardening (TODO)**
+  - [ ] Replace `SUPABASE_*` bootstrap from API with a static public config file in prod (zero round-trip + cacheable)
+  - [ ] Strict prod CORS allowlist (not the localhost regex)
+  - [ ] Real Umami site ID on all four HTML entry pages
+  - [ ] Replace PoC admin page with proper role-gated admin route (currently shared `ADMIN_API_KEY`)
+  - [ ] Session timeout / refresh behaviour audit (supabase-js defaults vs. our own `getValidatedUser` calls)
+  - [ ] Stripe live mode: entitlement expiry renewal on `invoice.paid`

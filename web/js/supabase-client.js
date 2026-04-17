@@ -156,6 +156,13 @@
         .select("reward_id,count")
         .eq("user_id", uid)
         .eq("day", today),
+      // Parent-configured rewards catalog for this student (RLS: own + active).
+      sb.from("student_rewards")
+        .select("id,label,description,xp_cost,sort_order")
+        .eq("student_user_id", uid)
+        .eq("active", true)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true }),
     ]);
     if (results[0].error || results[1].error) return null;
     var xpBalance = (results[0].data || []).reduce(function (s, r) { return s + Number(r.delta || 0); }, 0);
@@ -163,11 +170,15 @@
     (results[2].data || []).forEach(function (row) {
       dailyCounts[String(row.reward_id)] = Number(row.count || 0);
     });
+    var parentRewards = (results[3] && !results[3].error && Array.isArray(results[3].data))
+      ? results[3].data
+      : [];
     return {
-      ok:             true,
-      xp_balance:     xpBalance,
-      coupons_recent: results[1].data || [],
-      daily_counts:   dailyCounts,
+      ok:              true,
+      xp_balance:      xpBalance,
+      coupons_recent:  results[1].data || [],
+      daily_counts:    dailyCounts,
+      parent_rewards:  parentRewards,
     };
   }
 

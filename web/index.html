@@ -1,207 +1,665 @@
 <!DOCTYPE html>
-<html lang="en" data-levelup-build="2026-04-13-22">
+<html lang="en" data-levelup-build="2026-04-17-00">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LevelUp! Study Hub — Subjects</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>LevelUp — Level up your O-Level revision</title>
+  <meta name="description" content="Gamified O-Level study app — syllabus-aligned notes, spaced quizzes, boss battles and a parent dashboard. Start free with Topic 1 of Chemistry, Physics, or Geography." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <!-- Analytics: set data-website-id to your Umami site ID before going live -->
+  <meta property="og:title" content="LevelUp — Level up your O-Level revision" />
+  <meta property="og:description" content="Notes, quizzes, boss battles and XP rewards — built for focused O-Level revision." />
+  <meta property="og:type" content="website" />
   <script async src="https://analytics.umami.is/script.js"
           data-website-id="UMAMI_WEBSITE_ID"
           data-domains="levelupstudyhub.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="js/shell/asset-version.js"></script>
+  <link rel="stylesheet" href="css/app-shell.css" />
   <style>
-    :root {
-      --bg: #050716;
-      --card: #101322;
-      --border: #272f40;
-      --accent: #5eead4;
-      --accent2: #a78bfa;
-      --muted: #9ca3af;
-      --font: "Outfit", system-ui, sans-serif;
+    /* Landing-specific styles (composed with app-shell.css) */
+
+    /* ── Concise first fold ─────────────────────────────────────────── */
+    .hero-lite {
+      padding: clamp(48px, 9vw, 110px) 0 clamp(40px, 7vw, 80px);
+      text-align: center;
+      position: relative;
+      background: radial-gradient(ellipse at 20% 0%, rgba(168, 85, 247, 0.14), transparent 55%),
+                  radial-gradient(ellipse at 90% 30%, rgba(94, 234, 212, 0.10), transparent 55%);
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
+    .hero-lite__inner {
+      max-width: 820px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at top, #111827, #020617);
-      font-family: var(--font);
-      color: #e5e7eb;
     }
-    .shell {
-      width: min(720px, 100%);
-      padding: 32px 20px;
+    .hero-lite__eyebrow {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(168, 85, 247, 0.16);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      color: #d8b4fe;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      margin-bottom: 22px;
     }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 2rem;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .hero-lite__title {
+      font-family: "Outfit", system-ui, sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.4rem, 7vw, 4.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 0 0 20px;
     }
-    p.lead {
-      margin: 0 0 24px;
-      color: var(--muted);
-      font-size: 0.95rem;
+    .hero-lite__lead {
+      color: var(--ink-dim);
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      line-height: 1.6;
+      max-width: 56ch;
+      margin: 0 auto 30px;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-    }
-    a.card {
-      display: block;
-      padding: 18px 16px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.92);
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
-    }
-    a.card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
-    }
-    .card h2 {
-      margin: 0 0 6px;
-      font-size: 1.1rem;
-    }
-    .meta {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-    .tag-row {
+    .hero-lite__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-    }
-    .tag {
-      font-size: 0.7rem;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--muted);
-    }
-    a.card.subject-access-locked {
-      opacity: 0.42;
-      cursor: not-allowed;
-      filter: grayscale(0.35);
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .topbar-profile {
-      display: flex;
-      align-items: center;
       gap: 12px;
+      justify-content: center;
+      margin-bottom: 14px;
     }
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--border);
+    .hero-lite__foot {
+      color: var(--ink-muted);
+      font-size: 13px;
+      margin: 10px 0 0;
+    }
+
+    .hero {
+      padding: 56px 0 32px;
+      position: relative;
+    }
+    .hero__grid {
+      display: grid;
+      gap: 36px;
+      align-items: center;
+    }
+    .hero__copy p.lead { color: var(--ink-dim); font-size: clamp(1rem, 2vw, 1.2rem); margin: 0 0 24px; max-width: 54ch; line-height: 1.55; }
+    .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero__trust { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px 18px; color: var(--ink-muted); font-size: 13px; }
+    .hero__trust span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero__trust svg { width: 14px; height: 14px; color: var(--accent); }
+
+    /* Hero device/illustration */
+    .hero__media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(160deg, rgba(94, 234, 212, 0.12), rgba(192, 132, 252, 0.12));
+      border: 1px solid var(--line-soft);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero__device {
+      position: absolute;
+      inset: 12% 14%;
+      border-radius: 28px;
+      background: #0e1430;
+      border: 1px solid var(--line);
       overflow: hidden;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent);
-      font-weight: 700;
+      flex-direction: column;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
     }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .profile-info { display: flex; flex-direction: column; }
-    .profile-name { font-weight: 700; font-size: 0.95rem; }
-    .signout-btn {
-      color: var(--muted);
-      background: none;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      margin-top: 4px;
-      align-self: flex-start;
+    .hero__device::before {
+      content: "";
+      height: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+      border-bottom: 1px solid var(--line-soft);
     }
-    .signout-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-    .upgrade-badge {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 4px 10px;
-      background: rgba(94, 234, 212, 0.1);
-      color: var(--accent);
-      border-radius: 6px;
-      font-size: 0.8rem;
+    .mock-row {
+      display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+      border-bottom: 1px solid var(--line-soft); font-size: 12px;
+    }
+    .mock-bar { height: 8px; border-radius: 6px; background: rgba(255,255,255,0.08); flex: 1; overflow: hidden; }
+    .mock-bar > i { display: block; height: 100%; background: var(--brand-grad); }
+    .mock-stat {
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 10px;
       font-weight: 600;
-      border: 1px solid rgba(94, 234, 212, 0.2);
+    }
+    .mock-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px 16px; }
+    .mock-card {
+      margin: 12px 16px;
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .mock-chip {
+      display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700;
+      background: rgba(110, 231, 183, 0.18); color: #6ee7b7; margin-bottom: 8px;
+    }
+    .mock-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+    .mock-sub { font-size: 11px; color: var(--ink-muted); }
+
+    /* Floating badge over device */
+    .hero__float {
+      position: absolute;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(14, 20, 48, 0.9);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600;
+    }
+    .hero__float--xp { top: 10%; left: -4%; color: #6ee7b7; }
+    .hero__float--streak { bottom: 8%; right: -4%; color: #fbbf24; }
+
+    /* Stats row */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 40px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .stat-row .stat-val { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; }
+    .stat-row .stat-label { font-size: 12px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* Feature cards */
+    .features { padding: 72px 0 32px; }
+    .feature-card { display: flex; flex-direction: column; gap: 14px; }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center;
+      color: #0b1020; background: var(--brand-grad);
+    }
+    .feature-icon svg { width: 24px; height: 24px; }
+    .feature-card h3 { font-size: 1.15rem; margin: 0; font-weight: 700; }
+    .feature-card p { margin: 0; color: var(--ink-dim); font-size: 0.96rem; line-height: 1.55; }
+
+    /* Subjects strip */
+    .subjects { padding: 24px 0 40px; }
+    .subject-cards { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    .subject-card {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--card);
+      transition: transform 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+    }
+    .subject-card:hover { transform: translateY(-3px); border-color: rgba(129, 140, 248, 0.5); box-shadow: var(--shadow); }
+    .subject-card__hero {
+      height: 120px;
+      position: relative;
+      display: flex; align-items: flex-end;
+      padding: 14px;
+      color: #061021;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      overflow: hidden;
+    }
+    .subject-card__hero svg.pattern { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.25; }
+    .subject-card--chem  .subject-card__hero { background: linear-gradient(135deg, #6ee7b7, #22d3ee); }
+    .subject-card--phys  .subject-card__hero { background: linear-gradient(135deg, #a5b4fc, #818cf8); color: #fff; }
+    .subject-card--geo   .subject-card__hero { background: linear-gradient(135deg, #fda4af, #f472b6); color: #fff; }
+    .subject-card__body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .subject-card__meta { color: var(--ink-muted); font-size: 13px; }
+
+    /* How it works */
+    .how { padding: 72px 0 48px; }
+    .how__steps { counter-reset: step; display: grid; gap: 18px; grid-template-columns: 1fr; }
+    .how-step {
+      counter-increment: step;
+      position: relative;
+      padding-left: 54px;
+    }
+    .how-step::before {
+      content: counter(step);
+      position: absolute;
+      left: 0; top: 0;
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      background: var(--brand-grad);
+      color: #0b1020;
+      font-weight: 800;
+      border-radius: 12px;
+    }
+    .how-step h3 { margin: 4px 0 6px; font-size: 1.1rem; }
+    .how-step p { margin: 0; color: var(--ink-dim); line-height: 1.55; }
+
+    /* Testimonials carousel */
+    .quotes { padding: 56px 0; }
+    .quotes__track {
+      display: grid;
+      gap: 16px;
+      grid-auto-flow: column;
+      grid-auto-columns: 86%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 4px 4px 16px;
+      margin-right: calc((100vw - var(--container)) / -2);
+      scrollbar-width: thin;
+    }
+    .quote-card {
+      scroll-snap-align: start;
+      padding: 22px;
+      background: var(--card);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-lg);
+      display: flex; flex-direction: column; gap: 14px;
+      min-height: 200px;
+    }
+    .quote-card p { margin: 0; color: var(--ink-dim); line-height: 1.55; }
+    .quote-card footer { display: flex; align-items: center; gap: 10px; color: var(--ink-muted); font-size: 13px; }
+    .quote-card footer .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--brand-grad-soft);
+      border: 1px solid var(--line);
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 13px; color: var(--ink);
+    }
+    .quote-card svg.mark { color: var(--accent); width: 20px; height: 20px; }
+
+    /* Final CTA */
+    .final-cta {
+      margin-top: 40px;
+      padding: 48px 24px;
+      text-align: center;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(600px 260px at 80% -10%, rgba(192, 132, 252, 0.25), transparent 60%),
+        radial-gradient(480px 220px at 10% 110%, rgba(110, 231, 183, 0.2), transparent 60%),
+        linear-gradient(180deg, rgba(26, 32, 64, 0.9), rgba(18, 24, 53, 0.9));
+      border: 1px solid rgba(129, 140, 248, 0.35);
+    }
+    .final-cta h2 { margin: 0 0 10px; font-size: clamp(1.4rem, 3vw, 2.2rem); }
+    .final-cta p { margin: 0 0 24px; color: var(--ink-dim); max-width: 48ch; margin-inline: auto; }
+
+    @media (min-width: 720px) {
+      .hero { padding: 72px 0 40px; }
+      .hero__grid { grid-template-columns: 1.05fr 1fr; gap: 48px; }
+      .subject-cards { grid-template-columns: repeat(3, 1fr); }
+      .how__steps { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+      .quotes__track { grid-auto-columns: 48%; }
+    }
+    @media (min-width: 1024px) {
+      .features { padding: 96px 0 48px; }
+      .quotes__track { grid-auto-columns: 32%; }
     }
   </style>
 </head>
 <body>
-  <div class="shell" style="padding-top: 10px;">
-    <div class="topbar">
-      <div>
-        <h1>LevelUp!</h1>
-        <p class="lead" style="margin: 0;">Choose a subject to continue your journey.</p>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="levelup-shell" data-page="landing"></div>
+
+  <main id="main">
+    <!-- ── Hero (concise first fold) ──────────────────────────────────── -->
+    <section class="hero-lite">
+      <div class="container hero-lite__inner">
+        <span class="hero-lite__eyebrow">🚀 O-LEVEL MASTERY</span>
+        <h1 class="hero-lite__title">
+          Stop studying.<br>
+          Start <span class="text-grad">leveling up.</span>
+        </h1>
+        <p class="hero-lite__lead">
+          The smartest way to master O-Level subjects. Engage in rapid-fire quizzes,
+          defeat chapter bosses, and earn XP. Your AI tutor is waiting.
+        </p>
+        <div class="hero-lite__actions">
+          <button class="btn btn-primary btn-lg js-signin" data-umami-event="hero-cta-click">Try Topic 1 free</button>
+          <a class="btn btn-outline btn-lg" href="#how-it-works">See how it works</a>
+        </div>
+        <p class="hero-lite__foot">Free to try. No credit card required. One Google account for both parents and students.</p>
       </div>
-      <div class="topbar-profile" id="hub-profile-section" hidden>
-        <div class="avatar" id="hub-avatar">?</div>
-        <div class="profile-info">
-          <span class="profile-name" id="hub-profile-name">Student</span>
-          <button type="button" id="btn-signout" class="signout-btn">Sign out</button>
+    </section>
+
+    <!-- ── Secondary showcase (device + stats) ────────────────────────── -->
+    <section class="hero" aria-label="In-app preview">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <span class="eyebrow">What you get</span>
+          <h2 class="h2">Daily quests. Weekly bosses. Real progress.</h2>
+          <p class="lead">Syllabus-aligned notes, spaced quizzes, boss battles and XP rewards — built to keep you opening the app every day.</p>
+          <div class="hero__trust">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Topic 1 free, no card needed
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              One Google account for parent + student
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Progress syncs on every device
+            </span>
+          </div>
+        </div>
+
+        <div class="hero__media" aria-hidden="true">
+          <div class="hero__device">
+            <div class="mock-stats">
+              <div class="mock-stat">⚡ 1,240 XP</div>
+              <div class="mock-stat">🔥 7-day streak</div>
+              <div class="mock-stat">🏆 3 bosses</div>
+            </div>
+            <div class="mock-row"><span class="mock-sub">Chemistry · Topic 4</span><div class="mock-bar"><i style="width:72%"></i></div><span class="mock-sub">72%</span></div>
+            <div class="mock-row"><span class="mock-sub">Physics · Topic 3A</span><div class="mock-bar"><i style="width:48%"></i></div><span class="mock-sub">48%</span></div>
+            <div class="mock-card">
+              <span class="mock-chip">Today's quest</span>
+              <div class="mock-title">Balance 3 equations in under 60 seconds</div>
+              <div class="mock-sub">+ 80 XP · Master topic 2.3</div>
+            </div>
+          </div>
+          <div class="hero__float hero__float--xp">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+            +80 XP
+          </div>
+          <div class="hero__float hero__float--streak">
+            🔥 7-day streak
+          </div>
         </div>
       </div>
-    </div>
-    <div class="grid">
-      <!-- Cards start locked by default — hub-setup.js removes the lock only after confirming entitlement -->
-      <a class="card subject-access-locked" data-subject="chemistry" href="subject.html?subject=chemistry" aria-disabled="true">
-        <h2>O-Level Chemistry</h2>
-        <div class="meta">19 topics · themes · full question bank</div>
-        <div class="tag-row">
-          <span class="tag">MOE O-Level</span>
-          <span class="tag">Boss battles</span>
-          <span class="tag">XP shop</span>
+
+      <div class="container">
+        <div class="stat-row">
+          <div><div class="stat-val">3</div><div class="stat-label">Subjects</div></div>
+          <div><div class="stat-val">50+</div><div class="stat-label">Topics</div></div>
+          <div><div class="stat-val">5K+</div><div class="stat-label">Questions</div></div>
         </div>
-        <div class="upgrade-badge">Upgrade →</div>
-      </a>
-      <a class="card subject-access-locked" data-subject="physics" href="subject.html?subject=physics" aria-disabled="true">
-        <h2>O-Level Physics</h2>
-        <div class="meta">16 topics (+ A/B subtopics) · full notes · quizzes · games</div>
-        <div class="tag-row">
-          <span class="tag">Singapore MOE</span>
-          <span class="tag">Waves</span>
-          <span class="tag">Electricity</span>
+      </div>
+    </section>
+
+    <!-- ── Subjects ─────────────────────────────────────────────────── -->
+    <section class="subjects">
+      <div class="container">
+        <h2 class="h2">Pick your subject</h2>
+        <p class="dim" style="margin:0 0 24px;max-width:52ch;">Each subject ships the full O-Level syllabus, broken down into daily-sized topics. Topic 1 is free so you can try before you buy.</p>
+
+        <div class="subject-cards">
+          <a class="subject-card subject-card--chem js-signin" href="#">
+            <div class="subject-card__hero">
+              <svg class="pattern" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="atoms" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="#061021"/></pattern></defs><rect width="100" height="100" fill="url(#atoms)"/></svg>
+              Chemistry
+            </div>
+            <div class="subject-card__body">
+              <div class="row" style="gap:6px;">
+                <span class="badge badge--accent">Topic 1 free</span>
+                <span class="badge">13 topics</span>
+              </div>
+              <div class="subject-card__meta">Matter · Reactions · Organic · Earth</div>
+              <div class="row" style="gap:8px;justify-content:space-between;margin-top:4px;">
+                <span class="dim" style="font-size:13px;">Structured & MCQ</span>
+                <span class="text-grad" style="font-weight:700;font-size:13px;">Start →</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="subject-card subject-card--phys js-signin" href="#">
+            <div class="subject-card__hero">
+              <svg class="pattern" viewBox="0 0 100 100"><path d="M0 50 Q25 10, 50 50 T100 50" stroke="#061021" stroke-width="1.2" fill="none"/><path d="M0 70 Q25 30, 50 70 T100 70" stroke="#061021" stroke-width="1.2" fill="none"/></svg>
+              Physics
+            </div>
+            <div class="subject-card__body">
+              <div class="row" style="gap:6px;">
+                <span class="badge badge--accent">Topic 1 free</span>
+                <span class="badge">~20 topics</span>
+              </div>
+              <div class="subject-card__meta">Mechanics · Thermal · Waves · Electricity</div>
+              <div class="row" style="gap:8px;justify-content:space-between;margin-top:4px;">
+                <span class="dim" style="font-size:13px;">Worked + conceptual</span>
+                <span class="text-grad" style="font-weight:700;font-size:13px;">Start →</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="subject-card subject-card--geo js-signin" href="#">
+            <div class="subject-card__hero">
+              <svg class="pattern" viewBox="0 0 100 100"><path d="M5 80 L25 60 L45 75 L70 40 L95 60 L95 95 L5 95 Z" fill="#061021" opacity="0.35"/></svg>
+              Geography
+            </div>
+            <div class="subject-card__body">
+              <div class="row" style="gap:6px;">
+                <span class="badge badge--accent">Topic 1 free</span>
+                <span class="badge">9 topics</span>
+              </div>
+              <div class="subject-card__meta">Tourism · Climate · Food · Living</div>
+              <div class="row" style="gap:8px;justify-content:space-between;margin-top:4px;">
+                <span class="dim" style="font-size:13px;">SEQs + case studies</span>
+                <span class="text-grad" style="font-weight:700;font-size:13px;">Start →</span>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="upgrade-badge">Upgrade →</div>
-      </a>
-      <a class="card subject-access-locked" data-subject="geography" href="subject.html?subject=geography" aria-disabled="true">
-        <h2>O-Level Geography</h2>
-        <div class="meta">15 topics · 5 clusters · full notes · quizzes · games</div>
-        <div class="tag-row">
-          <span class="tag">Singapore MOE 2279</span>
-          <span class="tag">Tectonics</span>
-          <span class="tag">Climate</span>
-          <span class="tag">Tourism</span>
+      </div>
+    </section>
+
+    <!-- ── Features ─────────────────────────────────────────────────── -->
+    <section class="features" id="features">
+      <div class="container">
+        <span class="eyebrow">What's inside</span>
+        <h2 class="h2">Everything you need to score an A1</h2>
+        <p class="dim" style="max-width:58ch;margin:0 0 32px;">Built strictly to the latest O-Level syllabus. Designed like your favourite game so study time feels earned, not endured.</p>
+
+        <div class="grid-3">
+          <article class="card feature-card">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            <h3>Spaced repetition</h3>
+            <p>The engine tracks your weakest topics and quietly queues them until you own them.</p>
+          </article>
+          <article class="card feature-card">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            </span>
+            <h3>Boss battles</h3>
+            <p>Finish a topic, face the boss. 10 rapid-fire questions, no mistakes allowed — or try again tomorrow.</p>
+          </article>
+          <article class="card feature-card">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+            </span>
+            <h3>AI tutor</h3>
+            <p>Get it wrong? Your built-in tutor explains why using syllabus wording, not Wikipedia filler.</p>
+          </article>
+          <article class="card feature-card">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+            </span>
+            <h3>XP shop</h3>
+            <p>Earn XP for study streaks and master-status. Parents can spend XP on real-world rewards they pre-load.</p>
+          </article>
+          <article class="card feature-card">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <h3>Parent dashboard</h3>
+            <p>Invite a parent with one click. They see strengths, gaps, and can fund reward coupons — no login fuss.</p>
+          </article>
+          <article class="card feature-card">
+            <span class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </span>
+            <h3>Study anywhere</h3>
+            <p>Mobile-first, installs to your home screen, offline-friendly. Progress syncs the second you're back online.</p>
+          </article>
         </div>
-        <div class="upgrade-badge">Upgrade →</div>
-      </a>
-    </div>
-    </div>
-  </div>
-  <script src="js/shell/asset-version.js"></script>
-  <script src="js/shell/write-hub-tail-scripts.js"></script>
+      </div>
+    </section>
+
+    <!-- ── How it works ─────────────────────────────────────────────── -->
+    <section class="how" id="how-it-works">
+      <div class="container">
+        <span class="eyebrow">How it works</span>
+        <h2 class="h2">From "I'll study later" to "one more topic"</h2>
+        <p class="dim" style="max-width:58ch;margin:0 0 32px;">Three steps, 60 seconds to start. No syllabus PDFs, no textbooks, no printing.</p>
+
+        <div class="how__steps">
+          <article class="how-step">
+            <h3>Sign in with Google</h3>
+            <p>One tap. Parents and students share the same Google login — no extra passwords to forget.</p>
+          </article>
+          <article class="how-step">
+            <h3>Pick a subject</h3>
+            <p>Topic 1 is free forever. Try the full flow — notes, flashcards, quiz, written answers — before deciding.</p>
+          </article>
+          <article class="how-step">
+            <h3>Beat the boss</h3>
+            <p>Finish a topic, clear the boss battle, rack up XP. Parents can top up real-world rewards in the shop.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Testimonials / trust ─────────────────────────────────────── -->
+    <section class="quotes">
+      <div class="container">
+        <span class="eyebrow">Built for real students</span>
+        <h2 class="h2">It feels like a game. It's syllabus material.</h2>
+        <p class="dim" style="max-width:58ch;margin:0 0 24px;">Early testers have been spending 20 – 45 minutes a day, voluntarily, inside the app.</p>
+      </div>
+      <div class="container">
+        <div class="quotes__track" role="list" aria-label="Student testimonials">
+          <article class="quote-card" role="listitem">
+            <svg class="mark" viewBox="0 0 24 24" fill="currentColor"><path d="M7.17 17q-.825 0-1.412-.587T5.17 15H3q0-2.9 1.988-4.95T10 7.5v1.3q-1.575.275-2.863 1.3T5.17 12.5h2v4.5Zm10 0q-.825 0-1.412-.587T15.17 15H13q0-2.9 1.988-4.95T20 7.5v1.3q-1.575.275-2.863 1.3T15.17 12.5h2V17Z"/></svg>
+            <p>I actually open the app on bus rides now. Boss battles give me that one-more-try feeling, but I'm literally doing chemistry.</p>
+            <footer><span class="avatar">A</span> Ananya, Sec 4 · Singapore</footer>
+          </article>
+          <article class="quote-card" role="listitem">
+            <svg class="mark" viewBox="0 0 24 24" fill="currentColor"><path d="M7.17 17q-.825 0-1.412-.587T5.17 15H3q0-2.9 1.988-4.95T10 7.5v1.3q-1.575.275-2.863 1.3T5.17 12.5h2v4.5Zm10 0q-.825 0-1.412-.587T15.17 15H13q0-2.9 1.988-4.95T20 7.5v1.3q-1.575.275-2.863 1.3T15.17 12.5h2V17Z"/></svg>
+            <p>The parent dashboard is the piece I didn't know I needed. I can see the topics he avoids, and nudge gently instead of nagging.</p>
+            <footer><span class="avatar">P</span> Priya, parent</footer>
+          </article>
+          <article class="quote-card" role="listitem">
+            <svg class="mark" viewBox="0 0 24 24" fill="currentColor"><path d="M7.17 17q-.825 0-1.412-.587T5.17 15H3q0-2.9 1.988-4.95T10 7.5v1.3q-1.575.275-2.863 1.3T5.17 12.5h2v4.5Zm10 0q-.825 0-1.412-.587T15.17 15H13q0-2.9 1.988-4.95T20 7.5v1.3q-1.575.275-2.863 1.3T15.17 12.5h2V17Z"/></svg>
+            <p>I went from cramming the night before to a 14-day streak. The XP shop is basically bribery but it works.</p>
+            <footer><span class="avatar">J</span> Jayden, Sec 3</footer>
+          </article>
+          <article class="quote-card" role="listitem">
+            <svg class="mark" viewBox="0 0 24 24" fill="currentColor"><path d="M7.17 17q-.825 0-1.412-.587T5.17 15H3q0-2.9 1.988-4.95T10 7.5v1.3q-1.575.275-2.863 1.3T5.17 12.5h2v4.5Zm10 0q-.825 0-1.412-.587T15.17 15H13q0-2.9 1.988-4.95T20 7.5v1.3q-1.575.275-2.863 1.3T15.17 12.5h2V17Z"/></svg>
+            <p>The flashcard + quiz combo hits different. The AI explains what I got wrong, not just that I got it wrong.</p>
+            <footer><span class="avatar">M</span> Marcus, Sec 4</footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Final CTA ────────────────────────────────────────────────── -->
+    <section class="container">
+      <div class="final-cta">
+        <h2>Ready to level up?</h2>
+        <p>Topic 1 is free in every subject. Sign in with Google, start in 60 seconds, upgrade any time.</p>
+        <button class="btn btn-primary btn-lg js-signin" data-umami-event="cta-bottom-click">Get started with Google</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var AUTH_READY_EVENT = "levelup:auth-ready";
+      var openRequested = false;
+
+      function tryOpenAuth() {
+        if (!window.LevelupAuthUI) {
+          openRequested = true;
+          return;
+        }
+        window.LevelupAuthUI.openAuthModal({
+          redirectTo: window.location.origin + "/hub.html",
+        });
+      }
+
+      document.addEventListener(AUTH_READY_EVENT, function () {
+        if (openRequested && window.LevelupAuthUI) {
+          openRequested = false;
+          window.LevelupAuthUI.openAuthModal({
+            redirectTo: window.location.origin + "/hub.html",
+          });
+        }
+      });
+
+      document.addEventListener("click", function (e) {
+        var t = e.target.closest && e.target.closest(".js-signin");
+        if (!t) return;
+        e.preventDefault();
+        tryOpenAuth();
+        if (window.LevelupShell && typeof window.LevelupShell.closeDrawer === "function") {
+          window.LevelupShell.closeDrawer();
+        }
+      });
+
+      // Load Supabase + Auth scripts
+      var v = encodeURIComponent(window.APP_VERSION || "dev");
+      var paths = [
+        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+        "js/features/auth/auth-client.js",
+        "js/features/auth/auth-ui.js",
+      ];
+
+      function loadChain(list) {
+        var i = 0;
+        function next() {
+          if (i >= list.length) {
+            document.dispatchEvent(new CustomEvent(AUTH_READY_EVENT));
+            if (window.LevelupAuth && typeof window.LevelupAuth.getValidatedUser === "function") {
+              setTimeout(function () {
+                window.LevelupAuth.getValidatedUser().then(function (user) {
+                  if (user) window.location.replace("hub.html");
+                }).catch(function () {});
+              }, 150);
+            }
+            return;
+          }
+          var s = document.createElement("script");
+          var p = list[i];
+          s.src = p.indexOf("http") === 0 ? p : p + "?v=" + v;
+          s.async = false;
+          s.onload = function () { i++; next(); };
+          s.onerror = function () { i++; next(); };
+          document.body.appendChild(s);
+        }
+        next();
+      }
+
+      function startAuthLoader() { loadChain(paths); }
+
+      document.addEventListener("levelup:config-error", function () {
+        if (!window.SUPABASE_URL) {
+          document.querySelectorAll(".js-signin").forEach(function (btn) {
+            btn.textContent = "Service unavailable — try again later";
+            btn.disabled = true;
+          });
+        }
+      });
+
+      if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+        startAuthLoader();
+      } else {
+        document.addEventListener("levelup:config-ready", startAuthLoader);
+        var apiConfig = document.createElement("script");
+        apiConfig.src = "js/shell/api-config.js?v=" + v;
+        apiConfig.onload = function () {
+          var bs = document.createElement("script");
+          bs.src = "js/shell/bootstrap.js?v=" + v;
+          document.body.appendChild(bs);
+        };
+        document.body.appendChild(apiConfig);
+      }
+    })();
+  </script>
+
+  <!-- Shared shell (header + mobile drawer + footer) -->
+  <script src="js/shell/app-shell.js"></script>
 </body>
 </html>
-

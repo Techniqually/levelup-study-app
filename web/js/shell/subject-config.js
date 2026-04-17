@@ -52,7 +52,7 @@
     })
     .then(function (user) {
       if (!user) {
-        window.location.replace("landing.html");
+        window.location.replace("index.html");
         throw new Error("redirected_needs_auth");
       }
 
@@ -60,17 +60,25 @@
       window.LEVELUP_STUDENT_NAME = String((user.user_metadata && user.user_metadata.full_name) || user.email || "").trim();
 
       return window.LevelupAuth.isSubjectEntitled(subjectId).then(function (ok) {
-        if (!ok && !window.SUBJECT_PREVIEW_MODE) {
-          // Force preview mode if they load the page without preview flag but have no entitlement
-          window.location.replace("subject.html?subject=" + encodeURIComponent(subjectId) + "&preview=1");
-          throw new Error("redirected_entitlement_required");
-        }
-        
-        // If they have entitlement but the URL had preview=1, just remove it? Or just let it run but they have full access anyway.
-        // Actually! the manifest loader will limit topics if SUBJECT_PREVIEW_MODE is true. 
-        // If they are entitled, we should disable preview mode to ensure full access.
-        if (ok) {
-          window.SUBJECT_PREVIEW_MODE = false; 
+        // Reconcile preview flag with actual entitlement — in place, no navigation.
+        // Doing a full redirect here was causing loops when browsers cached a 301
+        // from an earlier `serve` config that stripped query strings.
+        try {
+          var url = new URL(window.location.href);
+          if (!ok) {
+            window.SUBJECT_PREVIEW_MODE = true;
+            url.searchParams.set("preview", "1");
+          } else {
+            window.SUBJECT_PREVIEW_MODE = false;
+            url.searchParams.delete("preview");
+          }
+          url.searchParams.set("subject", subjectId);
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, url.toString());
+          }
+        } catch (_) {
+          // fallback: just flip the flag
+          window.SUBJECT_PREVIEW_MODE = !ok;
         }
       });
     });

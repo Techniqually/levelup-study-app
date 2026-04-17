@@ -58,6 +58,37 @@ function applyServerDailyCounts(result) {
         changed = true;
       }
     }
+
+    // Parent-configured per-student rewards override the default static catalog
+    // (content/data/shop-rewards.js). When the parent has set any rewards, the
+    // shop displays THOSE instead. No defaults mixed in, to keep the contract
+    // between parent intent and student experience clean.
+    const parentRewards = Array.isArray(snapshot.parent_rewards)
+      ? snapshot.parent_rewards
+      : [];
+    if (parentRewards.length) {
+      const mapped = parentRewards.map((r) => ({
+        id: "student-reward:" + String(r.id),
+        label: String(r.label || "Reward"),
+        description: r.description ? String(r.description) : "",
+        xp: Math.max(0, Number(r.xp_cost || 0)),
+        // Parent-configured rewards default to effectively unlimited daily claims;
+        // parents moderate via enabling/disabling rewards instead.
+        dailyMax: 99,
+      }));
+      const prevCat = JSON.stringify(window.SHOP_REWARDS || []);
+      const nextCat = JSON.stringify(mapped);
+      if (prevCat !== nextCat) {
+        window.SHOP_REWARDS = mapped;
+        changed = true;
+        try {
+          document.dispatchEvent(new CustomEvent("levelup:shop-catalog-updated", {
+            detail: { source: "parent", count: mapped.length },
+          }));
+        } catch (_) {}
+      }
+    }
+
     state.shopLastSyncAt = Date.now();
     return changed;
   }

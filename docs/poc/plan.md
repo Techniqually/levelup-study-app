@@ -1,5 +1,8 @@
 # LevelUp! — Commercial PoC: Revised Implementation Plan (v2)
 
+> [!NOTE]
+> **Routing update (post-v2):** the public root is now `web/index.html` (landing). The signed-in subject hub has been renamed to `web/hub.html`. Any references in this document to `landing.html` map to the current `index.html`, and references to `index.html` (as the hub) map to `hub.html`. See `tasks.md` Phase 9 for the full cross-file rename log.
+
 ## Summary of Changes from v1
 
 | Topic | v1 | v2 (This Plan) |

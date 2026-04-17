@@ -26,7 +26,11 @@ function openShop(triggerServerSync) {
     const rewards = window.SHOP_REWARDS || [];
     const purchaseGate = canPurchaseReward();
     const list = document.getElementById("shop-rewards-list");
-    list.innerHTML = rewards
+    const isParentCatalog = rewards.length > 0 && rewards.every((r) => String(r.id || "").indexOf("student-reward:") === 0);
+    const sourceBadge = isParentCatalog
+      ? `<p class="hint" style="margin:0 0 10px;color:var(--ok,#6ee7b7);">Set by your parent · XP pooled across all subjects (${state.xp || 0} XP).</p>`
+      : `<p class="hint" style="margin:0 0 10px;">Default rewards · XP pooled across all subjects (${state.xp || 0} XP).</p>`;
+    list.innerHTML = sourceBadge + rewards
       .map((r) => {
         const dailyMax = getRewardDailyMax(r);
         const todayCount = getRewardPurchasesOnDate(r.id, getTodayIsoDate());
@@ -48,10 +52,14 @@ function openShop(triggerServerSync) {
                   : shopInFlight
                     ? "Syncing..."
                     : "Buy";
+        const desc = r.description
+          ? `<div class="shop-desc" style="font-size:12px;color:var(--ink-dim);margin-top:2px;">${escapeHtml(r.description)}</div>`
+          : "";
+        const capLabel = dailyMax >= 99 ? "" : ` · ${dailyRemaining}/${dailyMax} left today`;
         return `
       <div class="shop-item">
-        <span class="shop-label">${escapeHtml(r.label)}</span>
-        <span class="shop-xp">${r.xp} XP · ${dailyRemaining}/${dailyMax} left today</span>
+        <div class="shop-main"><span class="shop-label">${escapeHtml(r.label)}</span>${desc}</div>
+        <span class="shop-xp">${r.xp} XP${capLabel}</span>
         <button type="button" class="btn primary shop-buy" title="${escapeHtml(title)}" data-id="${escapeHtml(r.id)}" data-xp="${r.xp}" data-label="${escapeHtml(r.label)}" data-daily-max="${dailyMax}" ${reallyDisabled ? "disabled" : ""}>${
           cooldownMs > 0
             ? `Cooldown ${cooldownHrs}h`

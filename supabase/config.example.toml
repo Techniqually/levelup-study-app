@@ -1,0 +1,12 @@
+[auth]
+site_url = "http://localhost:3000"
+# Wildcards are supported. "/**" allows any path (and any hash) under that origin.
+additional_redirect_urls = [
+  "http://localhost:3000/**",
+  "http://127.0.0.1:3000/**"
+]
+
+[auth.external.google]
+enabled = true
+client_id = "your client id"
+secret = "your secret"

@@ -15,6 +15,26 @@
     return null;
   }
 
+  // In preview mode (non-entitled), keep only topics marked `free:true` and rewrite
+  // their file path to the `<subject>/free/<basename>` copy the sync tool uploaded.
+  // Storage RLS only permits `<subject>/free/*` for non-entitled users.
+  function applyPreviewView(list, subjectId) {
+    var sid = String(subjectId || "").toLowerCase();
+    var out = [];
+    for (var i = 0; i < list.length; i += 1) {
+      var row = list[i];
+      if (!row || !row.free) continue;
+      var file = String(row.file || "");
+      var base = file.split("/").pop();
+      out.push(
+        Object.assign({}, row, {
+          file: "data/subjects/" + sid + "/free/" + base,
+        })
+      );
+    }
+    return out;
+  }
+
   async function downloadText(path) {
     if (!canUseStorage()) throw new Error("storage_client_missing");
     var sb = global.LevelupAuth.getClient();
@@ -55,8 +75,13 @@
       await loadScriptFromStorage("shared/shop-rewards.js");
       var manifestText = await downloadText(sid + "/topics-manifest.json");
       var parsed = JSON.parse(manifestText);
-      var list = normalizeManifest(parsed);
-      if (!list || !list.length) return { ok: false, reason: "manifest_empty" };
+      var fullList = normalizeManifest(parsed);
+      if (!fullList || !fullList.length) return { ok: false, reason: "manifest_empty" };
+
+      var isPreview = !!global.SUBJECT_PREVIEW_MODE;
+      var list = isPreview ? applyPreviewView(fullList, sid) : fullList;
+      if (!list.length) return { ok: false, reason: "no_free_topics" };
+
       global.__topicRegistry = global.__topicRegistry || {};
       global.__registerTopic =
         global.__registerTopic ||
@@ -65,13 +90,21 @@
           global.__topicRegistry[String(topic.id)] = topic;
         };
       global.TOPICS_MANIFEST = list;
+      global.__LEVELUP_FULL_TOPIC_COUNT = fullList.length;
 
-      // Optional payloads.
-      var optional = [
-        sid + "/infographics-images.js",
-        sid + "/extra-quiz.js",
-        sid + "/extended-questions.js",
-      ];
+      if (isPreview) {
+        try { injectPreviewBanner(sid, list.length, fullList.length); } catch (_) {}
+      }
+
+      // Optional payloads. Skip the entitled-only ones in preview mode so we don't
+      // spam the console with 403s (RLS denies them for non-entitled users).
+      var optional = isPreview
+        ? []
+        : [
+            sid + "/infographics-images.js",
+            sid + "/extra-quiz.js",
+            sid + "/extended-questions.js",
+          ];
       for (var i = 0; i < optional.length; i += 1) {
         try {
           await loadScriptFromStorage(optional[i]);
@@ -80,15 +113,72 @@
         }
       }
 
+      // Rewrite infographic image URLs to Supabase signed URLs so the <img src> can
+      // actually fetch from the private study-materials bucket. Bundled
+      // infographics-images.js files build URLs like
+      //   `<origin>/data/subjects/<sid>/images/<file>`
+      // which point at the web server (404). Convert to signed URLs with a 24h TTL.
+      try {
+        await rewriteInfographicUrls(sid);
+      } catch (_) {
+        // best-effort: leave originals if signing fails
+      }
+
       try {
         global.__LEVELUP_INFO_MD_TEXT = await downloadText(sid + "/infographics-info.md");
       } catch (_) {
         global.__LEVELUP_INFO_MD_TEXT = "";
       }
-      return { ok: true, source: "storage", count: list.length };
+      return { ok: true, source: "storage", count: list.length, preview: isPreview };
     } catch (e) {
       return { ok: false, reason: (e && e.message) || "bootstrap_failed" };
     }
+  }
+
+  // Convert a bundled `data/subjects/<sid>/images/<file>` URL (or bare filename) to
+  // a signed Supabase Storage URL. Returns null on error.
+  async function signedImageUrl(subjectId, originalOrFilename) {
+    if (!canUseStorage()) return null;
+    var sb = global.LevelupAuth.getClient();
+    var raw = String(originalOrFilename || "");
+    if (!raw) return null;
+    // Strip to just `<subject>/images/<file>` (RLS-compatible storage path).
+    var m = raw.match(/data\/subjects\/([^\/]+)\/images\/(.+)$/i);
+    var storagePath;
+    if (m) {
+      storagePath = m[1] + "/images/" + m[2].split("?")[0];
+    } else if (/^[a-z0-9_-]+\/images\//i.test(raw)) {
+      storagePath = raw.split("?")[0];
+    } else {
+      // Assume bare filename under current subject's images/ folder.
+      storagePath = String(subjectId) + "/images/" + raw.split("/").pop().split("?")[0];
+    }
+    try {
+      var res = await sb.storage.from(BUCKET).createSignedUrl(storagePath, 60 * 60 * 24); // 24h
+      if (res.error || !res.data) return null;
+      return res.data.signedUrl || res.data.signedURL || res.data.signed_url || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function rewriteInfographicUrls(subjectId) {
+    var byTopic = global.SUBJECT_INFOS_BY_TOPIC;
+    if (!byTopic || typeof byTopic !== "object") return;
+    var jobs = [];
+    Object.keys(byTopic).forEach(function (tid) {
+      var list = byTopic[tid];
+      if (!Array.isArray(list)) return;
+      list.forEach(function (inf) {
+        if (!inf || !inf.image) return;
+        jobs.push(
+          signedImageUrl(subjectId, inf.image).then(function (url) {
+            if (url) inf.image = url;
+          })
+        );
+      });
+    });
+    if (jobs.length) await Promise.all(jobs);
   }
 
   async function loadForSubject(subjectId) {
@@ -113,9 +203,44 @@
     return { ok: true, source: "storage", count: list.length };
   }
 
+  function injectPreviewBanner(subjectId, freeCount, totalCount) {
+    if (document.getElementById("preview-banner")) return;
+    var pretty = subjectId.charAt(0).toUpperCase() + subjectId.slice(1);
+    var bar = document.createElement("div");
+    bar.id = "preview-banner";
+    bar.setAttribute("role", "status");
+    bar.innerHTML =
+      '<div class="preview-banner__inner">' +
+      '<div class="preview-banner__text">' +
+      '<strong>Preview mode</strong> · ' + freeCount + ' of ' + totalCount + ' ' + pretty + ' topics unlocked.' +
+      '</div>' +
+      '<div class="preview-banner__actions">' +
+      '<a class="preview-banner__cta" href="hub.html">Back to subjects</a>' +
+      '<button type="button" class="preview-banner__btn" id="preview-upgrade">Unlock full syllabus</button>' +
+      '</div>' +
+      '</div>';
+    var app = document.getElementById("app") || document.body;
+    app.insertBefore(bar, app.firstChild);
+    var btn = document.getElementById("preview-upgrade");
+    if (btn) {
+      btn.addEventListener("click", function () {
+        // POC: no billing wired yet — show a lightweight prompt.
+        var msg =
+          "To unlock the full " +
+          pretty +
+          " syllabus, an admin needs to grant your account the subject entitlement.\n\n" +
+          "Ping your onboarding contact with:\n• Email: " +
+          String((global.LEVELUP_STUDENT_ID) || "(signed-in email)") +
+          "\n• Subject: " + pretty;
+        try { window.alert(msg); } catch (_) {}
+      });
+    }
+  }
+
   global.LevelupRemoteManifest = {
     loadSubjectBootstrap: loadSubjectBootstrap,
     loadScriptFromStorage: loadScriptFromStorage,
     loadForSubject: loadForSubject,
+    signedImageUrl: signedImageUrl,
   };
 })(window);

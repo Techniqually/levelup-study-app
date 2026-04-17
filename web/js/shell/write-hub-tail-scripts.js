@@ -2,6 +2,7 @@
   var v = encodeURIComponent(window.APP_VERSION || "dev");
   var corePaths = [
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "js/shell/app-context.js",
     "js/features/auth/auth-client.js",
     "js/features/auth/auth-ui.js",
     "js/shell/hub-setup.js",
@@ -31,10 +32,10 @@
   }
 
   // If Supabase config is unavailable (API down + no cached keys), send the
-  // user to landing.html rather than leaving the hub in a broken unlocked state.
+  // user to the landing page rather than leaving the hub in a broken unlocked state.
   document.addEventListener("levelup:config-error", function () {
     if (!window.SUPABASE_URL) {
-      window.location.replace("landing.html");
+      window.location.replace("index.html");
     }
   });
 

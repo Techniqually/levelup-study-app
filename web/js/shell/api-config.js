@@ -1,9 +1,9 @@
 /**
  * Load API base URL from config file (git-ignored per environment).
- * Falls back to localhost:8080 if config file is missing.
+ * Falls back to localhost:8081 if config file is missing.
  */
 (function() {
-  var apiBase = "http://localhost:8080"; // fallback if config missing
+  var apiBase = "http://localhost:8081"; // fallback if config missing
 
   fetch("config/api.json")
     .then(function(r) { return r.ok ? r.json() : null; })

@@ -1,103 +1,265 @@
 <!DOCTYPE html>
-<html lang="en" data-levelup-build="2026-04-16-00">
+<html lang="en" data-levelup-build="2026-04-17-00">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LevelUp! Parent Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Parent dashboard · LevelUp</title>
+  <meta name="description" content="See your students' progress, strengths and gaps on LevelUp." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <!-- Analytics: set data-website-id to your Umami site ID before going live -->
   <script async src="https://analytics.umami.is/script.js"
           data-website-id="UMAMI_WEBSITE_ID"
           data-domains="levelupstudyhub.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="js/shell/asset-version.js"></script>
+  <link rel="stylesheet" href="css/app-shell.css" />
   <style>
-    :root { --bg:#060b1a; --card:#0f172a; --border:#23314a; --text:#e2e8f0; --muted:#94a3b8; --accent:#5eead4; --accent2:#a78bfa; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family:Outfit,system-ui,sans-serif; background:radial-gradient(circle at top,#111827,#020617); color:var(--text); min-height:100vh; }
-    .shell { max-width:960px; margin:0 auto; padding:24px 16px 40px; }
+    .gate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 16px;
+      text-align: center;
+      padding: 32px 0;
+    }
+    .gate h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); }
+    .gate p { margin: 0; color: var(--ink-dim); max-width: 42ch; line-height: 1.5; }
 
-    /* Auth gate */
-    .auth-gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:16px; text-align:center; }
-    .auth-gate h2 { margin:0; font-size:1.6rem; }
-    .auth-gate p { margin:0; color:var(--muted); max-width:380px; }
-    .btn-google { display:inline-flex; align-items:center; gap:10px; padding:12px 22px; background:#fff; color:#1a1a1a; border:none; border-radius:10px; font-family:inherit; font-size:1rem; font-weight:600; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-    .btn-google svg { width:20px; height:20px; flex:0 0 20px; }
-    .btn-google:hover { background:#f3f4f6; }
+    .status-card {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.02);
+      margin-bottom: 16px;
+    }
+    .status-card__text { color: var(--ink-dim); font-size: 14px; margin: 0; }
 
-    /* Topbar */
-    .topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0 18px; flex-wrap:wrap; }
-    .topbar-brand { display:flex; align-items:center; gap:8px; }
-    .home-link { display:inline-flex; align-items:center; gap:6px; text-decoration:none; color:var(--accent); font-size:0.9rem; font-weight:600; border:1px solid #2a3a57; border-radius:10px; padding:7px 12px; background:#0b1220; }
-    .home-link:hover { border-color:var(--accent); }
-    .topbar-right { display:flex; align-items:center; gap:10px; }
-    .topbar-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem; color:#000; flex:0 0 32px; }
-    .topbar-name { font-size:.9rem; color:var(--muted); }
-    .btn-signout { border:1px solid #2a3a57; background:#0b1220; color:#94a3b8; border-radius:8px; padding:6px 12px; font:inherit; font-size:.8rem; cursor:pointer; }
-    .btn-signout:hover { border-color:#5f7397; color:var(--text); }
+    .students { display: flex; flex-direction: column; gap: 14px; }
+    .student-card {
+      border: 1px solid var(--line-soft);
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      transition: border-color 200ms var(--ease);
+    }
+    .student-card:hover { border-color: rgba(129, 140, 248, 0.4); }
+    .student-toggle { width: 100%; display: block; text-align: left; cursor: pointer; padding: 0; }
 
-    .page-title { margin:0 0 16px; font-size:1.8rem; }
-    .hint-text { color:var(--muted); font-size:.9rem; }
-    .card { border:1px solid var(--border); background:rgba(15,23,42,.9); border-radius:14px; padding:14px; margin-bottom:12px; }
-    .status-msg { color:var(--muted); font-size:.9rem; margin-top:6px; }
+    .student-head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .name-row { display: flex; gap: 10px; align-items: center; }
+    .student-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--brand-grad);
+      color: #0b1020;
+      font-size: 14px; font-weight: 800;
+      flex: 0 0 36px; overflow: hidden;
+    }
+    .student-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .student-card h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+    .divider-dot { color: var(--ink-muted); margin: 0 6px; }
+    .student-meta { margin: 4px 0 0; color: var(--ink-muted); font-size: 13px; }
 
-    /* Student cards */
-    .student-card { border:1px solid #1f2a40; border-radius:12px; padding:10px 12px; background:#0b1220; margin-top:10px; }
-    .student-toggle { width:100%; border:none; background:transparent; color:inherit; padding:0; text-align:left; cursor:pointer; }
-    .student-head { display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
-    .student-card h3 { margin:0 0 4px; font-size:1rem; }
-    .name-row { display:flex; gap:8px; align-items:center; }
-    .student-avatar { width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#5eead4,#a78bfa); color:#000; font-size:.8rem; font-weight:700; flex:0 0 28px; }
-    .student-avatar img { width:100%; height:100%; border-radius:50%; object-fit:cover; }
-    .divider-dot { color:#5f7397; margin:0 6px; }
-    .student-meta { margin:0; color:var(--muted); font-size:.82rem; }
-    .student-summary { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px; }
-    .student-expand { margin-left:auto; color:var(--accent); font-size:.8rem; border:1px solid #2a3a57; border-radius:999px; padding:2px 8px; }
-    .student-details { margin-top:10px; }
+    .student-summary { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+    .student-expand {
+      margin-left: auto;
+      color: var(--accent);
+      font-size: 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.03);
+    }
 
-    .stat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
-    .stat-grid .chip { display:block; text-align:center; }
+    .student-details { margin-top: 14px; display: none; }
+    .student-card[data-expanded="true"] .student-details { display: block; }
 
-    .chips { display:flex; flex-wrap:wrap; gap:6px; }
-    .chip { border:1px solid #273449; border-radius:999px; padding:3px 8px; font-size:.78rem; color:#cbd5e1; }
-    .chip.ok { border-color:#1e4d3a; background:#0b2518; color:#4ade80; }
-    .chip.warn { border-color:#4d3a1e; background:#251c0b; color:#fb923c; }
-    .chip.locked { border-color:#4d1e2a; background:#25080f; color:#f87171; }
-    .details { margin-top:10px; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; }
-    .mini { border:1px solid #1f2a40; border-radius:10px; padding:10px; background:#070d1a; }
-    .mini h4 { margin:0 0 6px; font-size:.9rem; color:#cbd5e1; }
+    .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+    @media (min-width: 720px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
+    .stat-grid .chip { text-align: center; padding: 10px 12px; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--ink-dim);
+      font-weight: 500;
+    }
+    .chip.ok    { border-color: rgba(110, 231, 183, 0.4); background: rgba(110, 231, 183, 0.1); color: #6ee7b7; }
+    .chip.warn  { border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.1); color: #fbbf24; }
+    .chip.locked { border-color: rgba(248, 113, 113, 0.4); background: rgba(248, 113, 113, 0.1); color: #f87171; }
+
+    .details { margin-top: 12px; display: grid; gap: 10px; grid-template-columns: 1fr; }
+    @media (min-width: 720px) { .details { grid-template-columns: repeat(2, 1fr); } }
+    .mini {
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .mini h4 { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ink-dim); }
+    .mini.full { grid-column: 1 / -1; }
+
+    /* Activity table (today/week/month) */
+    .activity-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .activity-table th, .activity-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--line-soft); }
+    .activity-table thead th { font-weight: 700; color: var(--ink-muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
+    .activity-table tbody th { text-align: left; font-weight: 600; color: var(--ink-dim); }
+    .activity-table tbody td { font-family: var(--mono, ui-monospace, Menlo, monospace); font-weight: 700; }
+    .activity-table tbody tr:last-child th, .activity-table tbody tr:last-child td { border-bottom: 0; }
+
+    /* Rewards editor */
+    .rewards-block h4 { margin-top: 4px; }
+    .rewards-list { list-style: none; margin: 10px 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .reward-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    @media (max-width: 560px) {
+      .reward-row { grid-template-columns: 1fr; }
+      .reward-actions { justify-self: start; }
+    }
+    .reward-main strong { font-weight: 600; }
+    .reward-meta { display: flex; gap: 6px; }
+    .reward-actions { display: flex; gap: 6px; }
+    .btn-ghost {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink-dim);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { color: var(--ink); border-color: var(--line-bright, rgba(255,255,255,0.2)); }
+    .btn-ghost.danger { color: #f87171; border-color: rgba(248,113,113,0.4); }
+    .btn-ghost.danger:hover { background: rgba(248,113,113,0.08); }
+    .reward-form {
+      display: grid;
+      grid-template-columns: 1fr 120px 1fr auto;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    @media (max-width: 720px) { .reward-form { grid-template-columns: 1fr; } }
+    .reward-form input {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+    }
+    .reward-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .btn-primary {
+      border: 0;
+      background: var(--brand-grad, linear-gradient(135deg, #6ee7b7, #a78bfa));
+      color: #0b1020;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-summary {
+      border: 1px solid rgba(110, 231, 183, 0.4);
+      color: #6ee7b7;
+      background: rgba(110, 231, 183, 0.08);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn-summary:hover { background: rgba(110, 231, 183, 0.14); }
 
     /* Summary modal */
-    .summary-backdrop { position:fixed; inset:0; background:rgba(5,7,22,.82); z-index:100; display:flex; align-items:flex-start; justify-content:center; padding:24px 12px; overflow:auto; }
-    .summary-backdrop[hidden] { display:none !important; }
-    .summary-panel { max-width:640px; width:100%; border:1px solid var(--border); border-radius:14px; background:#0f172a; padding:18px; color:var(--text); box-shadow:0 24px 48px rgba(0,0,0,.45); }
-    .summary-panel h2 { margin:0 0 8px; font-size:1.2rem; color:var(--accent); }
-    .summary-body { font-size:.88rem; line-height:1.5; }
-    .summary-body h3 { margin:16px 0 6px; font-size:.95rem; color:#cbd5e1; }
-    .summary-body ul { margin:4px 0 0 18px; padding:0; }
-    .summary-foot { margin-top:14px; padding-top:12px; border-top:1px solid #23314a; font-size:.8rem; color:var(--muted); }
-    .summary-close { float:right; margin:0 0 8px 8px; border:1px solid #2a3a57; background:#0b1220; color:#94a3b8; border-radius:8px; padding:5px 10px; font:inherit; font-size:.8rem; cursor:pointer; }
-
-    .btn-summary { border:1px solid #2d6a5c; color:var(--accent); background:#0d1f1c; border-radius:8px; padding:6px 12px; font:inherit; font-size:.82rem; cursor:pointer; margin-top:8px; }
-
-    @media (max-width:760px) {
-      .shell { padding:16px 10px 28px; }
-      .stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .details { grid-template-columns:1fr; }
-      .student-expand { margin-left:0; }
-      .topbar { padding-bottom:12px; }
+    .summary-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(5, 8, 22, 0.8);
+      z-index: 80;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 24px 12px;
+      overflow: auto;
+      backdrop-filter: blur(8px);
     }
+    .summary-backdrop[hidden] { display: none !important; }
+    .summary-panel {
+      max-width: 640px; width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--bg-elev);
+      padding: 22px;
+      color: var(--ink);
+      box-shadow: var(--shadow-lg);
+    }
+    .summary-panel h2 { margin: 0 0 8px; font-size: 1.2rem; color: var(--accent); }
+    .summary-body { font-size: 14px; line-height: 1.55; }
+    .summary-body h3 { margin: 18px 0 6px; font-size: 14px; color: var(--ink-dim); }
+    .summary-body ul { margin: 4px 0 0 18px; padding: 0; }
+    .summary-foot { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: 12px; color: var(--ink-muted); }
+    .summary-close {
+      float: right;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--ink-dim);
+      border-radius: 10px;
+      padding: 6px 12px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      margin: 0 0 8px 8px;
+    }
+    .summary-close:hover { color: var(--ink); }
+
+    .page-title { margin: 12px 0 16px; font-size: clamp(1.4rem, 3vw, 2rem); }
+
+    /* Hidden auth/dashboard shells (JS toggles) */
+    [hidden] { display: none !important; }
+
+    #auth-error { color: #f87171; font-size: 14px; }
   </style>
 </head>
 <body>
-  <div class="shell">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- Auth gate (shown when signed out) -->
-    <div id="auth-gate" class="auth-gate" hidden>
-      <h2>Parent Dashboard</h2>
-      <p>Sign in with your Google account to monitor your students' progress.</p>
-      <button type="button" id="btn-google-signin" class="btn-google">
+  <div id="levelup-shell" data-page="parent"></div>
+
+  <main id="main" class="container">
+    <!-- Auth gate -->
+    <div id="auth-gate" class="gate" hidden>
+      <h1>Parent dashboard</h1>
+      <p>Sign in with your Google account to monitor your students' progress, strengths and gaps.</p>
+      <button type="button" id="btn-google-signin" class="btn btn-google btn-lg">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -106,32 +268,28 @@
         </svg>
         Continue with Google
       </button>
-      <p id="auth-error" class="hint-text" style="color:#f87171;" hidden></p>
+      <p id="auth-error" hidden></p>
     </div>
 
-    <!-- Dashboard (shown when signed in) -->
+    <!-- Dashboard -->
     <div id="dashboard" hidden>
-      <div class="topbar">
-        <a class="home-link" href="index.html">← LevelUp home</a>
-        <div class="topbar-right">
-          <div class="topbar-avatar" id="parent-avatar">P</div>
-          <span class="topbar-name" id="parent-name"></span>
-          <button type="button" id="btn-signout" class="btn-signout">Sign out</button>
-        </div>
+      <h1 class="page-title">Parent dashboard</h1>
+
+      <div class="status-card">
+        <p id="status" class="status-card__text">Loading your students…</p>
+        <button type="button" id="btn-refresh" class="btn btn-outline btn-sm">Refresh</button>
       </div>
 
-      <h1 class="page-title">Parent Dashboard</h1>
-
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-          <p class="status-msg" id="status">Loading your students…</p>
-          <button type="button" id="btn-refresh" style="border:1px solid #2a3a57;background:#0b1220;color:#94a3b8;border-radius:8px;padding:7px 14px;font:inherit;font-size:.85rem;cursor:pointer;">Refresh</button>
-        </div>
+      <!-- Hidden elements kept for backward compatibility with parent-dashboard.js -->
+      <div hidden>
+        <span id="parent-avatar">P</span>
+        <span id="parent-name"></span>
+        <button id="btn-signout" type="button"></button>
       </div>
 
-      <div class="card">
+      <div class="students card" style="padding:16px;">
         <div id="student-cards">
-          <p class="hint-text">Loading…</p>
+          <p class="muted">Loading…</p>
         </div>
       </div>
     </div>
@@ -145,9 +303,9 @@
         <p class="summary-foot" id="study-summary-foot"></p>
       </div>
     </div>
-  </div>
+  </main>
 
-  <script src="js/shell/asset-version.js"></script>
+  <script src="js/shell/app-shell.js"></script>
   <script src="js/shell/write-parent-tail-scripts.js"></script>
 </body>
 </html>

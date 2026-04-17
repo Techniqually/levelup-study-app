@@ -140,19 +140,145 @@
 
   // ── Student card rendering ────────────────────────────────────────────────
 
+  function renderActivityTable(s) {
+    return (
+      "<table class='activity-table'>" +
+        "<thead><tr><th></th><th>Today</th><th>This week</th><th>This month</th></tr></thead>" +
+        "<tbody>" +
+          "<tr><th scope='row'>XP earned</th>" +
+            "<td>+" + Number(s.xp_today || 0) + "</td>" +
+            "<td>+" + Number(s.xp_last_7d || 0) + "</td>" +
+            "<td>+" + Number(s.xp_last_30d || 0) + "</td></tr>" +
+          "<tr><th scope='row'>Activity events</th>" +
+            "<td>" + Number(s.events_today || 0) + "</td>" +
+            "<td>" + Number(s.events_7d || 0) + "</td>" +
+            "<td>" + Number(s.events_30d || 0) + "</td></tr>" +
+          "<tr><th scope='row'>Topics touched</th>" +
+            "<td>" + Number(s.touched_today || 0) + "</td>" +
+            "<td>" + Number(s.touched_7d || 0) + "</td>" +
+            "<td>" + Number(s.touched_30d || 0) + "</td></tr>" +
+        "</tbody>" +
+      "</table>"
+    );
+  }
+
+  function renderRewardsEditor(s) {
+    var rewards = jsonArr(s.rewards);
+    var rows = rewards.map(function (r) {
+      return (
+        "<li class='reward-row' data-id='" + esc(r.id) + "'>" +
+          "<div class='reward-main'>" +
+            "<strong>" + esc(r.label) + "</strong>" +
+            (r.description ? " <span class='hint-text'>" + esc(r.description) + "</span>" : "") +
+          "</div>" +
+          "<div class='reward-meta'>" +
+            "<span class='chip'>" + Number(r.xp_cost || 0) + " XP</span>" +
+            (r.active ? "" : "<span class='chip locked'>Inactive</span>") +
+          "</div>" +
+          "<div class='reward-actions'>" +
+            "<button type='button' class='btn-ghost js-reward-edit' data-id='" + esc(r.id) + "'>Edit</button>" +
+            "<button type='button' class='btn-ghost danger js-reward-delete' data-id='" + esc(r.id) + "'>Remove</button>" +
+          "</div>" +
+        "</li>"
+      );
+    }).join("");
+    return (
+      "<div class='rewards-block'>" +
+        "<h4>Rewards for " + esc(s.display_name || "this student") + "</h4>" +
+        "<p class='hint-text'>Set rewards they can redeem with XP. You fulfil them in real life.</p>" +
+        (rewards.length
+          ? "<ul class='rewards-list'>" + rows + "</ul>"
+          : "<p class='hint-text'>No rewards yet — add one below.</p>") +
+        "<form class='reward-form' data-student='" + esc(s.user_id || "") + "' autocomplete='off'>" +
+          "<input type='text' name='label' placeholder='Reward (e.g. 30 min screen time)' maxlength='120' required />" +
+          "<input type='number' name='xp_cost' placeholder='XP cost' min='0' max='100000' required />" +
+          "<input type='text' name='description' placeholder='Notes (optional)' maxlength='300' />" +
+          "<button type='submit' class='btn-primary'>Add reward</button>" +
+        "</form>" +
+      "</div>"
+    );
+  }
+
   function renderStudentDetailBlocks(s) {
     return (
-      "<button type='button' class='btn-summary btn-study-summary' data-uid='" + esc(s.user_id || "") + "'>Study summary</button>" +
+      "<button type='button' class='btn-summary btn-study-summary' data-uid='" + esc(s.user_id || "") + "'>Full study summary</button>" +
       "<div class='details'>" +
-        "<div class='mini'><h4>Last 7 days</h4><div class='chips'>" +
-          "<span class='chip'>XP +" + Number(s.xp_last_7d || 0) + "</span>" +
-        "</div></div>" +
+        "<div class='mini full'><h4>Activity</h4>" + renderActivityTable(s) + "</div>" +
         "<div class='mini'><h4>Subscription</h4><div class='chips'>" + entitlementBadge(s) + "</div></div>" +
         "<div class='mini'><h4>Strong topics</h4><div class='chips'>" + topicList(s.strong_topics, "mastery") + "</div></div>" +
         "<div class='mini'><h4>Weak topics</h4><div class='chips'>" + topicList(s.weak_topics, "mastery") + "</div></div>" +
         "<div class='mini'><h4>Recent coupons</h4><div class='chips'>" + recentCouponList(s.recent_coupons) + "</div></div>" +
+        "<div class='mini full'>" + renderRewardsEditor(s) + "</div>" +
       "</div>"
     );
+  }
+
+  // ── Rewards CRUD ─────────────────────────────────────────────────────────
+  async function callRpc(name, args) {
+    if (!window.LevelupAuth) throw new Error("auth_not_ready");
+    var sb = window.LevelupAuth.getClient();
+    if (!sb) throw new Error("supabase_not_ready");
+    var res = await sb.rpc(name, args || {});
+    if (res.error) throw res.error;
+    return res.data;
+  }
+
+  async function handleRewardSubmit(form) {
+    var fd = new FormData(form);
+    var studentId = form.getAttribute("data-student");
+    var label = String(fd.get("label") || "").trim();
+    var xp = parseInt(String(fd.get("xp_cost") || "0"), 10);
+    var desc = String(fd.get("description") || "").trim() || null;
+    var editId = form.dataset.editId || null;
+    if (!studentId || !label || !(xp >= 0)) return;
+    try {
+      await callRpc("parent_upsert_student_reward", {
+        p_student_user_id: studentId,
+        p_label: label,
+        p_xp_cost: xp,
+        p_description: desc,
+        p_id: editId,
+        p_active: true,
+        p_sort_order: 0,
+      });
+      delete form.dataset.editId;
+      form.reset();
+      var submit = form.querySelector("button[type=submit]");
+      if (submit) submit.textContent = "Add reward";
+      await loadData();
+    } catch (e) {
+      alert("Failed: " + ((e && e.message) || String(e)));
+    }
+  }
+
+  async function handleRewardDelete(id) {
+    if (!id) return;
+    if (!confirm("Remove this reward?")) return;
+    try {
+      await callRpc("parent_delete_student_reward", { p_id: id });
+      await loadData();
+    } catch (e) {
+      alert("Failed: " + ((e && e.message) || String(e)));
+    }
+  }
+
+  function handleRewardEdit(id) {
+    var row = document.querySelector(".reward-row[data-id='" + id + "']");
+    if (!row) return;
+    var label = row.querySelector(".reward-main strong").textContent;
+    var xpChip = row.querySelector(".reward-meta .chip");
+    var xp = parseInt((xpChip ? xpChip.textContent : "0").replace(/[^0-9]/g, ""), 10) || 0;
+    var descEl = row.querySelector(".reward-main .hint-text");
+    var desc = descEl ? descEl.textContent : "";
+    var form = row.closest(".rewards-block").querySelector(".reward-form");
+    if (!form) return;
+    form.dataset.editId = id;
+    form.label.value = label;
+    form.xp_cost.value = String(xp);
+    form.description.value = desc;
+    var submit = form.querySelector("button[type=submit]");
+    if (submit) submit.textContent = "Save changes";
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function renderStudents(students) {
@@ -211,6 +337,27 @@
       });
     });
 
+    // Rewards: add / edit / delete (delegated per-card so form submits don't bubble to toggle)
+    studentCards.querySelectorAll(".reward-form").forEach(function (form) {
+      form.addEventListener("submit", function (evt) {
+        evt.preventDefault();
+        handleRewardSubmit(form);
+      });
+      form.addEventListener("click", function (evt) { evt.stopPropagation(); });
+    });
+    studentCards.querySelectorAll(".js-reward-delete").forEach(function (btn) {
+      btn.addEventListener("click", function (evt) {
+        evt.stopPropagation();
+        handleRewardDelete(btn.getAttribute("data-id"));
+      });
+    });
+    studentCards.querySelectorAll(".js-reward-edit").forEach(function (btn) {
+      btn.addEventListener("click", function (evt) {
+        evt.stopPropagation();
+        handleRewardEdit(btn.getAttribute("data-id"));
+      });
+    });
+
     // Expand/collapse
     studentCards.querySelectorAll(".student-toggle").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -254,16 +401,24 @@
   function showDashboard(user) {
     if (authGate) authGate.hidden = true;
     if (dashboard) dashboard.hidden = false;
-    var name = String((user.user_metadata && user.user_metadata.full_name) || "").trim() ||
+    var meta = user.user_metadata || {};
+    var name = String(meta.full_name || meta.name || "").trim() ||
                String(user.email || "").split("@")[0] || "Parent";
+    var avatar = String(meta.avatar_url || meta.picture || "");
     if (parentName) parentName.textContent = name;
     if (parentAvatar) parentAvatar.textContent = name.charAt(0).toUpperCase();
+    if (window.LevelupShell && typeof window.LevelupShell.setProfile === "function") {
+      window.LevelupShell.setProfile(name, user.email || "", avatar);
+    }
     loadData();
   }
 
   function showAuthGate() {
     if (authGate) authGate.hidden = false;
     if (dashboard) dashboard.hidden = true;
+    if (window.LevelupShell && typeof window.LevelupShell.clearProfile === "function") {
+      window.LevelupShell.clearProfile();
+    }
   }
 
   // ── Auth wiring ───────────────────────────────────────────────────────────
@@ -312,7 +467,7 @@
     btnSignout.addEventListener("click", function () {
       if (!window.LevelupAuth) return;
       window.LevelupAuth.signOut().then(function () {
-        window.location.href = "landing.html";
+        window.location.href = "index.html";
       });
     });
   }

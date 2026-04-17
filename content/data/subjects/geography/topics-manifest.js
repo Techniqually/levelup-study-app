@@ -5,7 +5,7 @@ window.__registerTopic = function (topic) {
 
 window.TOPICS_MANIFEST = [
   // Cluster 1: Geography in Everyday Life
-  { id: "1.1", theme: "Cluster 1: Geography in Everyday Life", title: "Thinking Geographically", file: "data/subjects/geography/cluster1-everyday/topic-1-1.js" },
+  { id: "1.1", theme: "Cluster 1: Geography in Everyday Life", title: "Thinking Geographically", file: "data/subjects/geography/cluster1-everyday/topic-1-1.js", free: true },
   { id: "1.2", theme: "Cluster 1: Geography in Everyday Life", title: "Sustainable Development", file: "data/subjects/geography/cluster1-everyday/topic-1-2.js" },
   { id: "1.3", theme: "Cluster 1: Geography in Everyday Life", title: "Geographical Methods", file: "data/subjects/geography/cluster1-everyday/topic-1-3.js" },
 

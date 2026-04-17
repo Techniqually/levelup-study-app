@@ -71,7 +71,7 @@ if (!manifest || !manifest.length) {
   }
 
   document.getElementById("btn-home").onclick = function () {
-    if (window.SUBJECT_ID) { window.location.href = "index.html"; return; }
+    if (window.SUBJECT_ID) { window.location.href = "hub.html"; return; }
     route = { view: "home" };
     renderHome();
   };

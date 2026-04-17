@@ -1,12 +1,12 @@
 # LevelUp study app — agent notes
 
-Vanilla **HTML + CSS + JS** (no bundler). Three entry pages: **`index.html`** (subject hub), **`subject.html`** (per-subject app), **`parent.html`** (parent dashboard).
+Vanilla **HTML + CSS + JS** (no bundler). Entry pages under `web/`: **`index.html`** (public landing / Google sign-in), **`hub.html`** (signed-in subject hub), **`subject.html`** (per-subject app), **`parent.html`** (parent dashboard), **`admin.html`** (PoC admin helpers).
 
 Optional **LLM proxy:** **`api/`** — FastAPI + Docker Compose; provider keys stay server-side (`OPENAI_API_KEY` in `.env`). See **`api/README.md`** and **`docs/llm-integration-plan.md`**.
 
 ## Cache busting (central)
 
-- **Production bump:** set **`data-levelup-build`** on the `<html>` tag in **`subject.html`**, **`index.html`**, and **`parent.html`** (same value on all three). That value becomes `APP_VERSION` even if **`asset-version.js`** is still an older cached file (HTML is usually revalidated sooner than long‑cached JS).
+- **Production bump:** set **`data-levelup-build`** on the `<html>` tag in **`subject.html`**, **`hub.html`**, and **`parent.html`** (same value on all three). That value becomes `APP_VERSION` even if **`asset-version.js`** is still an older cached file (HTML is usually revalidated sooner than long‑cached JS).
 - **Fallback:** `js/shell/asset-version.js` ends with a string literal if there is no `data-levelup-build` (e.g. `file://`, odd entrypoints). Keep it aligned with the HTML attribute when you ship.
 - **Local dev:** without `data-levelup-build`, `localhost` / `127.0.0.1` use **UTC `YYYYMMDD-dev`**. Tests may set `window.APP_VERSION` before `asset-version.js` runs (then this file does nothing).
 - **Who reads `APP_VERSION`:** `subject-script-chain.js` (`mkV`), `subject-head-assets.js`, `write-*-tail-scripts.js`, `topic-load.js`, `app.js`. `subject-config.js` only sets `window.APP_VERSION` if still unset (`|| "dev"`).
@@ -29,7 +29,17 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 
 ## Boot order (hub)
 
-`index.html` loads **`asset-version.js`** then **`write-hub-tail-scripts.js`** → Supabase CDN, `auth-client.js`, `auth-ui.js`, `setup-forms.js`, **`hub-setup.js`**.
+`hub.html` loads **`asset-version.js`** then **`write-hub-tail-scripts.js`** → Supabase CDN, `auth-client.js`, `auth-ui.js`, `setup-forms.js`, **`hub-setup.js`**.
+
+## Routing
+
+- `/` (`index.html`) — public landing page; opens auth modal; auto-redirects to `hub.html` if a valid session is already present.
+- `/hub.html` — signed-in subject hub; unauthenticated users are bounced back to `/`.
+- `/subject.html?subject=…` — per-subject app; entitled content or `&preview=1` for free topic.
+- `/parent.html` — Google-auth-gated parent dashboard.
+- `/admin.html` — manual admin helpers (requires `ADMIN_API_KEY` header).
+
+OAuth redirect target must be inside the origin's `additional_redirect_urls` wildcard in `supabase/config.toml` (e.g. `http://localhost:3000/**`).
 
 ## Layout of `js/`
 
@@ -43,6 +53,10 @@ If you add globals consumed in `app.js`, load their script **before** `app.js` i
 | Sync | `js/supabase-client.js`, `js/progress-store.js` | Supabase client + `ProgressStore` API |
 
 **Structured (long) answers:** optional `extendedQuestions` on a topic (command word, marks, `prompt`, `rubric[]`, `modelAnswer`, optional `syllabusNote`, optional `minCharsForModel`). UI: **`Written`** tab in `subject.html` dock (`route.tab === "written"`); `topic-panels.js` → `renderWrittenPanel` / `LevelupExtendedQuiz.renderWrittenShell` + `bindWritten`. One question at a time (step in `sessionStorage`). **XP:** `state.writtenClaims` (once per question per local UTC day) + `addXp` `activityType: "written_practice"` after mark scheme + model viewed + heuristic quality (`app-constants.js` `WRITTEN_CLAIM_*`). Script: `quiz-extended.js` before `quiz-engine.js`.
+
+## Multi-country / multi-class
+
+UI is locked to **SG + O-Level** for the POC. Data + API already carry `(country_code, class_code, subject_slug)` — see `docs/multi-country-plan.md`. DB: `profiles.country_code/class_code`, `catalog_{countries,classes,subjects}`, `subject_entitlements` (structured; legacy `user_entitlements.entitlements[]` stays in sync via trigger). Client: `web/js/shell/app-context.js` exposes `window.LevelupContext`; `content/data/catalog.js` mirrors the DB catalog.
 
 ## Identity & storage keys
 

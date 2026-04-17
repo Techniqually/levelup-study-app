@@ -5,7 +5,7 @@ window.__registerTopic = function (topic) {
 };
 
 window.TOPICS_MANIFEST = [
-  { id: "1", theme: "Theme 1: Matter – Structures & Properties", title: "Experimental Design", file: "data/subjects/chemistry/theme1-matter/topic-01.js" },
+  { id: "1", theme: "Theme 1: Matter – Structures & Properties", title: "Experimental Design", file: "data/subjects/chemistry/theme1-matter/topic-01.js", free: true },
   { id: "2", theme: "Theme 1: Matter – Structures & Properties", title: "Methods of Purification and Analysis", file: "data/subjects/chemistry/theme1-matter/topic-02.js" },
   { id: "3", theme: "Theme 1: Matter – Structures & Properties", title: "Kinetic Particle Theory", file: "data/subjects/chemistry/theme1-matter/topic-03.js" },
   { id: "4", theme: "Theme 1: Matter – Structures & Properties", title: "Atomic Structure", file: "data/subjects/chemistry/theme1-matter/topic-04.js" },

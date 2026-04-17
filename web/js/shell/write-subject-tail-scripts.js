@@ -2,6 +2,7 @@
   var v = encodeURIComponent(window.APP_VERSION || "dev");
   var corePaths = [
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "js/shell/app-context.js",
     "js/features/auth/auth-client.js",
     "js/shell/subject-config.js",
     "js/features/study/remote-manifest.js",
@@ -34,7 +35,7 @@
   // Config unavailable → can't authenticate → redirect to landing
   document.addEventListener("levelup:config-error", function () {
     if (!window.SUPABASE_URL) {
-      window.location.replace("landing.html");
+      window.location.replace("index.html");
     }
   });
 

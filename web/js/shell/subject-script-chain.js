@@ -129,7 +129,14 @@
 
   var boot = window.__LEVELUP_SUBJECT_SETUP;
   if (boot && typeof boot.then === "function") {
-    boot.then(runChain).catch(runChain);
+    boot
+      .then(runChain)
+      .catch(function (err) {
+        var msg = String((err && err.message) || "subject_bootstrap_failed");
+        // If config redirected to landing, page is already navigating — don't render.
+        if (/redirected|needs_auth/i.test(msg)) return;
+        renderFatalLoadError(msg);
+      });
   } else {
     runChain();
   }

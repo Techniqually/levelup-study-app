@@ -817,6 +817,74 @@ body {
   background: rgba(74, 222, 128, 0.12);
 }
 
+.quiz-opt.wrong {
+  box-shadow: 0 0 0 1px var(--danger) inset;
+}
+
+.quiz-opt.correct {
+  box-shadow: 0 0 0 1px var(--ok) inset;
+}
+
+/* Inline per-question feedback (replaces the old blocking modal) */
+.quiz-feedback {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  background: var(--surface);
+  animation: quizFeedbackIn 160ms ease-out;
+}
+.quiz-feedback--wrong {
+  border-color: var(--danger);
+  background: rgba(248, 113, 113, 0.08);
+}
+.quiz-feedback--timeout {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+.quiz-feedback--correct {
+  border-color: var(--ok);
+  background: rgba(74, 222, 128, 0.08);
+}
+.quiz-feedback__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.quiz-feedback__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #0b0f1a;
+}
+.quiz-feedback--wrong .quiz-feedback__icon   { background: var(--danger); color: #fff; }
+.quiz-feedback--timeout .quiz-feedback__icon { background: #f59e0b; }
+.quiz-feedback--correct .quiz-feedback__icon { background: var(--ok); }
+.quiz-feedback__title { font-size: 1.05rem; }
+.quiz-feedback__body  { margin: 4px 0 8px; line-height: 1.5; color: var(--text); }
+.quiz-feedback__note  {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+.quiz-feedback__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+@keyframes quizFeedbackIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .quiz-score-line {
   margin-top: 16px;
   font-family: var(--mono);
@@ -1492,3 +1560,67 @@ html:has(#modal-root:not([hidden])) {
   font-weight: 600;
   margin-top: 8px;
 }
+
+/* ── Preview banner (subject.html, non-entitled users) ───────────────────── */
+#preview-banner {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  background: linear-gradient(90deg, rgba(94, 234, 212, 0.14), rgba(167, 139, 250, 0.14));
+  border-bottom: 1px solid rgba(167, 139, 250, 0.35);
+  color: var(--text);
+  font-family: var(--font);
+}
+.preview-banner__inner {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+}
+.preview-banner__text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.45;
+}
+.preview-banner__text strong {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.preview-banner__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.preview-banner__cta {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.preview-banner__cta:hover {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.preview-banner__btn {
+  display: inline-flex;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #0b1020;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(94, 234, 212, 0.3);
+}
+.preview-banner__btn:hover { filter: brightness(1.08); }

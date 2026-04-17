@@ -4,3 +4,4 @@ tmp.txt
 api/.env
 *.creds
 web/config/api.json
+config.toml

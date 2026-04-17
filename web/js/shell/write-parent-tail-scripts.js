@@ -2,6 +2,7 @@
   var v = encodeURIComponent(window.APP_VERSION || "dev");
   var corePaths = [
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "js/shell/app-context.js",
     "js/features/auth/auth-client.js",
     "js/features/auth/auth-ui.js",
     "js/parent-dashboard.js"

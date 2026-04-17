@@ -1,119 +1,182 @@
 (function () {
   var LAST_SUBJECT_KEY = "LEVELUP_LAST_SUBJECT";
+  var LANDING_PAGE = "index.html";
+
   var state = {
     isSignedIn: false,
     entitlements: {},
     displayName: "",
+    avatarUrl: "",
+    email: "",
   };
+
+  // When the URL contains an OAuth callback payload, supabase-js needs a tick to
+  // process it. Don't redirect-to-landing during this grace period.
+  function hasOAuthReturnPayload() {
+    var hash = String(window.location.hash || "");
+    if (hash.indexOf("access_token=") !== -1 || hash.indexOf("error=") !== -1) return true;
+    var qs = new URLSearchParams(window.location.search || "");
+    return qs.has("code") || qs.has("error") || qs.has("error_description");
+  }
+
+  var suppressAuthRedirectUntil = hasOAuthReturnPayload() ? Date.now() + 4000 : 0;
+
+  function redirectToLanding() {
+    if (Date.now() < suppressAuthRedirectUntil) return;
+    window.location.replace(LANDING_PAGE);
+  }
 
   // ── Topbar ──────────────────────────────────────────────────────────────────
 
   function refreshTopbar() {
-    var profileSection = document.getElementById("hub-profile-section");
-    var avatarEl       = document.getElementById("hub-avatar");
-    var nameEl         = document.getElementById("hub-profile-name");
-    var signoutBtn     = document.getElementById("btn-signout");
-    if (!profileSection) return;
-
-    if (!state.isSignedIn) {
-      profileSection.hidden = true;
-      return;
+    if (window.LevelupShell && typeof window.LevelupShell.setProfile === "function") {
+      if (state.isSignedIn) {
+        window.LevelupShell.setProfile(state.displayName, state.email, state.avatarUrl);
+      } else {
+        window.LevelupShell.clearProfile();
+      }
     }
-
-    profileSection.hidden = false;
-    if (nameEl) nameEl.textContent = state.displayName || "Student";
-
-    if (avatarEl) {
-      avatarEl.textContent = (state.displayName || "S").charAt(0).toUpperCase();
-    }
-
-    if (signoutBtn && !signoutBtn.__bound) {
-      signoutBtn.__bound = true;
-      signoutBtn.addEventListener("click", function () {
-        if (window.LevelupAuth) {
-          window.LevelupAuth.signOut().then(function () {
-            window.location.href = "landing.html";
-          });
-        }
-      });
+    var firstNameEl = document.getElementById("hub-welcome-name");
+    if (firstNameEl && state.isSignedIn) {
+      var first = (state.displayName || "").split(/\s+/)[0] || "";
+      firstNameEl.textContent = first ? ", " + first : "";
     }
   }
 
   // ── Subject card access ──────────────────────────────────────────────────────
 
   function updateSubjectCardsAccess() {
-    document.querySelectorAll("a.card[data-subject]").forEach(function (card) {
+    document.querySelectorAll(".s-card[data-subject], a.card[data-subject]").forEach(function (card) {
       var sid     = String(card.getAttribute("data-subject") || "").toLowerCase();
-      var allowed = !!state.entitlements[sid];
+      var entitled = !!state.entitlements[sid];
 
-      // Remove any previously injected badge
-      var existing = card.querySelector(".upgrade-badge");
-      if (existing) existing.remove();
-
-      if (allowed) {
-        card.classList.remove("subject-access-locked");
+      if (entitled) {
+        card.classList.remove("is-locked", "subject-access-locked");
+        card.classList.add("is-entitled");
         card.removeAttribute("aria-disabled");
       } else {
-        card.classList.add("subject-access-locked");
-        card.setAttribute("aria-disabled", "true");
-        var badge = document.createElement("div");
-        badge.className = "upgrade-badge";
-        badge.textContent = "Upgrade →";
-        card.appendChild(badge);
+        card.classList.add("is-locked");
+        card.classList.remove("is-entitled");
       }
+
+      var cta = card.querySelector('[data-role="primary-cta"]');
+      var statusEl = card.querySelector('[data-role="primary-state"]');
+      if (cta) cta.textContent = entitled ? "Open →" : "Try free topic →";
+      if (statusEl) statusEl.textContent = entitled ? "Full access" : "Preview mode";
+
+      // Toggle the "Topic 1 free" badge / "Full access" badge inside the tag row.
+      var freeBadge = card.querySelector('[data-role="free-badge"]');
+      var fullBadge = card.querySelector('[data-role="full-badge"]');
+      if (freeBadge) freeBadge.hidden = entitled;
+      if (fullBadge) fullBadge.hidden = !entitled;
+
+      // Hide the hero lock chip for entitled subjects.
+      var lockChip = card.querySelector(".s-card__lock");
+      if (lockChip) lockChip.style.display = entitled ? "none" : "";
     });
+
+    updateHelpCard();
+  }
+
+  function updateHelpCard() {
+    var helpCard = document.querySelector('[data-role="help-card"]');
+    if (!helpCard) return;
+    var title = helpCard.querySelector('[data-role="help-card-title"]');
+    var body  = helpCard.querySelector('[data-role="help-card-body"]');
+    var cta   = helpCard.querySelector('[data-role="help-card-primary"]');
+    var ents  = state.entitlements || {};
+    var all = ["chemistry","physics","geography"];
+    var ownedCount = all.filter(function (s) { return !!ents[s]; }).length;
+    var firstUnowned = all.find(function (s) { return !ents[s]; });
+
+    if (ownedCount === all.length) {
+      if (title) title.textContent = "You're all set. Keep the streak going!";
+      if (body)  body.textContent  = "Full access to every subject. Jump back in and chip away at topics — XP, bosses and daily quests are yours.";
+      if (cta) {
+        cta.textContent = "Continue Chemistry";
+        cta.href = "subject.html?subject=chemistry";
+      }
+    } else if (ownedCount > 0) {
+      if (title) title.textContent = "Nice — keep going.";
+      if (body)  body.textContent  = "You have full access to " + ownedCount + " subject" + (ownedCount === 1 ? "" : "s") + ". Try a free topic from the remaining subject" + (all.length - ownedCount === 1 ? "" : "s") + " whenever you want.";
+      if (cta && firstUnowned) {
+        cta.textContent = "Try " + firstUnowned.charAt(0).toUpperCase() + firstUnowned.slice(1) + " free topic";
+        cta.href = "subject.html?subject=" + encodeURIComponent(firstUnowned);
+      } else if (cta) {
+        cta.textContent = "Continue Chemistry";
+        cta.href = "subject.html?subject=chemistry";
+      }
+    } else {
+      if (title) title.textContent = "New here? Start with Chemistry Topic 1.";
+      if (body)  body.textContent  = "Every subject includes a free preview topic with full notes, flashcards, quiz and written practice — no credit card. Upgrade any subject individually when you're ready to unlock the full syllabus.";
+      if (cta) {
+        cta.textContent = "Open Chemistry free topic";
+        cta.href = "subject.html?subject=chemistry";
+      }
+    }
   }
 
   // ── Card click guard ─────────────────────────────────────────────────────────
 
-  document.querySelectorAll("a.card[data-subject]").forEach(function (card) {
-    card.addEventListener("click", function (e) {
-      var sid     = String(card.getAttribute("data-subject") || "").toLowerCase();
-      var allowed = !!state.entitlements[sid];
+  function bindCardClicks() {
+    document.querySelectorAll(".s-card[data-subject], a.card[data-subject]").forEach(function (card) {
+      if (card.__boundClick) return;
+      card.__boundClick = true;
+      card.addEventListener("click", function (e) {
+        var sid     = String(card.getAttribute("data-subject") || "").toLowerCase();
+        var entitled = !!state.entitlements[sid];
 
-      if (!allowed) {
-        e.preventDefault();
-        // Redirect to preview mode — subject-config.js will handle the locked state
-        window.location.href = "subject.html?subject=" + encodeURIComponent(sid) + "&preview=1";
-        return;
-      }
+        if (!entitled) {
+          e.preventDefault();
+          window.location.href = "subject.html?subject=" + encodeURIComponent(sid) + "&preview=1";
+          return;
+        }
 
-      if (sid) localStorage.setItem(LAST_SUBJECT_KEY, sid);
-    }, true);
-  });
+        if (sid) localStorage.setItem(LAST_SUBJECT_KEY, sid);
+      }, true);
+    });
+  }
 
   // ── Main auth + entitlement flow ─────────────────────────────────────────────
 
   async function syncStateFromSession() {
-    // 1. Verify LevelupAuth is available
     if (!window.LevelupAuth || typeof window.LevelupAuth.getValidatedUser !== "function") {
-      window.location.replace("landing.html");
+      redirectToLanding();
       return;
     }
 
-    // 2. Server-validate the session (catches ghost/stale tokens from previous sessions)
     var user;
     try {
       user = await window.LevelupAuth.getValidatedUser();
     } catch (e) {
-      window.location.replace("landing.html");
+      redirectToLanding();
       return;
     }
 
     if (!user) {
-      window.location.replace("landing.html");
+      redirectToLanding();
       return;
     }
 
-    // 3. Populate state and show topbar
+    suppressAuthRedirectUntil = 0;
+
+    if (hasOAuthReturnPayload() && window.history && window.history.replaceState) {
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (_) {}
+    }
+
     state.isSignedIn = true;
+    var meta = user.user_metadata || {};
     state.displayName =
-      String((user.user_metadata && user.user_metadata.full_name) || "").trim() ||
+      String(meta.full_name || meta.name || "").trim() ||
       String(user.email || "").split("@")[0] ||
       "Student";
+    state.email = String(user.email || "");
+    state.avatarUrl = String(meta.avatar_url || meta.picture || "");
+
     refreshTopbar();
 
-    // 4. Check entitlements for all subjects in parallel; default to false on error
     try {
       var results = await Promise.all([
         window.LevelupAuth.isSubjectEntitled("chemistry").catch(function () { return false; }),
@@ -129,24 +192,28 @@
       state.entitlements = { chemistry: false, physics: false, geography: false };
     }
 
-    // 5. Apply lock/unlock to cards (subjects start locked in HTML — we only unlock here)
     updateSubjectCardsAccess();
   }
 
-  // ── Auth state listener (handles OAuth callback and sign-out) ───────────────
+  // ── Auth state listener ─────────────────────────────────────────────────────
 
-  if (window.LevelupAuth && typeof window.LevelupAuth.onAuthStateChange === "function") {
-    window.LevelupAuth.onAuthStateChange(function (session) {
-      if (!session || !session.user) {
-        window.location.replace("landing.html");
-      } else {
-        // Re-run the full check on auth change
-        syncStateFromSession();
-      }
-    });
+  function boot() {
+    bindCardClicks();
+    if (window.LevelupAuth && typeof window.LevelupAuth.onAuthStateChange === "function") {
+      window.LevelupAuth.onAuthStateChange(function (session) {
+        if (!session || !session.user) {
+          redirectToLanding();
+        } else {
+          syncStateFromSession();
+        }
+      });
+    }
+    syncStateFromSession();
   }
 
-  // ── Kick off on load ─────────────────────────────────────────────────────────
-
-  syncStateFromSession();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();

@@ -5,7 +5,7 @@ window.__registerTopic = function (topic) {
 
 window.TOPICS_MANIFEST = [
   // Section I: Measurement
-  { id: "1", theme: "Section I: Measurement", title: "Physical Quantities, Units and Measurement", file: "data/subjects/physics/theme1-measurement/topic-01.js" },
+  { id: "1", theme: "Section I: Measurement", title: "Physical Quantities, Units and Measurement", file: "data/subjects/physics/theme1-measurement/topic-01.js", free: true },
 
   // Section II: Newtonian Mechanics
   { id: "2", theme: "Section II: Newtonian Mechanics", title: "Kinematics", file: "data/subjects/physics/theme2-mechanics/topic-02.js" },
