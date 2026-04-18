@@ -246,10 +246,9 @@
 
   // ── Today's plan ─────────────────────────────────────────────────────────────
 
-  function todayIso() {
-    var d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d.toISOString();
+  /** Rolling 24h window (UTC instants) — matches shop purchase-gate evidence. */
+  function isoSinceMsAgo(ms) {
+    return new Date(Date.now() - Number(ms || 0)).toISOString();
   }
 
   async function renderTodayPlan(user) {
@@ -263,13 +262,18 @@
     var ents  = state.entitlements || {};
     var items = [];
 
-    // Pull today's XP ledger + the weakest owned topic in one round trip.
+    // XP in the last 24h (not calendar midnight): aligns with canPurchaseReward's
+    // 24h window and avoids local-midnight vs UTC / client-clock edge cases that
+    // made "today" sum look stuck at 0 while the ledger had fresh rows.
     try {
+      var since24h = isoSinceMsAgo(24 * 60 * 60 * 1000);
       var [xpToday, weakQ] = await Promise.all([
         sb.from("study_xp_ledger")
           .select("delta, subject_id, meta")
           .eq("user_id", user.id)
-          .gte("created_at", todayIso()),
+          .gte("created_at", since24h)
+          .order("created_at", { ascending: false })
+          .limit(2000),
         sb.from("study_topic_stats")
           .select("subject_id, topic_id, mastery, seen")
           .eq("user_id", user.id)
@@ -278,26 +282,31 @@
           .limit(8),
       ]);
 
-      var xpSumToday = 0;
-      var subjectsTouchedToday = {};
-      (xpToday && Array.isArray(xpToday.data) ? xpToday.data : []).forEach(function (r) {
+      if (xpToday && xpToday.error) {
+        try {
+          console.warn("hub today plan: study_xp_ledger query failed", xpToday.error);
+        } catch (_log) {}
+      }
+      var xpSum24h = 0;
+      var subjectsTouched24h = {};
+      (xpToday && !xpToday.error && Array.isArray(xpToday.data) ? xpToday.data : []).forEach(function (r) {
         var d = Number(r.delta || 0);
         if (d <= 0) return;
-        xpSumToday += d;
-        if (r.subject_id) subjectsTouchedToday[String(r.subject_id).toLowerCase()] = true;
+        xpSum24h += d;
+        if (r.subject_id) subjectsTouched24h[String(r.subject_id).toLowerCase()] = true;
       });
 
-      // Daily habit goal
-      if (xpSumToday < 25) {
+      // Habit goal uses the same rolling window as the shop purchase gate (24h).
+      if (xpSum24h < 25) {
         items.push({
           href: firstEntitledSubjectHref() || "subject.html?subject=chemistry",
-          title: "Earn 25 XP today",
-          meta: xpSumToday + " / 25 XP so far",
+          title: "Earn 25 XP (last 24h)",
+          meta: xpSum24h + " / 25 XP in the last 24 hours",
         });
       } else {
         items.push({
           href: "profile.html#report",
-          title: "Habit complete — " + xpSumToday.toLocaleString() + " XP today",
+          title: "Habit met — " + xpSum24h.toLocaleString() + " XP in 24h",
           meta: "Open your report",
         });
       }
@@ -337,7 +346,10 @@
         '</li>'
       );
     }).join("");
-    if (hint) hint.textContent = "Quick wins · personalised from your recent activity.";
+    if (hint) {
+      hint.textContent =
+        "Quick wins · XP total is a rolling 24h window (same idea as the shop study gate).";
+    }
     host.hidden = false;
   }
 
