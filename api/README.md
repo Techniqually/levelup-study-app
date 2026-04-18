@@ -7,18 +7,18 @@ Small proxy so the static study app never holds `OPENAI_API_KEY`. See [`docs/llm
 ```bash
 cd api
 cp .env.example .env
-# Edit .env: set OPENAI_API_KEY, APP_TOKEN (long random), CORS_ORIGINS for your static host
+# Edit .env: set OPENAI_API_KEY, SUPABASE_*, STRIPE_*, CORS_ORIGINS
 docker compose up --build
 ```
 
-- API listens inside the container on **8000**; Compose maps host **8080 → 8000** (change the left side in `docker-compose.yml` if needed).
-- **Health (no auth):** `curl -s http://127.0.0.1:8080/health`
-- **Quiz explain (requires `APP_TOKEN` when set):**
+- API listens inside the container on **8080**; Compose maps host **8081 → 8080** (change the left side in `docker-compose.yml` if needed).
+- **Health (no auth):** `curl -s http://127.0.0.1:8081/health`
+- **Quiz explain (requires Supabase session JWT):**
 
 ```bash
-curl -s -X POST http://127.0.0.1:8080/llm/quiz-explain \
+curl -s -X POST http://127.0.0.1:8081/llm/quiz-explain \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_APP_TOKEN" \
+  -H "Authorization: Bearer YOUR_SUPABASE_ACCESS_TOKEN" \
   -d "{\"question\":\"What is 2+2?\",\"options\":[\"3\",\"4\",\"5\"],\"correct_index\":1,\"chosen_index\":0}"
 ```
 
@@ -26,10 +26,27 @@ Request JSON for `quiz-explain` includes the MCQ fields plus optional **course c
 
 Response JSON includes `parsed` (object if the model returned valid JSON), `raw_content`, `parse_error`, `model`, `usage`.
 
-- **401:** missing/wrong `Authorization` when `APP_TOKEN` is non-empty in `.env`.
+- **401:** missing/wrong Supabase bearer token.
+- **429:** enforced at **5 requests/minute per user id**.
 - **429:** OpenAI (or upstream) rate limit **or billing** — the proxy returns **429** with JSON `detail.message` (not 502). **Usage charts can stay at 0** if every call fails: OpenAI often returns **429 + `insufficient_quota`** until Billing has a card / credits (“Add credits” in the dashboard). That is not the same as “you used too many RPM.”
 - **503:** `OPENAI_API_KEY` missing.
-- **Empty `APP_TOKEN`:** gate disabled (local dev only; do not use in production).
+
+### Stripe webhook fulfillment
+
+- Endpoint: `POST /webhook/stripe`
+- Signature header required: `Stripe-Signature`
+- Event handled: `checkout.session.completed`
+- `client_reference_id` must be the Supabase auth user UUID.
+- Entitlement source:
+  - first preference: `session.metadata.entitlement`
+  - fallback: `STRIPE_DEFAULT_ENTITLEMENT`
+- Idempotency is enforced in `public.stripe_webhook_events`.
+
+Local Stripe CLI test:
+
+```bash
+stripe listen --forward-to http://127.0.0.1:8081/webhook/stripe
+```
 
 ### CORS errors in the browser
 
@@ -51,7 +68,7 @@ Response JSON includes `parsed` (object if the model returned valid JSON), `raw_
 
 - **CORS:** Set **`CORS_ORIGINS`** to your **exact** site origin, e.g. `https://yourname.github.io` (no path, usually no trailing slash). For a **project** site use `https://yourname.github.io/repo-name` only if that is the real `Origin` header (GitHub uses that form for project pages).
 
-- **Secrets:** Still only **`APP_TOKEN`** + proxy URL in the app; **`OPENAI_API_KEY`** stays in server `.env`.
+- **Secrets:** Browser stores only proxy URL; bearer token is Supabase session JWT. **`OPENAI_API_KEY`** stays in server `.env`.
 
 ## Environment variables
 
@@ -60,12 +77,17 @@ Response JSON includes `parsed` (object if the model returned valid JSON), `raw_
 | `OPENAI_API_KEY` | For LLM calls | Upstream secret (never in the browser). |
 | `OPENAI_BASE_URL` | No | Default `https://api.openai.com/v1` (OpenAI-compatible). |
 | `MODEL` | No | Default `gpt-4o-mini`. |
-| `APP_TOKEN` | Recommended | Shared secret; client sends `Authorization: Bearer …`. |
-| `CORS_ORIGINS` | No | Comma-separated origins; if empty, CORS middleware is not added. |
+| `SUPABASE_URL` | Yes | Supabase project URL for webhook fulfillment writes. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Service role key for server-side entitlement updates. |
+| `SUPABASE_JWT_SECRET` | Yes | Verifies browser Supabase access tokens on `/llm/*`. |
+| `STRIPE_SECRET_KEY` | Yes (webhook) | Stripe secret key used by Stripe SDK. |
+| `STRIPE_WEBHOOK_SECRET` | Yes (webhook) | Signature secret for Stripe webhook verification. |
+| `STRIPE_DEFAULT_ENTITLEMENT` | No | Fallback entitlement if metadata missing (default `olevel_chem`). |
+| `CORS_ORIGINS` | No | Comma-separated origins; if empty, API falls back to localhost/127.0.0.1 origin regex only. |
 | `MAX_TOKENS` | No | Cap for quiz-explain (default 512). |
 | `LLM_TIMEOUT_S` | No | Upstream HTTP timeout (default 60). |
 
 ## Later (not implemented here)
 
-- Per-IP rate limits and quotas.
+- Plan-based quotas across multiple API instances (Redis/Postgres backed).
 - Multi-provider fallback / rotation (ordered chain in `.env`) — see the integration plan.

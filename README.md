@@ -8,11 +8,33 @@
 npx serve .
 ```
 
-Open the URL (needed for dynamic topic scripts and markdown XHR if the browser blocks `file://`).
+Open the URL (required for runtime script loading).
+
+### Configuring the API endpoint
+
+The FastAPI proxy (`api/`) and the static web app (`web/`) are deployed on **separate servers**, so the app needs to know the API base URL.
+
+**Local development setup:**
+1. Copy `web/config/api.json.example` → `web/config/api.json`
+2. Edit `web/config/api.json` to point to your API:
+   ```json
+   {
+     "apiBase": "http://localhost:8080"
+   }
+   ```
+3. **Important:** `web/config/api.json` is git-ignored (never checked in). Each environment (local/staging/prod) needs its own copy.
+
+**Production deployment:**
+- `web/config/api.json.example` is checked in as a template
+- Your CI/CD or deployment script should generate `web/config/api.json` with the appropriate API domain before deployment
+- Example: `echo '{"apiBase":"https://api.example.com"}' > web/config/api.json`
+
+**Default fallback:**
+- If `web/config/api.json` is missing, the app falls back to `http://localhost:8080` (local dev default)
 
 ## Content layout (subjects)
 
-The app supports multiple subjects. `js/app.js` reads `window.SUBJECT_ID` and loads that subject’s topic/infographics assets from `data/subjects/<subject>/...`.
+The app supports multiple subjects. In production POC mode, `js/app.js` reads `window.SUBJECT_ID` and subject data is loaded from Supabase Storage (`study-materials` bucket) only.
 
 ### Subject picker shells
 
@@ -20,16 +42,16 @@ The app supports multiple subjects. `js/app.js` reads `window.SUBJECT_ID` and lo
 - `subject.html`: generic shell (set by `?subject=<id>`, e.g. `subject?subject=physics`)
 - `study.html`: legacy chemistry redirect to `subject?subject=chemistry` (kept for convenience)
 
-### Per-subject topic data
+### Per-subject topic data (storage source of truth)
 
-Each subject provides:
+Each subject provides files in `content/data/subjects/<subject>/`, synced to bucket object keys `<subject>/...`:
 
-- `data/subjects/<subject>/topics-manifest.js`
-- `data/subjects/<subject>/theme*/topic-*.js` (theme folders + topic scripts)
+- `topics-manifest.js` (also converted to `<subject>/topics-manifest.json` during sync)
+- `theme*/topic-*.js` (theme folders + topic scripts)
 
 Topic scripts must call `window.__registerTopic({ id, title, ... })`.
 
-**How loading works:** see [`docs/DATA-LOADING.md`](docs/DATA-LOADING.md) (still valid, just under `data/subjects/<subject>/...`).
+`web/` no longer falls back to local `data/...` files. Missing bucket objects now fail the subject bootstrap by design.
 
 **Regenerate topic files** after editing `scripts/topics-chunk-*.mjs`:
 
@@ -37,11 +59,30 @@ Topic scripts must call `window.__registerTopic({ id, title, ... })`.
 node scripts/build-all.mjs
 ```
 
+## Sync subject data to Supabase Storage (repeatable)
+
+For monetized delivery, upload a subject from `content/data/subjects/<subject>/` into private bucket `study-materials`.
+
+```bash
+SUPABASE_URL=http://127.0.0.1:54321 \
+SUPABASE_SERVICE_ROLE_KEY=... \
+node content/tools/sync-study-materials.mjs --subject chemistry --free-topic theme1-matter/topic-01.js
+```
+
+The script:
+- uploads all files under `content/data/subjects/<subject>/` to `<subject>/...` in the bucket
+- generates and uploads `<subject>/topics-manifest.json` from `topics-manifest.js`
+- uploads `content/data/shop-rewards.js` to `shared/shop-rewards.js` (required runtime data)
+- optionally writes a free preview copy to `<subject>/free/<topic-file>`
+- keeps incremental hash state in `<subject>/.upload-manifest.json` (changed files only on future runs)
+
+Use the same script for local and remote Supabase by changing only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+
 ## Infographics extra-info (generic)
 
-Each subject may have *per-infographic* markdown text stored here:
+Each subject may have *per-infographic* markdown text in:
 
-- `data/subjects/<subject>/infographics-info.md`
+- `content/data/subjects/<subject>/infographics-info.md` (synced to `<subject>/infographics-info.md`)
 
 The generic loader parses that markdown synchronously into:
 
@@ -83,11 +124,9 @@ If topic files already embed infographics, you can omit `infographics-images.js`
 
 Subject shell must inject (with cache-busting `?v=`):
 
-1. `data/subjects/<subject>/topics-manifest.js`
-2. (optional) `data/subjects/<subject>/infographics-images.js`
-3. `js/infographics-info-loader.js`
-4. `data/shop-rewards.js`
-5. `js/app.js`
+1. remote bootstrap via `js/features/study/remote-manifest.js` (manifest + optional assets + shop rewards from bucket)
+2. `js/infographics-info-loader.js`
+3. `js/app.js`
 
 ## Adding a new subject (minimal checklist)
 
@@ -95,16 +134,16 @@ Subject shell must inject (with cache-busting `?v=`):
    - `subject.html` pattern is preferred (generic `?subject=<id>` driven)
    - set `window.SUBJECT_ID` and `window.SUBJECT_TITLE`
    - inject scripts with the required load order above
-2. Add topic data:
-   - `data/subjects/<newSubject>/topics-manifest.js`
-   - `data/subjects/<newSubject>/theme*/topic-*.js` (must call `window.__registerTopic`)
+2. Add topic data in `content/`:
+   - `content/data/subjects/<newSubject>/topics-manifest.js`
+   - `content/data/subjects/<newSubject>/theme*/topic-*.js` (must call `window.__registerTopic`)
 3. Add infographic images (folder):
-   - `data/subjects/<newSubject>/images/` (for image-backed infographics)
+   - `content/data/subjects/<newSubject>/images/` (for image-backed infographics)
 4. Add infographic extra-info markdown:
-   - `data/subjects/<newSubject>/infographics-info.md`
+   - `content/data/subjects/<newSubject>/infographics-info.md`
    - ensure `### File: <filename>` keys match the infographic `infoKey` (usually the exact image filename)
 5. If needed, add image wiring:
-   - `data/subjects/<newSubject>/infographics-images.js` (only if topic scripts don’t embed `infographics`)
+   - `content/data/subjects/<newSubject>/infographics-images.js` (only if topic scripts don’t embed `infographics`)
 
 ## Image prompts (Nano Banana etc.)
 
@@ -126,9 +165,9 @@ This app supports hybrid persistence:
 
 ### 1) Create/run database schema
 
-Run this script in Supabase SQL Editor:
+Run all SQL files in order from:
 
-- `supabase/study_app_phase1.sql`
+- `supabase/migrations/*.sql`
 
 The script includes:
 - core tables + study tables
@@ -136,6 +175,8 @@ The script includes:
 - student identity (`student_id`) support
 - idempotent event/purchase upsert indexes
 - reward purchase RPC
+- monetization POC entitlements + Stripe webhook idempotency tables
+- private `study-materials` storage policies
 - parent dashboard RPC + parent code setup function
 - profile data clear function
 
@@ -143,7 +184,7 @@ The script includes:
 
 Use the **Setup package** tool (subject hub, subject Settings, or parent page): paste a Base64 string or JSON with `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and optional `LEVELUP_STUDENT_*`, `llm`, `parent`, etc. Values are stored in `localStorage`.
 
-On the hub you can also use **Offline defaults** to skip cloud sync (when no Supabase keys are set yet) and fill a placeholder student for local-only use.
+For monetization POC, use real Supabase keys and login; offline defaults are not part of the paid-access path.
 
 From the console (opens the same package UI):
 - `window.configureConfigPackage()` (hub)
@@ -171,7 +212,6 @@ Recommended JSON shape:
     "enabled": true,
     "mode": "fastapi",
     "proxyBaseUrl": "https://your-render-app.onrender.com",
-    "appToken": "same-as-APP_TOKEN",
     "features": { "quizExplain": true },
     "cache": { "maxEntries": 200, "ttlDays": 60 }
   }
@@ -184,12 +224,13 @@ Compatibility notes:
 - `fastapi` is accepted as an alias for `llm` when importing.
 - `LEVELUP_STUDENT_NAME` is optional on import (omit if you only need to refresh other keys).
 - Legacy pastes may still include a `parent` object; **Apply** will still write those keys if present.
-- **`llm`**: a block with `enabled: true` but empty `proxyBaseUrl` / `appToken` is **not** written (avoids “I applied the template” with no Supabase/student yet). Use `"enabled": false` to persist a disabled stub, or set both URL and token.
+- **`llm`**: a block with `enabled: true` but empty `proxyBaseUrl` is **not** written. Use `"enabled": false` to persist a disabled stub, or set the URL.
 - Only known keys are applied; unknown fields are ignored.
 
 Important:
 - Do **not** use DB connection string or service role in browser.
 - Use only Project URL + anon/public key.
+- FastAPI verifies Supabase JWTs server-side with `SUPABASE_JWT_SECRET`; browser only sends the normal Supabase access token.
 
 ### 3) Student identity
 

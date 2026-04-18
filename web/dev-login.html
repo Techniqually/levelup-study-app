@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dev login (local only)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; background: #0b1020; color: #e6ecf5; }
+    h1 { font-size: 1.2rem; }
+    input { display: block; margin: 8px 0; padding: 10px; width: 100%; max-width: 360px; box-sizing: border-box; background: #1a2040; color: #fff; border: 1px solid #2a3360; border-radius: 8px; font-size: 14px; }
+    button { margin-top: 8px; padding: 10px 18px; background: linear-gradient(135deg,#5eead4,#818cf8); color: #0b1020; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    pre { background: #1a2040; padding: 12px; border-radius: 8px; max-width: 720px; overflow: auto; white-space: pre-wrap; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .row a { padding: 8px 14px; background: rgba(255,255,255,0.05); color: #6ee7b7; border: 1px solid #2a3360; border-radius: 8px; text-decoration: none; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Dev password login (local only — do not ship)</h1>
+  <p>This is a dev-only helper because Google OAuth can't be scripted. If the user does not exist yet (e.g. after db reset), Sign in will auto-create it.</p>
+
+  <input id="email" placeholder="email" value="testpreview@local.test" />
+  <input id="password" type="password" placeholder="password" value="testtest123!" />
+  <button id="go">Sign in</button>
+  <button id="grant" style="background:#fbbf24;">Grant all entitlements to this user</button>
+  <button id="logout" style="background:#f87171;">Sign out</button>
+
+  <pre id="out">ready.</pre>
+
+  <div class="row">
+    <a href="index.html">Landing</a>
+    <a href="hub.html">Hub</a>
+    <a href="subject.html?subject=chemistry&preview=1">Chemistry (preview)</a>
+    <a href="subject.html?subject=chemistry">Chemistry (entitled)</a>
+    <a href="parent.html">Parent</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/shell/api-config.js"></script>
+  <script src="js/shell/bootstrap.js"></script>
+  <script>
+    function out(msg) { document.getElementById("out").textContent = typeof msg === "string" ? msg : JSON.stringify(msg, null, 2); }
+
+    async function waitForCfg() {
+      if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) return;
+      await new Promise(function (r) { document.addEventListener("levelup:config-ready", r, { once: true }); });
+    }
+
+    var sb;
+    function client() {
+      if (!sb) sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+      return sb;
+    }
+
+    document.getElementById("go").addEventListener("click", async function () {
+      await waitForCfg();
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      var r = await client().auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      // Local dev convenience: auto-create test user after db reset.
+      if (r.error && /invalid login credentials/i.test(String(r.error.message || ""))) {
+        var created = await client().auth.signUp({
+          email: email,
+          password: password,
+        });
+        if (created.error) {
+          out({
+            error: created.error && created.error.message,
+            detail: "sign-up failed",
+          });
+          return;
+        }
+        r = await client().auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+      }
+      out({ error: r.error && r.error.message, user: r.data && r.data.user && r.data.user.email });
+      if (r.data && r.data.user) {
+        setTimeout(function () { location.href = "hub.html"; }, 400);
+      }
+    });
+
+    document.getElementById("logout").addEventListener("click", async function () {
+      await waitForCfg();
+      var r = await client().auth.signOut();
+      out({ signedOut: true, error: r.error });
+    });
+
+    document.getElementById("grant").addEventListener("click", async function () {
+      await waitForCfg();
+      var { data: { user } } = await client().auth.getUser();
+      if (!user) { out("Not signed in. Sign in first."); return; }
+      out(
+        "Entitlements are stored in public.subject_entitlements (legacy user_entitlements.entitlements[] was removed).\n" +
+        "Run this in your terminal (local Supabase):\n\n" +
+        "docker exec -i supabase_db_Olevel-study-app psql -U postgres -d postgres <<SQL\n" +
+        "insert into public.subject_entitlements\n" +
+        "  (user_id, country_code, class_code, subject_slug, access_from, access_to, source)\n" +
+        "values\n" +
+        "  ('" + user.id + "', 'sg', 'olevel', '__all__', now(), null, 'dev_login')\n" +
+        "on conflict (user_id, country_code, class_code, subject_slug)\n" +
+        "  do update set\n" +
+        "    access_from = excluded.access_from,\n" +
+        "    access_to   = excluded.access_to,\n" +
+        "    source      = excluded.source;\n" +
+        "SQL\n\n" +
+        "Your user_id is: " + user.id
+      );
+    });
+  </script>
+</body>
+</html>

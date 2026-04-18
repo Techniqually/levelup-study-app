@@ -4,7 +4,7 @@ services:
   levelup-llm-proxy:
     build: .
     ports:
-      - "8081:8000"
+      - "8081:8080"
     # Optional: copy .env.example → .env (see README). required: false so compose works before .env exists.
     env_file:
       - path: .env

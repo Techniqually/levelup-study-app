@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+import collections
+import logging
 import os
-import secrets
-from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.auth import is_admin_user, verify_supabase_jwt
+from app.billing import create_billing_router
+from app.email_service import EmailService
 from app.llm_upstream import UpstreamHttpError, chat_completion_json
+from app.stripe_webhook import create_stripe_webhook_router
+from app.supabase_admin import SupabaseAdminStore
+
+logger = logging.getLogger("levelup.api")
+logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
 
 
 class Settings(BaseSettings):
@@ -21,10 +30,23 @@ class Settings(BaseSettings):
         validation_alias="OPENAI_BASE_URL",
     )
     model: str = Field(default="gpt-4o-mini", validation_alias="MODEL")
-    app_token: str = Field(default="", validation_alias="APP_TOKEN")
     cors_origins: str = Field(default="", validation_alias="CORS_ORIGINS")
     max_tokens: int = Field(default=512, validation_alias="MAX_TOKENS")
     llm_timeout_s: float = Field(default=60.0, validation_alias="LLM_TIMEOUT_S")
+    supabase_url: str = Field(default="", validation_alias="SUPABASE_URL")
+    supabase_service_role_key: str = Field(default="", validation_alias="SUPABASE_SERVICE_ROLE_KEY")
+    supabase_jwt_secret: str = Field(default="", validation_alias="SUPABASE_JWT_SECRET")
+    supabase_anon_key_public: str = Field(default="", validation_alias="SUPABASE_ANON_KEY_PUBLIC")
+    stripe_secret_key: str = Field(default="", validation_alias="STRIPE_SECRET_KEY")
+    stripe_webhook_secret: str = Field(default="", validation_alias="STRIPE_WEBHOOK_SECRET")
+    # Admin API key — kept as a fallback for ops scripts. Real admin UI uses Supabase auth + role check.
+    admin_api_key: str = Field(default="", validation_alias="ADMIN_API_KEY")
+    # Email (Resend)
+    resend_api_key: str = Field(default="", validation_alias="RESEND_API_KEY")
+    email_from: str = Field(default="", validation_alias="EMAIL_FROM")
+    email_reply_to: str = Field(default="", validation_alias="EMAIL_REPLY_TO")
+    # Internal webhook signing secret (set on Supabase Database Webhook → /internal/email/welcome)
+    internal_webhook_secret: str = Field(default="", validation_alias="INTERNAL_WEBHOOK_SECRET")
 
 
 def get_settings() -> Settings:
@@ -33,11 +55,36 @@ def get_settings() -> Settings:
 
 settings = get_settings()
 
-app = FastAPI(title="LevelUp LLM proxy", version="0.1.0")
+app = FastAPI(title="LevelUp LLM proxy", version="0.2.0")
+
+_RATE_WINDOW_SECONDS = 60.0
+_RATE_MAX_REQUESTS = 5
+_rate_windows: dict[str, collections.deque[float]] = {}
+
+
+def _enforce_per_user_rate_limit(user_id: str) -> None:
+    import time
+
+    now = time.time()
+    win = _rate_windows.get(user_id)
+    if win is None:
+        win = collections.deque()
+        _rate_windows[user_id] = win
+    cutoff = now - _RATE_WINDOW_SECONDS
+    while win and win[0] < cutoff:
+        win.popleft()
+    if len(win) >= _RATE_MAX_REQUESTS:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "error": "rate_limited",
+                "message": "Rate limit exceeded (max 5 requests per minute per user)",
+            },
+        )
+    win.append(now)
 
 
 def _parse_cors_origins(raw: str) -> list[str]:
-    """Comma-separated list; strips Windows \\r so entries match browser Origin exactly."""
     if not raw:
         return []
     out: list[str] = []
@@ -48,7 +95,6 @@ def _parse_cors_origins(raw: str) -> list[str]:
     return out
 
 
-# Any http(s) localhost / 127.0.0.1 with optional port — dev only fallback when CORS_ORIGINS is unset in container.
 _LOCALHOST_ORIGIN_REGEX = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
 
 _origins = _parse_cors_origins(settings.cors_origins or "")
@@ -60,7 +106,7 @@ if _origins:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    print(f"[levelup-llm-proxy] CORS allow_origins={_origins!r}")
+    logger.info("CORS allow_origins=%r", _origins)
 else:
     app.add_middleware(
         CORSMiddleware,
@@ -69,26 +115,178 @@ else:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    print(
-        "[levelup-llm-proxy] WARNING: CORS_ORIGINS is empty — using localhost/127.0.0.1 regex only. "
-        "Set CORS_ORIGINS for GitHub Pages / production (see README)."
+    logger.warning(
+        "CORS_ORIGINS is empty — using localhost regex only. "
+        "Set CORS_ORIGINS for production (see README)."
     )
 
 
-def require_app_token(request: Request) -> None:
-    """When APP_TOKEN is non-empty, require Authorization: Bearer <token>."""
-    expected = (settings.app_token or "").strip()
-    if not expected:
-        return
-    auth = request.headers.get("authorization") or ""
-    parts = auth.split(None, 1)
-    if len(parts) != 2 or parts[0].lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Missing or invalid Authorization")
-    if not secrets.compare_digest(parts[1].strip(), expected):
-        raise HTTPException(status_code=401, detail="Invalid token")
+# ── Shared singletons ────────────────────────────────────────────────────────
+
+_admin_store: SupabaseAdminStore | None = None
+if (settings.supabase_url or "").strip() and (settings.supabase_service_role_key or "").strip():
+    try:
+        _admin_store = SupabaseAdminStore(
+            settings.supabase_url, settings.supabase_service_role_key
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("SupabaseAdminStore disabled: %s", exc)
+
+_email_service: EmailService | None = None
+if _admin_store is not None and (settings.resend_api_key or "").strip():
+    try:
+        _email_service = EmailService(
+            admin_client=_admin_store.client,
+            resend_api_key=settings.resend_api_key,
+            from_address=settings.email_from,
+            reply_to=settings.email_reply_to or None,
+            enabled=True,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("EmailService disabled: %s", exc)
 
 
-TokenDep = Annotated[None, Depends(require_app_token)]
+# ── Auth guard ────────────────────────────────────────────────────────────────
+
+@app.middleware("http")
+async def auth_guard_middleware(request: Request, call_next):
+    path = request.url.path
+    # /llm/* and /billing/* require a signed-in user
+    if path.startswith("/llm/") or path.startswith("/billing/"):
+        try:
+            ctx = verify_supabase_jwt(request, settings.supabase_jwt_secret)
+        except HTTPException as exc:
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+        request.state.auth_user_id = ctx.user_id
+
+    # /admin/* requires either admin API key OR an admin user JWT
+    if path.startswith("/admin/"):
+        api_key = (request.headers.get("x-admin-api-key") or "").strip()
+        expected = (settings.admin_api_key or "").strip()
+        if expected and api_key == expected:
+            return await call_next(request)
+        try:
+            ctx = verify_supabase_jwt(request, settings.supabase_jwt_secret)
+        except HTTPException:
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Admin requires X-Admin-Api-Key or an admin user JWT"},
+            )
+        is_admin = await is_admin_user(
+            settings.supabase_url, settings.supabase_service_role_key, ctx.user_id
+        )
+        if not is_admin:
+            return JSONResponse(status_code=403, content={"detail": "Not an admin user"})
+        request.state.auth_user_id = ctx.user_id
+
+    # /internal/* requires the shared internal webhook secret (used by Supabase DB webhooks)
+    if path.startswith("/internal/"):
+        provided = (request.headers.get("x-internal-secret") or "").strip()
+        expected = (settings.internal_webhook_secret or "").strip()
+        if not expected or provided != expected:
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Missing or invalid X-Internal-Secret header"},
+            )
+
+    return await call_next(request)
+
+
+# ── Public endpoints ──────────────────────────────────────────────────────────
+
+@app.get("/health")
+async def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/config")
+async def get_client_config() -> dict[str, str]:
+    return {
+        "supabaseUrl": settings.supabase_url,
+        "supabaseAnonKey": settings.supabase_anon_key_public,
+    }
+
+
+# ── Admin endpoints ───────────────────────────────────────────────────────────
+
+class LinkStudentBody(BaseModel):
+    parent_user_id: str = Field(..., min_length=1, max_length=64)
+    student_user_id: str = Field(..., min_length=1, max_length=64)
+    label: str | None = Field(default=None, max_length=100)
+
+
+class GrantSubjectEntitlementBody(BaseModel):
+    student_user_id: str = Field(..., min_length=1, max_length=64)
+    country_code: str = Field(..., min_length=2, max_length=3)
+    class_code: str = Field(..., min_length=2, max_length=20)
+    subject_slug: str = Field(..., min_length=1, max_length=64)
+    access_to: str | None = Field(default=None, description="ISO 8601 expiry datetime, or null for no expiry")
+
+
+def _require_admin_store() -> SupabaseAdminStore:
+    if _admin_store is None:
+        raise HTTPException(status_code=503, detail="Supabase service role not configured")
+    return _admin_store
+
+
+@app.post("/admin/link-student")
+async def link_student(body: LinkStudentBody) -> dict:
+    store = _require_admin_store()
+    try:
+        store.client.table("parent_student_links").insert(
+            {
+                "parent_user_id": body.parent_user_id,
+                "student_user_id": body.student_user_id,
+                "label": body.label,
+            }
+        ).execute()
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail=f"Supabase error: {exc!s}") from exc
+    return {"ok": True, "parent_user_id": body.parent_user_id, "student_user_id": body.student_user_id}
+
+
+@app.post("/admin/grant-subject-entitlement")
+async def grant_subject_entitlement(body: GrantSubjectEntitlementBody) -> dict:
+    store = _require_admin_store()
+    payload: dict = {
+        "user_id": body.student_user_id,
+        "country_code": body.country_code,
+        "class_code": body.class_code,
+        "subject_slug": body.subject_slug,
+        "source": "admin_manual",
+    }
+    if body.access_to:
+        payload["access_to"] = body.access_to
+    try:
+        store.client.table("subject_entitlements").upsert(
+            payload, on_conflict="user_id,country_code,class_code,subject_slug"
+        ).execute()
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail=f"Supabase error: {exc!s}") from exc
+    return {"ok": True, "granted": payload}
+
+
+# ── Internal webhook endpoints (Supabase DB → /internal/...) ────────────────
+
+class WelcomeEmailBody(BaseModel):
+    user_id: str = Field(..., min_length=1, max_length=64)
+    email: str = Field(..., min_length=3, max_length=320)
+    display_name: str | None = Field(default=None, max_length=200)
+
+
+@app.post("/internal/email/welcome")
+async def internal_welcome_email(body: WelcomeEmailBody) -> dict:
+    if _email_service is None or not _email_service.enabled:
+        return {"ok": True, "skipped": "email_disabled"}
+    res = await _email_service.send_welcome(
+        user_id=body.user_id,
+        recipient=body.email,
+        display_name=body.display_name,
+    )
+    return {"ok": res.ok, "deduped": res.deduped, "provider_id": res.provider_id, "error": res.error}
+
+
+# ── LLM endpoints (unchanged shape) ──────────────────────────────────────────
 
 
 def _context_line(value: str | None, max_len: int) -> str:
@@ -104,7 +302,6 @@ class QuizExplainBody(BaseModel):
     correct_index: int = Field(..., ge=0)
     chosen_index: int = Field(..., ge=0)
     canonical_hint: str | None = Field(default=None, max_length=2000)
-    # Optional — from app; server merges into a fixed template (not free-form system prompts).
     subject_id: str | None = Field(default=None, max_length=64)
     subject_title: str | None = Field(default=None, max_length=200)
     topic_title: str | None = Field(default=None, max_length=300)
@@ -118,19 +315,15 @@ class QuizExplainBody(BaseModel):
         return self
 
 
-@app.get("/health")
-async def health() -> dict[str, str]:
-    return {"status": "ok"}
-
-
 @app.post("/llm/quiz-explain")
-async def quiz_explain(body: QuizExplainBody, _: TokenDep) -> dict:
+async def quiz_explain(body: QuizExplainBody, request: Request) -> dict:
+    user_id = str(getattr(request.state, "auth_user_id", "") or "")
+    if user_id:
+        _enforce_per_user_rate_limit(user_id)
+
     key = (settings.openai_api_key or "").strip()
     if not key:
-        raise HTTPException(
-            status_code=503,
-            detail="OPENAI_API_KEY is not configured",
-        )
+        raise HTTPException(status_code=503, detail="OPENAI_API_KEY is not configured")
 
     labels = [f"{i}. {t}" for i, t in enumerate(body.options)]
     hint_block = ""
@@ -202,7 +395,6 @@ async def quiz_explain(body: QuizExplainBody, _: TokenDep) -> dict:
                 "upstream_code": e.provider_code or "",
                 "upstream_message": um[:800] if um else "",
             }
-            # OpenAI often uses HTTP 429 for insufficient_quota / billing — unrelated to "requests shown" on chart.
             if (
                 "insufficient" in uc
                 or uc == "billing_hard_limit_reached"
@@ -211,9 +403,8 @@ async def quiz_explain(body: QuizExplainBody, _: TokenDep) -> dict:
                 or "quota" in um.lower()
             ):
                 detail["message"] = (
-                    "OpenAI blocked this call for billing/quota (dashboard can still show 0 successful requests). "
-                    "Complete Billing: add a payment method and/or buy credits — the “Add credits” banner means "
-                    "new API keys cannot run until the account can be charged."
+                    "OpenAI blocked this call for billing/quota. "
+                    "Complete Billing: add a payment method and/or buy credits."
                 )
             else:
                 detail["message"] = (
@@ -235,7 +426,7 @@ async def quiz_explain(body: QuizExplainBody, _: TokenDep) -> dict:
             status_code=502,
             detail=f"Upstream LLM HTTP {e.status_code}: {snippet or e.status_code}",
         ) from e
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         raise HTTPException(status_code=502, detail=f"Upstream LLM error: {e!s}") from e
 
     return {
@@ -248,9 +439,44 @@ async def quiz_explain(body: QuizExplainBody, _: TokenDep) -> dict:
     }
 
 
+# ── Stripe + billing routers ─────────────────────────────────────────────────
+
+if (
+    (settings.stripe_secret_key or "").strip()
+    and (settings.stripe_webhook_secret or "").strip()
+    and _admin_store is not None
+):
+    try:
+        app.include_router(
+            create_stripe_webhook_router(
+                stripe_secret_key=settings.stripe_secret_key,
+                stripe_webhook_secret=settings.stripe_webhook_secret,
+                admin_store=_admin_store,
+                email_service=_email_service,
+            )
+        )
+        logger.info("Stripe webhook router enabled")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Stripe webhook router disabled: %s", exc)
+else:
+    logger.info("Stripe webhook router disabled (missing Stripe/Supabase env vars)")
+
+if (settings.stripe_secret_key or "").strip() and _admin_store is not None:
+    try:
+        app.include_router(
+            create_billing_router(
+                stripe_secret_key=settings.stripe_secret_key,
+                admin_store=_admin_store,
+            )
+        )
+        logger.info("Billing router enabled")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Billing router disabled: %s", exc)
+
+
 # Allow `uvicorn app.main:app` with cwd = api/
 if __name__ == "__main__":
     import uvicorn
 
-    port = int(os.environ.get("PORT", "8000"))
+    port = int(os.environ.get("PORT", "8080"))
     uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=False)

@@ -2,6 +2,8 @@
 
 This document scopes how to add optional, student-controlled LLM features to the existing **vanilla HTML/CSS/JS** app (see `AGENTS.md`), with emphasis on **exam outcomes**, **concept clarity**, and **low token spend**.
 
+> Monetization POC update (issue #11): live implementation now uses Supabase session JWT bearer auth on `/llm/*` instead of shared `APP_TOKEN`. Keep this document as legacy context where those token references appear.
+
 ---
 
 ## Goals (aligned with the app)

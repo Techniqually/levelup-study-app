@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-levelup-build="2026-04-18-03">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LevelUp! — Subject</title>
+    <!-- Analytics: set data-website-id to your Umami site ID before going live -->
+    <script async src="https://analytics.umami.is/script.js"
+            data-website-id="UMAMI_WEBSITE_ID"
+            data-domains="levelupstudyhub.com"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    />
+    <!-- Global header / footer styles (shared with hub.html, parent.html, index.html) -->
+    <link rel="stylesheet" href="css/app-shell.css" />
+    <!-- Cache bust: bump js/shell/asset-version.js only -->
+    <script src="js/shell/asset-version.js"></script>
+    <script src="js/shell/subject-head-assets.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="levelup-shell" data-page="subject"></div>
+
+    <div id="app">
+      <header class="topbar">
+        <div class="topbar-stats">
+          <span class="pill xp" id="stat-xp">0 XP</span>
+          <span class="pill streak" id="stat-streak">🔥 0 day</span>
+          <span
+            class="pill badge-boss"
+            id="stat-boss"
+            hidden
+            title="Theme boss beaten"
+            >🏆</span
+          >
+          <button type="button" class="pill-link" id="btn-home" aria-label="All subjects">All subjects</button>
+        </div>
+      </header>
+
+      <main id="main"></main>
+
+      <nav class="dock" id="dock" hidden>
+        <button type="button" data-tab="cheat">Notes</button>
+        <button type="button" data-tab="visual">Visuals</button>
+        <button type="button" data-tab="flash">Cards</button>
+        <button type="button" data-tab="quiz">Quiz</button>
+        <button type="button" data-tab="written">Written</button>
+        <button type="button" data-tab="game">Games</button>
+      </nav>
+    </div>
+
+    <!-- ── Modals ────────────────────────────────────────────────────────────── -->
+    <div
+      class="modal-overlay"
+      id="modal-root"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="modal explain-modal" id="panel-explain" hidden>
+        <h2 id="explain-title">Let's fix that</h2>
+        <p id="explain-body"></p>
+        <div id="explain-llm-wrap" class="explain-llm-wrap" hidden>
+          <button type="button" class="btn" id="btn-explain-llm-why">
+            Why? (AI tutor)
+          </button>
+          <div id="explain-llm-body" class="explain-llm-body" hidden></div>
+        </div>
+        <button type="button" class="btn primary" id="btn-explain-ok">
+          Got it — continue
+        </button>
+      </div>
+
+      <div class="modal modal-shop" id="panel-shop" hidden>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+          <h2 style="margin:0">🛒 Rewards Shop</h2>
+          <button type="button" class="btn primary" id="btn-close-shop">Done</button>
+        </div>
+        <div class="shop-toolbar">
+          <button type="button" class="btn" id="btn-shop-refresh">Refresh</button>
+          <span class="hint" id="shop-sync-status">Not synced yet.</span>
+        </div>
+        <p class="shop-lead hint">Spend XP on rewards. Show the coupon to your parent to claim.</p>
+        <div class="shop-layout">
+          <div class="shop-rewards-col">
+            <div id="shop-summary" class="shop-summary" aria-live="polite"></div>
+            <div id="shop-rewards-list" class="shop-rewards-list"></div>
+          </div>
+          <div class="shop-coupons-col">
+            <h3 class="shop-sub" id="shop-coupons-heading">My coupons today</h3>
+            <div id="shop-coupons-list"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── HTML Templates (cloned by JS for dynamic UI) ─────────────────────── -->
+
+    <!-- Flashcard session wrapper — cloned by startFlash() -->
+    <template id="tpl-flash-panel">
+      <div class="panel active" data-panel="flash">
+        <p class="flash-progress" id="flash-progress">Tap card to flip · <span id="flash-count"></span></p>
+        <div class="flash-area">
+          <div class="flash-card" id="flash-card">
+            <div class="flash-face flash-front" id="flash-front"></div>
+            <div class="flash-face flash-back"  id="flash-back"></div>
+          </div>
+        </div>
+        <div class="flash-actions">
+          <button type="button" class="btn danger-outline" id="flash-review">Need review</button>
+          <button type="button" class="btn primary"        id="flash-got">Got it ✓</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Quiz timer bar row — cloned per question by runQuiz() -->
+    <template id="tpl-quiz-meta">
+      <div class="quiz-meta">
+        <div class="timer-bar-wrap"><div class="timer-bar" id="q-timer"></div></div>
+        <span class="combo" id="q-combo"></span>
+        <div class="health-bar" id="q-health"></div>
+      </div>
+    </template>
+
+    <!-- Question confidence widget — used by renderQuestionConfidenceHtml() -->
+    <template id="tpl-question-confidence">
+      <div class="question-confidence">
+        <div class="question-confidence-head">
+          <span class="question-confidence-label"></span>
+          <span class="question-confidence-pct"></span>
+        </div>
+        <div class="question-confidence-bar">
+          <div class="question-confidence-fill"></div>
+        </div>
+        <div class="question-confidence-reason"></div>
+      </div>
+    </template>
+
+    <!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+    <!-- KaTeX loaded deferred — renderMathWhenReady() polls until it arrives -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    ></script>
+
+    <!-- Global header/footer (shared with hub.html, parent.html) -->
+    <script src="js/shell/app-shell.js"></script>
+
+    <!-- Shell scripts emitted with ?v=APP_VERSION (see write-subject-tail-scripts.js) -->
+    <script src="js/shell/write-subject-tail-scripts.js"></script>
+  </body>
+</html>

@@ -2,3 +2,6 @@ NUS-IS5126/
 tmp.txt
 *.bkup
 api/.env
+*.creds
+web/config/api.json
+config.toml
