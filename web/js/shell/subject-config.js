@@ -57,7 +57,21 @@
       }
 
       window.LEVELUP_STUDENT_ID = user.id;
-      window.LEVELUP_STUDENT_NAME = String((user.user_metadata && user.user_metadata.full_name) || user.email || "").trim();
+      var meta = user.user_metadata || {};
+      var displayName =
+        String(meta.full_name || meta.name || "").trim() ||
+        String(user.email || "").split("@")[0] ||
+        "Student";
+      window.LEVELUP_STUDENT_NAME = displayName;
+      try { localStorage.setItem(STUDENT_ID_KEY, user.id); } catch (_e0) {}
+      try { localStorage.setItem(STUDENT_NAME_KEY, displayName); } catch (_e1) {}
+      if (window.LevelupShell && typeof window.LevelupShell.setProfile === "function") {
+        window.LevelupShell.setProfile(
+          displayName,
+          String(user.email || ""),
+          String(meta.avatar_url || meta.picture || "")
+        );
+      }
 
       return window.LevelupAuth.isSubjectEntitled(subjectId).then(function (ok) {
         // Reconcile preview flag with actual entitlement — in place, no navigation.

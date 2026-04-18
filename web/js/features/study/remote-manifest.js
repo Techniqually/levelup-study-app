@@ -68,6 +68,27 @@
     });
   }
 
+  async function listSubjectRootFiles(subjectId) {
+    if (!canUseStorage()) return null;
+    var sb = global.LevelupAuth.getClient();
+    try {
+      var res = await sb.storage.from(BUCKET).list(String(subjectId || ""), {
+        limit: 200,
+        offset: 0,
+      });
+      if (res.error || !Array.isArray(res.data)) return null;
+      var names = Object.create(null);
+      for (var i = 0; i < res.data.length; i += 1) {
+        var row = res.data[i];
+        var n = row && row.name ? String(row.name) : "";
+        if (n) names[n] = true;
+      }
+      return names;
+    } catch (_) {
+      return null;
+    }
+  }
+
   async function loadSubjectBootstrap(subjectId) {
     var sid = String(subjectId || "").toLowerCase();
     if (!sid) return { ok: false, reason: "subject_missing" };
@@ -109,9 +130,15 @@
             sid + "/extra-quiz.js",
             sid + "/extended-questions.js",
           ];
+      var rootFiles = await listSubjectRootFiles(sid);
       for (var i = 0; i < optional.length; i += 1) {
+        var optPath = optional[i];
+        if (rootFiles) {
+          var optName = optPath.split("/").pop();
+          if (!rootFiles[optName]) continue;
+        }
         try {
-          await loadScriptFromStorage(optional[i]);
+          await loadScriptFromStorage(optPath);
         } catch (_) {
           // optional
         }

@@ -43,6 +43,28 @@
     }
   }
 
+  async function refreshHeaderShopXp(userId) {
+    if (!window.LevelupShell || typeof window.LevelupShell.setShopXp !== "function") return;
+    var sb = window.LevelupAuth && window.LevelupAuth.getClient && window.LevelupAuth.getClient();
+    if (!sb || !userId) {
+      window.LevelupShell.setShopXp(null);
+      return;
+    }
+    try {
+      var q = await sb.from("study_xp_ledger").select("delta").eq("user_id", userId);
+      if (q.error || !Array.isArray(q.data)) {
+        window.LevelupShell.setShopXp(null);
+        return;
+      }
+      var xp = q.data.reduce(function (sum, row) {
+        return sum + Number((row && row.delta) || 0);
+      }, 0);
+      window.LevelupShell.setShopXp(xp);
+    } catch (_e) {
+      window.LevelupShell.setShopXp(null);
+    }
+  }
+
   // ── Subject card access ──────────────────────────────────────────────────────
 
   function updateSubjectCardsAccess() {
@@ -176,6 +198,7 @@
     state.avatarUrl = String(meta.avatar_url || meta.picture || "");
 
     refreshTopbar();
+    refreshHeaderShopXp(user.id);
 
     try {
       var results = await Promise.all([
