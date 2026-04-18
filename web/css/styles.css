@@ -541,6 +541,24 @@ body {
   font-size: 0.9rem;
 }
 
+.quiz-counter {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.quiz-countdown {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--muted);
+  min-width: 44px;
+  text-align: right;
+}
+
 .health-bar {
   display: flex;
   gap: 4px;
@@ -1029,6 +1047,35 @@ body {
   font-size: 0.95rem;
 }
 
+.match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.match-header .flash-progress {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.match-timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 56px;
+  text-align: center;
+}
+
 .match-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1056,8 +1103,18 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow: hidden;
+  word-break: break-word;
   transition: transform 0.15s, border-color 0.15s;
 }
+
+.match-tile .mini-md,
+.match-tile > div {
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.match-tile .katex { font-size: 0.9em; }
 
 .match-tile:hover:not(:disabled) {
   border-color: var(--accent2);

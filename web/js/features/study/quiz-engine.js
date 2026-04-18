@@ -230,9 +230,13 @@ function bindQuiz(t) {
 
       const q = qs[qi];
       const optionItems = shuffle(q.options.map((o, i) => ({ o, i })));
+      const qNum = qi + 1;
+      const qTotal = qs.length;
       container.innerHTML = `
         <div class="quiz-meta">
+          <span class="quiz-counter">Q ${qNum} / ${qTotal}</span>
           <div class="timer-bar-wrap"><div class="timer-bar" id="q-timer"></div></div>
+          <span class="quiz-countdown" id="q-countdown" aria-live="polite">${Math.round(questionMs / 1000)}s</span>
           <span class="combo" id="q-combo">${isReview ? "Review mode" : combo >= COMBO_AT ? "🔥 COMBO x" + COMBO_MULT : ""}</span>
           <div class="health-bar" id="q-health">${Array(healthMax)
             .fill(0)
@@ -263,6 +267,24 @@ function bindQuiz(t) {
       bar.style.width = "0%";
       qStart = Date.now();
       timedOutCurrent = false;
+      // Numeric countdown next to the timer bar, updated every 250 ms until
+      // the user answers or the question times out. Stored on the container
+      // so finish() can cancel it.
+      const countdownEl = document.getElementById("q-countdown");
+      if (container.__countdownId) {
+        clearInterval(container.__countdownId);
+        container.__countdownId = null;
+      }
+      if (countdownEl) {
+        container.__countdownId = setInterval(() => {
+          const remain = Math.max(0, questionMs - (Date.now() - qStart));
+          countdownEl.textContent = (remain / 1000).toFixed(1) + "s";
+          if (remain <= 0) {
+            clearInterval(container.__countdownId);
+            container.__countdownId = null;
+          }
+        }, 250);
+      }
       if (timerId) clearTimeout(timerId);
       timerId = setTimeout(() => {
         // Boss keeps strict timeout. Normal/review quiz allows overtime answer with reduced XP.
@@ -299,6 +321,10 @@ function bindQuiz(t) {
       if (timerId) {
         clearTimeout(timerId);
         timerId = null;
+      }
+      if (container.__countdownId) {
+        clearInterval(container.__countdownId);
+        container.__countdownId = null;
       }
       const q = qs[qi];
       const elapsed = (Date.now() - qStart) / 1000;
@@ -378,14 +404,19 @@ function bindQuiz(t) {
         const confidence = document.getElementById("quiz-confidence");
         if (confidence) {
           confidence.innerHTML = renderQuestionConfidenceHtml(q, t.id);
-          if (window.LevelupLlmQuizWhy && typeof window.LevelupLlmQuizWhy.attachBelowConfidence === "function") {
-            window.LevelupLlmQuizWhy.attachBelowConfidence(q, t, q.correctIndex);
-          }
         }
-        setTimeout(() => {
-          qi++;
-          renderQ();
-        }, 900);
+        // Explicit Next button replaces the old 900 ms auto-advance so the
+        // user can read the explanation / confidence meta at their own pace.
+        // Intentionally no LLM auto-explain here (it pulls focus / wastes
+        // tokens); the wrong-answer inline feedback keeps the same rule.
+        showInlineFeedback(
+          "correct",
+          "Nice",
+          q.explanation,
+          "",
+          () => { qi++; renderQ(); },
+          null
+        );
       } else {
         wrongCount++;
         recordQuestionOutcome(q, t.id, "wrong", elapsed);
@@ -415,23 +446,17 @@ function bindQuiz(t) {
             renderHome();
           };
         } else {
+          // Deliberately no LLM-explain payload on wrong answers: students
+          // were using "Why?" as a crutch instead of studying the canonical
+          // explanation. The written q.explanation + confidence note is
+          // shown, and the question will resurface for practice.
           showInlineFeedback(
             "wrong",
             "Not quite",
             q.explanation,
             `${confidenceMeta.label} · ${confidenceMeta.reason} · No XP for wrong answer${timedOutCurrent ? " (answered after time)" : ""}, but this question will show up again for practice.`,
             next,
-            clickedBtn
-              ? {
-                  q: q,
-                  topicId: t.id,
-                  chosenIndex: Number(clickedBtn.dataset.idx),
-                  subjectId: typeof SUBJECT_ID !== "undefined" ? SUBJECT_ID : "",
-                  subjectTitle: typeof SUBJECT_TITLE !== "undefined" ? SUBJECT_TITLE : "",
-                  topicTitle: t.title || "",
-                  level: "O-Level",
-                }
-              : null
+            null
           );
         }
       }

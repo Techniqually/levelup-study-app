@@ -33,13 +33,16 @@ function bindGames(t) {
       const item = pool[i];
       area.innerHTML = `
         <p class="tf-progress">${i + 1} / ${pool.length}</p>
-        <p class="tf-statement">${escapeHtml(item.statement)}</p>
+        <div class="tf-statement" id="tf-statement"></div>
         <div class="tf-row">
           <button type="button" class="btn primary tf-pick" data-v="true">True</button>
           <button type="button" class="btn tf-pick" data-v="false">False</button>
         </div>
-        <p class="tf-feedback" id="tf-feedback" hidden></p>
+        <div class="tf-feedback" id="tf-feedback" hidden></div>
         <button type="button" class="btn" id="tf-next" hidden>Next</button>`;
+      const stEl = document.getElementById("tf-statement");
+      stEl.innerHTML = renderMiniMarkdown(item.statement || "");
+      renderMathWhenReady(stEl, 0);
       const fb = document.getElementById("tf-feedback");
       const next = document.getElementById("tf-next");
       area.querySelectorAll(".tf-pick").forEach((btn) => {
@@ -49,7 +52,8 @@ function bindGames(t) {
           if (ok) correct++;
           fb.hidden = false;
           fb.className = "tf-feedback " + (ok ? "tf-ok" : "tf-bad");
-          fb.textContent = (ok ? "✓ " : "✗ ") + item.explain;
+          fb.innerHTML = (ok ? "✓ " : "✗ ") + renderMiniMarkdown(item.explain || "");
+          renderMathWhenReady(fb, 0);
           area.querySelectorAll(".tf-pick").forEach((b) => (b.disabled = true));
           next.hidden = false;
         };
@@ -121,18 +125,49 @@ function bindGames(t) {
     arranged = best;
     let sel = null;
     let matched = 0;
-    area.innerHTML =
-      '<div class="match-grid" id="match-grid"></div><p class="flash-progress" id="match-status"></p>';
+    // Total-elapsed timer. Starts on first user interaction (to avoid punishing
+    // a user who just opened the tab), stops when all pairs are matched. We
+    // keep the timer purely cosmetic/motivational for now — no XP penalty.
+    area.innerHTML = `
+      <div class="match-header">
+        <p class="flash-progress" id="match-status">Match the pairs</p>
+        <div class="match-timer" id="match-timer" aria-live="polite">0:00</div>
+      </div>
+      <div class="match-grid" id="match-grid"></div>`;
     const grid = document.getElementById("match-grid");
+    const timerEl = document.getElementById("match-timer");
+    let startedAt = 0;
+    let tickId = null;
+    function fmtMMSS(ms) {
+      const s = Math.max(0, Math.floor(ms / 1000));
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return m + ":" + (sec < 10 ? "0" : "") + sec;
+    }
+    function startTimer() {
+      if (startedAt) return;
+      startedAt = Date.now();
+      tickId = setInterval(() => {
+        timerEl.textContent = fmtMMSS(Date.now() - startedAt);
+      }, 250);
+    }
+    function stopTimer() {
+      if (tickId) { clearInterval(tickId); tickId = null; }
+    }
     arranged.forEach((tile) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "match-tile";
-      btn.textContent = tile.text.length > 60 ? tile.text.slice(0, 57) + "…" : tile.text;
+      // Allow KaTeX on match tiles too (flashcard fronts/backs often carry
+      // inline math like $F=ma$ for physics). We truncate rendered HTML via
+      // CSS instead of substring so math doesn't get split mid-expression.
+      btn.innerHTML = renderMiniMarkdown(String(tile.text || ""));
+      renderMathWhenReady(btn, 0);
       btn.dataset.id = tile.id;
       btn.dataset.match = tile.match;
       btn.addEventListener("click", () => {
         if (btn.classList.contains("matched") || btn.disabled) return;
+        startTimer();
         if (!sel) {
           sel = btn;
           btn.classList.add("selected");
@@ -150,6 +185,8 @@ function bindGames(t) {
           sel = null;
           matched += 2;
           if (matched === arranged.length) {
+            stopTimer();
+            const elapsedMs = startedAt ? Date.now() - startedAt : 0;
             addXp(25, {
               topicId: t.id,
               theme: t.theme,
@@ -159,7 +196,7 @@ function bindGames(t) {
               reason: "game_match_complete",
             });
             document.getElementById("match-status").textContent =
-              "Cleared! +25 XP";
+              `Cleared in ${fmtMMSS(elapsedMs)} · +25 XP`;
           }
         } else {
           btn.classList.add("wrong-flash");
@@ -190,7 +227,8 @@ function bindGames(t) {
       order.forEach((text, idx) => {
         const el = document.createElement("div");
         el.className = "seq-item";
-        el.textContent = text;
+        el.innerHTML = renderMiniMarkdown(String(text || ""));
+        renderMathWhenReady(el, 0);
         el.draggable = true;
         el.dataset.idx = idx;
         el.addEventListener("dragstart", (e) => {
