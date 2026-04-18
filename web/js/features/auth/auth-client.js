@@ -58,6 +58,23 @@
     await sb.auth.signOut();
     entitlementsCache = null;
     cachedForUserId = "";
+    // Phase 8: Supabase is the canonical source of truth for study progress,
+    // and localStorage is only a write-through cache. When the user signs out
+    // we must drop every `levelup_<subject>_v1` cache + its migration flag so
+    // the next sign-in on this browser does not resurrect a previous user's
+    // XP / topic stats before the fresh remote snapshot arrives.
+    try {
+      var killed = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!k) continue;
+        if (/^levelup_[a-z0-9-]+_v1(?:_supabase_migrated_v1|_report_digest_v1)?$/i.test(k)) {
+          killed.push(k);
+        }
+      }
+      killed.forEach(function (k) { localStorage.removeItem(k); });
+      localStorage.removeItem("LEVELUP_LAST_SUBJECT");
+    } catch (_e) {}
   }
 
   function onAuthStateChange(cb) {

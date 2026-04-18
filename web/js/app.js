@@ -133,9 +133,21 @@ if (!manifest || !manifest.length) {
           ? ("Supabase connected (" + (result.context.studentName || "Student") + " \xB7 " + (result.context.studentId || "") + ").")
           : ("Supabase not connected: " + ((result && result.error) || progressStore.getLastError() || "unknown error"));
       }
-      progressStore.fetchBootstrapState().then(function (remoteBootstrap) {
-        var _pulled = mergeRemoteBootstrap(remoteBootstrap);
-        if (_pulled && route.view === "home") renderHome();
+      // Phase 8: prefer the authoritative per-subject state row. Fall back to
+      // reconstructing state from the ledger/topic tables if the row doesn't
+      // exist yet (first-run, pre-migration), then merge the reconstruction
+      // with any richer local cache (merge-max) so offline-earned XP isn't
+      // dropped if the debounced snapshot hasn't flushed yet.
+      progressStore.fetchSubjectState().then(function (remoteRow) {
+        if (remoteRow && remoteRow.clientState) {
+          var _replaced = replaceWithRemoteSubjectState(remoteRow);
+          if (_replaced && route.view === "home") renderHome();
+          return;
+        }
+        progressStore.fetchBootstrapState().then(function (remoteBootstrap) {
+          var _pulled = mergeRemoteBootstrap(remoteBootstrap);
+          if (_pulled && route.view === "home") renderHome();
+        });
       });
       progressStore.reconcileLocalPurchases(state.purchaseLedger || []).then(function () {
         progressStore.fetchShopSnapshot().then(function (snapshot) {

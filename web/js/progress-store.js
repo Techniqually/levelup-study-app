@@ -69,15 +69,21 @@
     return res;
   }
 
-  function scheduleSnapshot(portableState) {
+  function scheduleSnapshot(portableStateSnapshot) {
     if (!hasClient()) return;
     clearTimeout(state.snapshotTimer);
     state.snapshotTimer = setTimeout(() => {
-      // Full state sync to user_subject_state (multi-device sync).
+      // Re-read the *current* portable state at flush time if available.
+      // (The old code captured the snapshot at schedule time, so rapid writes
+      // only uploaded the first snapshot in the debounce window.)
+      var latest = portableStateSnapshot;
+      try {
+        if (typeof portableState === "function") latest = portableState();
+      } catch (_e) {}
       if (typeof window.LevelupSupabase.syncSubjectState === "function") {
-        safe(() => window.LevelupSupabase.syncSubjectState(state.subjectId, portableState));
+        safe(() => window.LevelupSupabase.syncSubjectState(state.subjectId, latest));
       } else {
-        safe(() => window.LevelupSupabase.logStateSnapshot(portableState));
+        safe(() => window.LevelupSupabase.logStateSnapshot(latest));
       }
     }, SNAPSHOT_DEBOUNCE_MS);
   }

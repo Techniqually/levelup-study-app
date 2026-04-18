@@ -9,6 +9,7 @@ function loadState() {
 
   function saveState() {
     state = normalizeState(state);
+    state.lastSavedAt = Date.now();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     if (progressStore && progressStore.hasClient()) {
       progressStore.scheduleSnapshot(portableState());
@@ -67,6 +68,25 @@ function loadState() {
     state.dailyChallenge = payload.dailyChallenge || state.dailyChallenge;
     state = normalizeState(state);
     saveState();
+  }
+
+  // Phase 8: Supabase is the source of truth. When we fetch a fresh
+  // `user_subject_state.client_state` row on boot we REPLACE the in-memory
+  // state with the remote payload (instead of the old merge-max logic) and
+  // then write the merged result back to localStorage as a cache.
+  //
+  // Remote rows that are *older* than the local cache are ignored — this keeps
+  // recently-earned XP intact if the user went offline and the debounced
+  // snapshot hasn't been flushed yet.
+  function replaceWithRemoteSubjectState(remoteRow) {
+    if (!remoteRow || !remoteRow.clientState) return false;
+    var remote = remoteRow.clientState;
+    if (!remote || typeof remote !== "object") return false;
+    var remoteTs = Date.parse(remoteRow.updatedAt || "") || 0;
+    var localTs  = Number(state && state.lastSavedAt) || 0;
+    if (localTs && remoteTs && localTs > remoteTs + 2000) return false;
+    applyPortableState(remote);
+    return true;
   }
 
   function mergeRemoteBootstrap(remote) {
