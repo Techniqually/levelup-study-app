@@ -7,6 +7,33 @@
 (function () {
   var FALLBACK_API_BASE = "http://localhost:8081";
 
+  function isBrowserLocalhost() {
+    var h = String(window.location.hostname || "").toLowerCase();
+    return h === "localhost" || h === "127.0.0.1";
+  }
+
+  /** Stale keys from local Supabase CLI — must not be reused on deployed origins. */
+  function looksLikeLocalDevSupabaseUrl(u) {
+    var s = String(u || "").toLowerCase();
+    if (!s) return false;
+    return (
+      s.indexOf("127.0.0.1") !== -1 ||
+      s.indexOf("localhost") !== -1 ||
+      s.indexOf(":54321") !== -1
+    );
+  }
+
+  function clearStaleSupabaseCacheIfNeeded() {
+    if (isBrowserLocalhost()) return;
+    try {
+      var u = localStorage.getItem("SUPABASE_URL");
+      if (u && looksLikeLocalDevSupabaseUrl(u)) {
+        localStorage.removeItem("SUPABASE_URL");
+        localStorage.removeItem("SUPABASE_ANON_KEY");
+      }
+    } catch (_e) {}
+  }
+
   function initFromConfig(cfg) {
     if (!cfg || !cfg.supabaseUrl || !cfg.supabaseAnonKey) {
       document.dispatchEvent(new CustomEvent('levelup:config-error', {
@@ -22,6 +49,7 @@
   }
 
   function runBootstrap(apiBase) {
+    clearStaleSupabaseCacheIfNeeded();
     var cached = localStorage.getItem("SUPABASE_URL");
     if (cached) {
       // Already have config — use immediately, refresh in background
