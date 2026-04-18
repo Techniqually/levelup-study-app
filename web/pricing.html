@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" data-levelup-build="2026-04-17-02">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Pricing · LevelUp</title>
+  <meta name="description" content="LevelUp O-Level pricing. $29 per subject lifetime, or $69 for all three subjects (Chemistry, Physics, Geography). One-time payment, no subscription." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script async src="https://analytics.umami.is/script.js"
+          data-website-id="UMAMI_WEBSITE_ID"
+          data-domains="levelupstudyhub.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="js/shell/asset-version.js"></script>
+  <link rel="stylesheet" href="css/app-shell.css" />
+  <style>
+    .pricing-hero {
+      padding: clamp(48px, 9vw, 88px) 0 16px;
+      text-align: center;
+      background: radial-gradient(ellipse at 25% 0%, rgba(168, 85, 247, 0.12), transparent 55%),
+                  radial-gradient(ellipse at 80% 35%, rgba(94, 234, 212, 0.08), transparent 55%);
+    }
+    .pricing-hero__eyebrow {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(168, 85, 247, 0.16);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      color: #d8b4fe;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      margin-bottom: 16px;
+    }
+    .pricing-hero h1 {
+      font-family: "Outfit", system-ui, sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
+    }
+    .pricing-hero .lead {
+      color: var(--ink-dim);
+      font-size: clamp(1rem, 1.4vw, 1.1rem);
+      line-height: 1.55;
+      max-width: 60ch;
+      margin: 0 auto;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin: 36px auto 12px;
+    }
+    @media (min-width: 760px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+    }
+    @media (min-width: 1024px) {
+      .pricing-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    }
+
+    .price-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+      transition: transform 180ms var(--ease), border-color 180ms var(--ease);
+    }
+    .price-card:hover { transform: translateY(-2px); border-color: rgba(94, 234, 212, 0.5); }
+    .price-card[data-featured="1"] {
+      border-color: rgba(168, 85, 247, 0.55);
+      background:
+        linear-gradient(180deg, rgba(168, 85, 247, 0.08), rgba(94, 234, 212, 0.05)),
+        rgba(255, 255, 255, 0.02);
+      box-shadow: 0 18px 60px rgba(168, 85, 247, 0.18);
+    }
+    .price-card__badge {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--brand-grad);
+      color: #0b1020;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .price-card__name { font-size: 1rem; font-weight: 700; margin: 0; color: var(--ink); }
+    .price-card__amount { display: flex; align-items: baseline; gap: 6px; }
+    .price-card__amount strong { font-size: 2.4rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); }
+    .price-card__amount .cur { color: var(--ink-dim); font-weight: 600; font-size: 0.95rem; }
+    .price-card__amount .per { color: var(--ink-muted); font-size: 0.85rem; }
+    .price-card__features { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 8px; }
+    .price-card__features li {
+      font-size: 14px;
+      color: var(--ink-dim);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+    .price-card__features li::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      margin-top: 3px;
+      border-radius: 50%;
+      background: rgba(94, 234, 212, 0.18);
+      box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.45);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235eead4' stroke-width='3' stroke-linecap='round'><polyline points='20 6 9 17 4 12'/></svg>");
+      background-size: 12px;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .price-card__cta { margin-top: auto; }
+    .price-card__cta button { width: 100%; }
+
+    .price-help {
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 13px;
+      margin: 18px 0 4px;
+    }
+
+    .pricing-faq {
+      margin: 56px 0 24px;
+      display: grid;
+      gap: 12px;
+    }
+    .pricing-faq h2 { margin: 0 0 8px; font-size: 1.25rem; }
+    .pricing-faq details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .pricing-faq summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink);
+      list-style: none;
+    }
+    .pricing-faq summary::-webkit-details-marker { display: none; }
+    .pricing-faq details[open] summary { color: var(--accent, #5eead4); }
+    .pricing-faq p { margin: 8px 0 0; color: var(--ink-dim); line-height: 1.6; }
+
+    .price-status {
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 13px;
+      margin-top: 6px;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="levelup-shell" data-page="pricing"></div>
+
+  <main id="main" class="container">
+    <section class="pricing-hero">
+      <span class="pricing-hero__eyebrow">PRICING</span>
+      <h1>One price. Lifetime access.</h1>
+      <p class="lead">
+        $29 per subject, or $69 for all three. No subscription. No renewals.
+        Pay once and study to your O-Levels.
+      </p>
+    </section>
+
+    <section aria-label="Plans">
+      <div class="pricing-grid" id="pricing-grid">
+        <!-- Server-rendered cards go here. Static fallback below mirrors the SG O-Level catalog. -->
+        <div class="price-card" data-fallback="1">
+          <h3 class="price-card__name">O-Level Chemistry</h3>
+          <div class="price-card__amount"><span class="cur">$</span><strong>29</strong><span class="per">SGD · once</span></div>
+          <ul class="price-card__features">
+            <li>13 syllabus topics + worked notes</li>
+            <li>Quizzes, flashcards, written practice</li>
+            <li>XP, streaks, boss battles</li>
+          </ul>
+          <div class="price-card__cta"><button class="btn btn-outline btn-lg" data-buy="sg_olevel_chemistry">Get Chemistry</button></div>
+        </div>
+        <div class="price-card" data-fallback="1">
+          <h3 class="price-card__name">O-Level Physics</h3>
+          <div class="price-card__amount"><span class="cur">$</span><strong>29</strong><span class="per">SGD · once</span></div>
+          <ul class="price-card__features">
+            <li>~20 syllabus topics</li>
+            <li>Quizzes, flashcards, written practice</li>
+            <li>XP, streaks, boss battles</li>
+          </ul>
+          <div class="price-card__cta"><button class="btn btn-outline btn-lg" data-buy="sg_olevel_physics">Get Physics</button></div>
+        </div>
+        <div class="price-card" data-fallback="1">
+          <h3 class="price-card__name">O-Level Geography</h3>
+          <div class="price-card__amount"><span class="cur">$</span><strong>29</strong><span class="per">SGD · once</span></div>
+          <ul class="price-card__features">
+            <li>9 syllabus topics</li>
+            <li>Quizzes, flashcards, written practice</li>
+            <li>XP, streaks, boss battles</li>
+          </ul>
+          <div class="price-card__cta"><button class="btn btn-outline btn-lg" data-buy="sg_olevel_geography">Get Geography</button></div>
+        </div>
+        <div class="price-card" data-featured="1" data-fallback="1">
+          <span class="price-card__badge">Best value · save $18</span>
+          <h3 class="price-card__name">All 3 subjects</h3>
+          <div class="price-card__amount"><span class="cur">$</span><strong>69</strong><span class="per">SGD · once</span></div>
+          <ul class="price-card__features">
+            <li>Chemistry + Physics + Geography</li>
+            <li>Everything in single subjects</li>
+            <li>Bonus parent dashboard reports</li>
+            <li>One Stripe transaction, instant unlock</li>
+          </ul>
+          <div class="price-card__cta"><button class="btn btn-primary btn-lg" data-buy="sg_olevel_bundle3" data-umami-event="pricing-bundle-click">Get all 3 →</button></div>
+        </div>
+      </div>
+      <p class="price-status" id="price-status"></p>
+      <p class="price-help">All prices in Singapore Dollars (SGD). Topic 1 of every subject is free — try before you buy.</p>
+    </section>
+
+    <section class="pricing-faq" aria-label="Pricing FAQ">
+      <h2>Pricing FAQ</h2>
+      <details>
+        <summary>Is this a subscription?</summary>
+        <p>No. It's a one-time payment per subject (or for the bundle). You keep access until your O-Levels are done.</p>
+      </details>
+      <details>
+        <summary>Can I upgrade from a single subject to the bundle later?</summary>
+        <p>Email us — we'll discount the bundle by what you already paid. (Self-serve upgrade is on the roadmap.)</p>
+      </details>
+      <details>
+        <summary>Refund policy?</summary>
+        <p>Topic 1 of every subject is free, so there's a meaningful trial before you pay. If something genuinely doesn't work for you within 14 days, email and we'll refund.</p>
+      </details>
+      <details>
+        <summary>Do parents need a separate account?</summary>
+        <p>No. The same Google account opens both the student app and the parent dashboard.</p>
+      </details>
+      <details>
+        <summary>I'm not in Singapore — does this still work?</summary>
+        <p>Yes — the content is mapped to the Singapore-Cambridge O-Level syllabus, which is widely used. Pricing is in SGD; Stripe converts at checkout.</p>
+      </details>
+    </section>
+  </main>
+
+  <script src="js/shell/api-config.js"></script>
+  <script src="js/shell/bootstrap.js"></script>
+  <script src="js/shell/app-shell.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/shell/app-context.js"></script>
+  <script src="js/features/auth/auth-client.js"></script>
+  <script src="js/features/auth/auth-ui.js"></script>
+  <script>
+    // Wire .js-signin clicks to open the auth modal (mirrors index.html).
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest && e.target.closest(".js-signin");
+      if (!t) return;
+      e.preventDefault();
+      if (window.LevelupAuthUI && typeof window.LevelupAuthUI.openAuthModal === "function") {
+        window.LevelupAuthUI.openAuthModal({ redirectTo: window.location.href });
+      }
+      if (window.LevelupShell && typeof window.LevelupShell.closeDrawer === "function") {
+        window.LevelupShell.closeDrawer();
+      }
+    });
+
+    // After Supabase config arrives, surface the profile pill if already signed in.
+    document.addEventListener("levelup:config-ready", async function () {
+      try {
+        if (!window.LevelupAuth || typeof window.LevelupAuth.getSession !== "function") return;
+        var session = await window.LevelupAuth.getSession();
+        if (!session || !session.user) return;
+        var u = session.user;
+        var name =
+          (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) ||
+          (u.email || "").split("@")[0] ||
+          "Student";
+        if (window.LevelupShell && typeof window.LevelupShell.setProfile === "function") {
+          window.LevelupShell.setProfile(name, u.email || "", (u.user_metadata && u.user_metadata.avatar_url) || "");
+        }
+      } catch (_e) {}
+    });
+  </script>
+  <script>
+    (function () {
+      var grid = document.getElementById("pricing-grid");
+      var status = document.getElementById("price-status");
+
+      function setStatus(msg, isError) {
+        if (!status) return;
+        status.textContent = msg || "";
+        status.style.color = isError ? "#fda4af" : "";
+      }
+
+      function moneyMajor(cents, currency) {
+        var amt = (Number(cents) || 0) / 100;
+        var cur = (currency || "sgd").toUpperCase();
+        return cur === "SGD" || cur === "USD" || cur === "EUR" || cur === "GBP"
+          ? cur + " " + amt.toFixed(0)
+          : amt.toFixed(2) + " " + cur;
+      }
+
+      function renderCatalog(prices) {
+        if (!Array.isArray(prices) || !prices.length) return;
+        var pinned = prices
+          .slice()
+          .sort(function (a, b) {
+            return (a.sort_order || 0) - (b.sort_order || 0);
+          });
+        grid.innerHTML = pinned
+          .map(function (p) {
+            var featured = p.kind === "bundle" ? ' data-featured="1"' : "";
+            var badge =
+              p.kind === "bundle"
+                ? '<span class="price-card__badge">Best value</span>'
+                : "";
+            var amount = (Number(p.amount_cents) || 0) / 100;
+            var cur = (p.currency || "sgd").toUpperCase();
+            var unavailable = !p.available
+              ? '<p style="color:#fbbf24;font-size:12px;margin:4px 0 0;">Coming soon — checkout opens once Stripe price is configured.</p>'
+              : "";
+            var features =
+              p.kind === "bundle"
+                ? '<li>Every subject in your country/class</li><li>One Stripe transaction, instant unlock</li><li>Bonus parent dashboard reports</li>'
+                : '<li>Full syllabus access</li><li>Quizzes · flashcards · written practice</li><li>XP, streaks, boss battles</li>';
+            var btn = p.available
+              ? '<button class="btn ' + (p.kind === "bundle" ? "btn-primary" : "btn-outline") + ' btn-lg" data-buy="' + p.id + '">Buy</button>'
+              : '<button class="btn btn-outline btn-lg" disabled>Not available</button>';
+            return (
+              '<div class="price-card"' + featured + '>' +
+              badge +
+              '<h3 class="price-card__name">' + escapeHtml(p.display_name || p.id) + '</h3>' +
+              '<div class="price-card__amount"><span class="cur">' + cur + '</span><strong>' + amount.toFixed(0) + '</strong><span class="per">once</span></div>' +
+              '<ul class="price-card__features">' + features + '</ul>' +
+              unavailable +
+              '<div class="price-card__cta">' + btn + '</div>' +
+              '</div>'
+            );
+          })
+          .join("");
+      }
+
+      function escapeHtml(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      async function loadCatalog() {
+        var base = window.LEVELUP_API_BASE || "";
+        if (!base) return;
+        try {
+          var res = await fetch(base.replace(/\/$/, "") + "/billing/catalog", { credentials: "omit" });
+          if (!res.ok) return;
+          var body = await res.json();
+          if (body && Array.isArray(body.prices) && body.prices.length) {
+            renderCatalog(body.prices);
+          }
+        } catch (_e) {
+          // Keep static fallback cards.
+        }
+      }
+
+      async function startCheckout(priceId, btn) {
+        var base = window.LEVELUP_API_BASE || "";
+        if (!base) {
+          setStatus("Checkout is not configured (no API base). Contact support.", true);
+          return;
+        }
+        if (!window.LevelupAuth || typeof window.LevelupAuth.getAccessToken !== "function") {
+          setStatus("Sign in required.", true);
+          return;
+        }
+        var token = await window.LevelupAuth.getAccessToken();
+        if (!token) {
+          // Trigger sign-in modal then bounce back to pricing on success.
+          try { sessionStorage.setItem("LEVELUP_POST_SIGNIN_REDIRECT", "pricing.html"); } catch (_e) {}
+          var btns = document.querySelectorAll(".js-signin");
+          if (btns[0]) btns[0].click();
+          else setStatus("Sign in to buy. Open the menu → Get started.", true);
+          return;
+        }
+        btn.disabled = true;
+        var origin = window.location.origin || (window.location.protocol + "//" + window.location.host);
+        var path = window.location.pathname.replace(/[^/]*$/, "");
+        var success = origin + path + "hub.html?purchase=ok";
+        var cancel = origin + path + "pricing.html?purchase=cancel";
+        try {
+          var res = await fetch(base.replace(/\/$/, "") + "/billing/checkout-session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify({
+              price_ids: [priceId],
+              success_url: success,
+              cancel_url: cancel,
+            }),
+          });
+          var body = await res.json().catch(function () { return null; });
+          if (!res.ok || !body || !body.url) {
+            setStatus(
+              "Couldn't start checkout. " + ((body && (body.detail || body.message)) || ("HTTP " + res.status)),
+              true
+            );
+            btn.disabled = false;
+            return;
+          }
+          window.location.href = body.url;
+        } catch (e) {
+          setStatus("Network error: " + (e && e.message ? e.message : e), true);
+          btn.disabled = false;
+        }
+      }
+
+      grid.addEventListener("click", function (e) {
+        var btn = e.target.closest && e.target.closest("[data-buy]");
+        if (!btn) return;
+        var id = btn.getAttribute("data-buy");
+        if (!id) return;
+        setStatus("Opening Stripe checkout…", false);
+        startCheckout(id, btn);
+      });
+
+      // If returning from Stripe cancel, surface that.
+      try {
+        var qs = new URLSearchParams(window.location.search);
+        if (qs.get("purchase") === "cancel") {
+          setStatus("Checkout cancelled. No charge made.", true);
+        }
+      } catch (_e) {}
+
+      // Try to render server-side catalog. Static fallback keeps the page useful
+      // even when the API is unreachable.
+      document.addEventListener("levelup:api-config-ready", loadCatalog);
+      if (window.LEVELUP_API_BASE) loadCatalog();
+    })();
+  </script>
+</body>
+</html>

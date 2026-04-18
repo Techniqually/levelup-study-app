@@ -206,6 +206,7 @@
       '  <div class="site-footer__col">' +
       '    <h4>Family</h4>' +
       '    <ul>' +
+      '      <li><a href="pricing.html">Pricing</a></li>' +
       '      <li><a href="parent.html">Parent dashboard</a></li>' +
       '      <li><a href="index.html#how-it-works">How it works</a></li>' +
       '      <li><a href="index.html#faq">FAQ</a></li>' +
@@ -215,8 +216,8 @@
       '    <h4>Support</h4>' +
       '    <ul>' +
       '      <li><a href="mailto:hello@levelup.local">Contact</a></li>' +
-      '      <li><a href="index.html#privacy">Privacy</a></li>' +
-      '      <li><a href="index.html#terms">Terms</a></li>' +
+      '      <li><a href="privacy.html">Privacy</a></li>' +
+      '      <li><a href="terms.html">Terms</a></li>' +
       '    </ul>' +
       '  </div>' +
       '</div>' +
