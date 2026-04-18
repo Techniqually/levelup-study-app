@@ -19,9 +19,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Create api.json
+        run: |
+          # Ensure the directory exists
+          mkdir -p ./web/config
+          
+          # Use the GitHub variable if it exists, otherwise default to localhost
+          API_URL="${{ vars.API_BASE_URL || 'http://localhost:8081' }}"
+          
+          echo "{
+            \"apiBase\": \"$API_URL\"
+          }" > ./web/config/api.json
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./web
           keep_files: false
+          
