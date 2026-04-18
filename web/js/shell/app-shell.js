@@ -17,6 +17,8 @@
     subject: "hub",
     profile: "hub",
     pricing: "home",
+    privacy: "home",
+    terms: "home",
   };
 
   // Pages that should show the global "Shop" button when the user is signed in.
