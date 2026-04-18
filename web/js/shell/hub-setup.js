@@ -267,7 +267,7 @@
     try {
       var [xpToday, weakQ] = await Promise.all([
         sb.from("study_xp_ledger")
-          .select("delta, topic_id, subject_id")
+          .select("delta, subject_id, meta")
           .eq("user_id", user.id)
           .gte("created_at", todayIso()),
         sb.from("study_topic_stats")

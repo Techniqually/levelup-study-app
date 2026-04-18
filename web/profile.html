@@ -408,7 +408,7 @@
               .order("updated_at", { ascending: false })
               .limit(60),
             sb.from("study_xp_ledger")
-              .select("delta, created_at, topic_id")
+              .select("delta, created_at, meta")
               .eq("user_id", user.id)
               .gte("created_at", since7d)
               .order("created_at", { ascending: false })
@@ -430,7 +430,9 @@
             xpWeek += d;
             if (ts >= startOfDay.getTime()) {
               xpToday += d;
-              if (r.topic_id) topicsToday[r.topic_id] = true;
+              var tid =
+                r.meta && r.meta.topicId != null ? String(r.meta.topicId) : "";
+              if (tid) topicsToday[tid] = true;
             }
           });
           var topicsTodayCount = Object.keys(topicsToday).length;
