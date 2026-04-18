@@ -28,8 +28,6 @@ function loadState() {
       lastStudyDate: state.lastStudyDate,
       streak: state.streak,
       streakRewardDate: state.streakRewardDate,
-      unlockAll: state.unlockAll,
-      challengeMode: state.challengeMode,
       topicScores: state.topicScores,
       topicBest: state.topicBest,
       flashKnown: state.flashKnown,
@@ -52,8 +50,6 @@ function loadState() {
     state.lastStudyDate = payload.lastStudyDate ?? state.lastStudyDate;
     state.streak = payload.streak ?? state.streak;
     state.streakRewardDate = payload.streakRewardDate ?? state.streakRewardDate;
-    state.unlockAll = payload.unlockAll ?? state.unlockAll;
-    state.challengeMode = payload.challengeMode ?? state.challengeMode;
     state.topicScores = payload.topicScores || state.topicScores;
     state.topicBest = payload.topicBest || state.topicBest;
     state.flashKnown = payload.flashKnown || state.flashKnown;

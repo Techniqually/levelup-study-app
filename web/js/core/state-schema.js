@@ -5,8 +5,6 @@ function defaultState() {
       lastStudyDate: null,
       streak: 0,
       streakRewardDate: "",
-      unlockAll: true,
-      challengeMode: false,
       topicScores: {},
       topicBest: {},
       flashKnown: {},

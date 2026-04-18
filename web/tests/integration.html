@@ -74,16 +74,13 @@ window.ProgressStore = null; // disable Supabase writes during unit tests
 <script src="../js/utils/format.js"></script>
 <script src="../js/utils/text.js"></script>
 <script src="../js/features/study/quiz-extended.js"></script>
-<script src="../js/utils/crypto-transfer.js"></script>
 <script src="../js/utils/quiz-keys.js"></script>
 <script src="../js/features/llm/llm-config.js"></script>
-<script src="../js/shell/setup-forms.js"></script>
 <script src="../js/features/llm/llm-keepalive.js"></script>
 <script src="../js/features/llm/llm-cache.js"></script>
 <script src="../js/features/llm/llm-client.js"></script>
 <script src="../js/core/state-schema.js"></script>
 <script src="../js/core/state-persistence.js"></script>
-<script src="../js/core/transfer-ui.js"></script>
 <script src="../js/features/study/topic-stats.js"></script>
 <script src="../js/features/study/topic-meta.js"></script>
 <script src="../js/features/xp/xp-guards.js"></script>
@@ -205,44 +202,9 @@ state         = loadState();
   assert(SS, "normalizeState coerces xp",   ns.xp === 42);
   assert(SS, "normalizeState fixes ledger", Array.isArray(ns.xpLedger));
 
-  // ── SUITE: Setup package (config blob) ───────────────────────────────────
-  var SSP = suite("setup-package");
-  assert(SSP, "LevelupSetupForms present", !!window.LevelupSetupForms);
-  var _pkgObj = {
-    v: 2,
-    SUPABASE_URL: "https://example.supabase.co",
-    SUPABASE_ANON_KEY: "anon-key",
-    LEVELUP_STUDENT_ID: "carol-1",
-    LEVELUP_STUDENT_NAME: "Carol",
-    fastapi: {
-      enabled: true,
-      mode: "fastapi",
-      proxyBaseUrl: "https://llm.example.com",
-      features: { quizExplain: true },
-      cache: { maxEntries: 100, ttlDays: 30 },
-    },
-    parent: { projectCode: "study-app", parentCode: "1234", rememberCode: true },
-  };
-  var _pkgB64 = LevelupSetupForms.encodeConfigPayload(_pkgObj);
-  var _pkgParsed = LevelupSetupForms.parseConfigPackage(_pkgB64);
-  assert(SSP, "parse package ok", _pkgParsed.ok === true);
-  var _reB64 = LevelupSetupForms.encodeConfigPayload(JSON.parse(JSON.stringify(_pkgParsed.value)));
-  var _reParsed = LevelupSetupForms.parseConfigPackage(_reB64);
-  assert(SSP, "JSON → Base64 → parse round-trip", _reParsed.ok && _reParsed.value.SUPABASE_URL === "https://example.supabase.co");
-  assert(SSP, "parse package fields", _pkgParsed.ok && _pkgParsed.value.SUPABASE_URL === "https://example.supabase.co");
-  var _applied = LevelupSetupForms.applyConfigPayload(_pkgParsed.value);
-  assert(SSP, "apply package writes keys", Array.isArray(_applied) && _applied.length >= 4);
-  assert(SSP, "LLM config mapped from fastapi alias", !!localStorage.getItem("LEVELUP_LLM_CONFIG_JSON"));
-  assert(SSP, "parent project persisted", localStorage.getItem("LEVELUP_PARENT_PROJECT_CODE") === "study-app");
-  assert(SSP, "isClientSetupComplete after apply", LevelupSetupForms.isClientSetupComplete() === true);
-  var _tpl = LevelupSetupForms.readSetupPackageTemplatePayload();
-  assert(SSP, "template has embedded keys (no parent block)", _tpl && _tpl.SUPABASE_URL !== undefined && _tpl.llm && !("parent" in _tpl));
-  assert(SSP, "template llm has proxy field", _tpl.llm && "proxyBaseUrl" in _tpl.llm);
-  var _hollowLlmOnly = LevelupSetupForms.applyConfigPayload({
-    v: 2,
-    llm: { v: 2, enabled: true, proxyBaseUrl: "" },
-  });
-  assert(SSP, "hollow llm (no proxy) not persisted as applied keys", _hollowLlmOnly.indexOf("LEVELUP_LLM_CONFIG_JSON") === -1);
+  // NOTE: the legacy "setup-package" suite (LevelupSetupForms / config blob
+  // import-export) was removed in phase 5: the subject-level settings modal
+  // and its transfer UI are gone — bootstrap now runs from the backend.
 
   // ── SUITE: XP ledger ─────────────────────────────────────────────────────
   var SX = suite("xp");
@@ -283,10 +245,8 @@ state         = loadState();
   assert(ST, "getTopicMeta('1') finds topic",   getTopicMeta("1") !== null);
   assert(ST, "getTopicMeta('999') returns null", getTopicMeta("999") === null);
   assert(ST, "topicIndex('1') is 0",            topicIndex("1") === 0);
-  state.unlockAll = true;
-  assert(ST, "isUnlocked when unlockAll=true",  isUnlocked("2"));
-  state.unlockAll = false;
-  assert(ST, "isUnlocked(0) always true",       isUnlocked("1"));
+  assert(ST, "isUnlocked('2') always true (no in-subject gating)", isUnlocked("2"));
+  assert(ST, "isUnlocked('1') always true", isUnlocked("1"));
   assert(ST, "buildThemeIndex produces themeOrder", themeOrder.length > 0);
   assert(ST, "themesByKey has entries",             Object.keys(themesByKey).length > 0);
 

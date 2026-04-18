@@ -2,11 +2,9 @@
 function isUnlocked(topicId) {
     const i = topicIndex(topicId);
     if (i < 0) return false;
-    if (state.unlockAll) return true;
-    if (i === 0) return true;
-    const need = state.challengeMode ? 80 : PASS_PCT;
-    const prev = manifest[i - 1].id;
-    return (state.topicBest[prev] || 0) >= need;
+    // Topics are always unlocked inside a subject the user is entitled to;
+    // the entitlement gate lives at `subject-config.js` (not here).
+    return true;
   }
 
   function isBossUnlocked(themeKey) {
