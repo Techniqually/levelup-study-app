@@ -558,16 +558,24 @@ body {
   flex: 1;
   min-width: 120px;
   height: 8px;
-  background: var(--surface2);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 4px;
   overflow: hidden;
+  position: relative;
 }
 
 .timer-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
   width: 100%;
-  transition: width linear;
+  height: 100%;
+  transform-origin: right center;
+  transform: scaleX(1);
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: inherit;
+  will-change: transform;
 }
 
 .combo {
@@ -616,6 +624,7 @@ body {
   font-weight: 600;
   margin-bottom: 16px;
   line-height: 1.4;
+  scroll-margin-top: calc(var(--header-h, 64px) + 52px);
 }
 
 .quiz-start-actions {

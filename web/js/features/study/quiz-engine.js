@@ -260,31 +260,29 @@ function bindQuiz(t) {
         renderMathWhenReady(qEl, 0);
       }
       const bar = document.getElementById("q-timer");
-      bar.style.transition = "none";
-      bar.style.width = "100%";
-      void bar.offsetWidth;
-      bar.style.transition = `width ${questionMs}ms linear`;
-      bar.style.width = "0%";
-      qStart = Date.now();
-      timedOutCurrent = false;
-      // Numeric countdown next to the timer bar, updated every 250 ms until
-      // the user answers or the question times out. Stored on the container
-      // so finish() can cancel it.
       const countdownEl = document.getElementById("q-countdown");
       if (container.__countdownId) {
         clearInterval(container.__countdownId);
         container.__countdownId = null;
       }
-      if (countdownEl) {
-        container.__countdownId = setInterval(() => {
-          const remain = Math.max(0, questionMs - (Date.now() - qStart));
-          countdownEl.textContent = (remain / 1000).toFixed(1) + "s";
-          if (remain <= 0) {
-            clearInterval(container.__countdownId);
-            container.__countdownId = null;
-          }
-        }, 250);
+      qStart = Date.now();
+      timedOutCurrent = false;
+      function tickQuizTimer() {
+        const remain = Math.max(0, questionMs - (Date.now() - qStart));
+        const p = questionMs <= 0 ? 0 : Math.min(1, remain / questionMs);
+        if (countdownEl) countdownEl.textContent = (remain / 1000).toFixed(1) + "s";
+        if (bar) bar.style.transform = "scaleX(" + p + ")";
+        if (remain <= 0 && container.__countdownId) {
+          clearInterval(container.__countdownId);
+          container.__countdownId = null;
+        }
       }
+      if (bar) {
+        bar.style.transition = "none";
+        bar.style.transform = "scaleX(1)";
+      }
+      tickQuizTimer();
+      container.__countdownId = setInterval(tickQuizTimer, 100);
       if (timerId) clearTimeout(timerId);
       timerId = setTimeout(() => {
         // Boss keeps strict timeout. Normal/review quiz allows overtime answer with reduced XP.
@@ -293,7 +291,7 @@ function bindQuiz(t) {
           return;
         }
         timedOutCurrent = true;
-        if (bar) bar.style.width = "0%";
+        if (bar) bar.style.transform = "scaleX(0)";
         const confidence = document.getElementById("quiz-confidence");
         if (confidence) {
           confidence.innerHTML =
@@ -314,6 +312,12 @@ function bindQuiz(t) {
           finish(i === q.correctIndex, false, b);
         };
         optEl.appendChild(b);
+      });
+      requestAnimationFrame(function () {
+        const scrollEl = document.getElementById("quiz-question");
+        if (scrollEl && typeof scrollEl.scrollIntoView === "function") {
+          scrollEl.scrollIntoView({ block: "start", behavior: "instant" });
+        }
       });
     }
 
