@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-levelup-build="2026-04-17-02">
+<html lang="en" data-levelup-build="2026-04-19-01">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="js/shell/asset-version.js"></script>
+  <script src="js/shell/runtime-path.js"></script>
   <link rel="stylesheet" href="css/app-shell.css" />
   <style>
     /* Landing-specific styles (composed with app-shell.css) */
@@ -570,13 +571,19 @@
       var AUTH_READY_EVENT = "levelup:auth-ready";
       var openRequested = false;
 
+      function hubAfterSignIn() {
+        return window.LevelupPath && typeof window.LevelupPath.pageHref === "function"
+          ? window.LevelupPath.pageHref("hub.html")
+          : window.location.href;
+      }
+
       function tryOpenAuth() {
         if (!window.LevelupAuthUI) {
           openRequested = true;
           return;
         }
         window.LevelupAuthUI.openAuthModal({
-          redirectTo: window.location.origin + "/hub.html",
+          redirectTo: hubAfterSignIn(),
         });
       }
 
@@ -584,7 +591,7 @@
         if (openRequested && window.LevelupAuthUI) {
           openRequested = false;
           window.LevelupAuthUI.openAuthModal({
-            redirectTo: window.location.origin + "/hub.html",
+            redirectTo: hubAfterSignIn(),
           });
         }
       });
