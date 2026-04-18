@@ -11,12 +11,16 @@ function escapeHtml(s) {
 
     const inline = (s) =>
       s
-        // Avoid breaking math like `$v=gt` by our `*italic*` / `**bold**` transforms.
-        // We only apply inline markdown to non-math segments.
-        .split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g)
+        // Avoid breaking math by our `*italic*` / `**bold**` transforms — only
+        // touch non-math segments. Supports `$...$`, `$$...$$`, and LaTeX `\(...\)`,
+        // `\[...\]` (same as most topic JSON / quiz strings).
+        .split(
+          /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\([\s\S]*?\\\)|\\[[\s\S]*?\\])/g
+        )
         .map((seg) => {
           if (!seg) return seg;
-          if (seg[0] === "$") return seg; // preserve math delimiters for KaTeX
+          if (seg[0] === "$") return seg;
+          if (seg.slice(0, 2) === "\\(" || seg.slice(0, 2) === "\\[") return seg;
           return seg
             // inline code
             .replace(/`([^`]+)`/g, "<code>$1</code>")
@@ -77,6 +81,8 @@ function escapeHtml(s) {
       window.renderMathInElement(el, {
         delimiters: [
           { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
           { left: "$", right: "$", display: false },
         ],
         throwOnError: false,

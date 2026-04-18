@@ -211,6 +211,19 @@ function renderHome() {
 
     startTime(t.id, route.tab);
 
-    // Typeset `$...$` / `$$...$$` using KaTeX (loaded by `subject.html`).
+    // Typeset `$...$`, `$$...$$`, `\(...\)`, `\[...\]` via KaTeX (subject.html).
     renderMathWhenReady(document.getElementById("topic-panels") || main, 0);
+
+    // Tab / topic body swaps leave the scroll position mid-panel; snap back to
+    // the topic chrome so Notes ↔ Quiz etc. always start from the top.
+    requestAnimationFrame(function () {
+      try {
+        var hdr = document.querySelector(".topic-header");
+        if (hdr && typeof hdr.scrollIntoView === "function") {
+          hdr.scrollIntoView({ block: "start", behavior: "instant" });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      } catch (_e) {}
+    });
   }
