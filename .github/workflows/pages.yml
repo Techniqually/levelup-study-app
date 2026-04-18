@@ -3,7 +3,7 @@ name: Deploy static site to Pages
 on:
   push:
     branches:
-      - main
+      - prod
   workflow_dispatch:
 
 permissions:
@@ -23,5 +23,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./web
           keep_files: false
