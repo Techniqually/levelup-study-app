@@ -80,6 +80,8 @@
     if (!err) return false;
     var c = String(err.code || "");
     if (c === "23505") return true;
+    var st = String(err.statusCode || err.status || "");
+    if (st === "409") return true;
     var m = (String(err.message || "") + " " + String(err.details || "")).toLowerCase();
     return m.indexOf("duplicate") !== -1 || m.indexOf("unique") !== -1 || m.indexOf("already exists") !== -1;
   }
