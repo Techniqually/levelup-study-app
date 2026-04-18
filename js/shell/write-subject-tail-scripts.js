@@ -43,6 +43,6 @@
     startApp();
   } else {
     document.addEventListener("levelup:config-ready", startApp);
-    loadChain(["js/shell/api-config.js", "js/shell/bootstrap.js"]);
+    loadChain(["js/shell/runtime-path.js", "js/shell/api-config.js", "js/shell/bootstrap.js"]);
   }
 })();
