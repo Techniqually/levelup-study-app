@@ -1,0 +1,14 @@
+{
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "directoryListing": false,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/hub", "destination": "/hub.html" },
+    { "source": "/parent", "destination": "/parent.html" },
+    { "source": "/subject", "destination": "/subject.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/study", "destination": "/study.html" },
+    { "source": "/dev-login", "destination": "/dev-login.html" }
+  ]
+}

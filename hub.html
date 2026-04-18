@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" data-levelup-build="2026-04-17-02">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Your subjects · LevelUp</title>
+  <meta name="description" content="Your LevelUp subject hub — continue studying Chemistry, Physics or Geography." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script async src="https://analytics.umami.is/script.js"
+          data-website-id="UMAMI_WEBSITE_ID"
+          data-domains="levelupstudyhub.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="js/shell/asset-version.js"></script>
+  <link rel="stylesheet" href="css/app-shell.css" />
+  <style>
+    .hub-hero {
+      padding: 32px 0 16px;
+    }
+    .hub-hero__row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .hub-hero h1 { margin: 0 0 6px; font-size: clamp(1.6rem, 4vw, 2.4rem); }
+    .hub-hero .lead { margin: 0; color: var(--ink-dim); max-width: 52ch; }
+
+    .streak-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: #fbbf24;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .subjects-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+      margin: 12px 0 24px;
+    }
+    @media (min-width: 720px) {
+      .subjects-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    }
+
+    .s-card {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+      background: var(--card);
+      transition: transform 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+      color: inherit;
+    }
+    .s-card:hover { transform: translateY(-3px); border-color: rgba(129, 140, 248, 0.5); box-shadow: var(--shadow); }
+
+    .s-card__hero {
+      position: relative;
+      height: 128px;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      color: #081024;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      font-size: 22px;
+      overflow: hidden;
+    }
+    .s-card__hero svg.pattern { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.25; }
+    .s-card--chemistry .s-card__hero { background: linear-gradient(135deg, #6ee7b7, #22d3ee); }
+    .s-card--physics   .s-card__hero { background: linear-gradient(135deg, #a5b4fc, #818cf8); color: #fff; }
+    .s-card--geography .s-card__hero { background: linear-gradient(135deg, #fda4af, #f472b6); color: #fff; }
+
+    .s-card__lock {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(8, 12, 30, 0.65);
+      color: #fff;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .s-card__lock svg { width: 12px; height: 12px; }
+
+    .s-card__body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px;
+      flex: 1;
+    }
+    .s-card__title { font-size: 1.05rem; font-weight: 700; margin: 0; }
+    .s-card__meta { color: var(--ink-muted); font-size: 13px; line-height: 1.5; }
+    .s-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .s-card__actions {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+    }
+
+    .s-card.is-locked .s-card__hero { filter: saturate(0.8) brightness(0.85); }
+    .s-card.is-entitled .s-card__lock { display: none; }
+
+    /* Per-subject mastery ring (top-left of hero). Driven by --pct (0..100). */
+    .s-card__ring {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: conic-gradient(#fff calc(var(--pct, 0) * 1%), rgba(0, 0, 0, 0.25) 0);
+      display: grid;
+      place-items: center;
+      color: #0b1020;
+      font-weight: 800;
+      font-size: 11px;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
+      transition: background 400ms ease;
+    }
+    .s-card__ring b {
+      background: #fff;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      letter-spacing: -0.02em;
+    }
+
+    /* "Continue" badge on the card the student was last on. */
+    .s-card__continue {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      backdrop-filter: blur(6px);
+    }
+    .s-card.is-continue { outline: 2px solid rgba(255, 255, 255, 0.35); }
+
+    /* Today's plan */
+    .hub-today {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px 18px;
+      margin: 0 0 20px;
+    }
+    .hub-today__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .hub-today h2 { margin: 0; font-size: 1rem; font-weight: 700; color: var(--ink); }
+    .hub-today__hint { color: var(--ink-muted); font-size: 12px; }
+    .hub-today__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .hub-today__item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--line);
+    }
+    .hub-today__item a { color: inherit; text-decoration: none; display: flex; gap: 10px; align-items: center; }
+    .hub-today__item .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--brand-grad);
+    }
+    .hub-today__item strong { color: var(--ink); font-weight: 600; }
+    .hub-today__item .meta { color: var(--ink-muted); font-size: 12px; }
+
+    /* Help card */
+    .help-card {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    @media (min-width: 720px) {
+      .help-card { grid-template-columns: 2fr 1fr; align-items: center; }
+    }
+    .help-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+    .help-card p { margin: 0; color: var(--ink-dim); line-height: 1.55; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="levelup-shell" data-page="hub"></div>
+
+  <main id="main" class="container">
+    <section class="hub-hero">
+      <div class="hub-hero__row">
+        <div>
+          <h1>Welcome back<span id="hub-welcome-name"></span>.</h1>
+          <p class="lead">Pick a subject to continue. Free topics always open — upgrade to unlock the full syllabus per subject.</p>
+        </div>
+        <div class="row" id="hub-hero-side" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="hub-today" class="hub-today" aria-label="Quick plan" hidden>
+      <div class="hub-today__head">
+        <h2>Next up</h2>
+        <span class="hub-today__hint" id="hub-today-hint">Quick wins from your recent activity.</span>
+      </div>
+      <ul class="hub-today__list" id="hub-today-list"></ul>
+    </section>
+
+    <section aria-label="Subjects" class="section--tight">
+      <div class="subjects-grid" id="subjects-grid">
+        <!-- ────────────── Chemistry ────────────── -->
+        <a class="s-card s-card--chemistry is-locked" data-subject="chemistry" href="subject.html?subject=chemistry" aria-label="O-Level Chemistry">
+          <div class="s-card__hero">
+            <svg class="pattern" viewBox="0 0 100 100" aria-hidden="true"><defs><pattern id="atoms" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="9" cy="9" r="2.2" fill="#061021"/></pattern></defs><rect width="100" height="100" fill="url(#atoms)"/></svg>
+            Chemistry
+            <span class="s-card__ring" data-role="mastery-ring" aria-hidden="true" style="--pct:0;"><b data-role="mastery-pct">0%</b></span>
+            <span class="s-card__lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg>Preview</span>
+            <span class="s-card__continue" data-role="continue-badge" hidden>Continue</span>
+          </div>
+          <div class="s-card__body">
+            <h2 class="s-card__title">O-Level Chemistry</h2>
+            <div class="s-card__meta">13 topics · Matter · Reactions · Organic · Earth</div>
+            <div class="s-card__tags">
+              <span class="badge badge--accent" data-role="free-badge">Topic 1 free</span>
+              <span class="badge badge--ok" data-role="full-badge" hidden>Full access</span>
+              <span class="badge">MOE syllabus</span>
+              <span class="badge">Boss battles</span>
+            </div>
+            <div class="s-card__actions">
+              <span class="dim" style="font-size:13px;" data-role="primary-state">Loading…</span>
+              <span class="text-grad" style="font-weight:700;font-size:14px;" data-role="primary-cta">Open →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- ────────────── Physics ────────────── -->
+        <a class="s-card s-card--physics is-locked" data-subject="physics" href="subject.html?subject=physics" aria-label="O-Level Physics">
+          <div class="s-card__hero">
+            <svg class="pattern" viewBox="0 0 100 100" aria-hidden="true"><path d="M0 50 Q25 10, 50 50 T100 50" stroke="#061021" stroke-width="1.2" fill="none"/><path d="M0 70 Q25 30, 50 70 T100 70" stroke="#061021" stroke-width="1.2" fill="none"/></svg>
+            Physics
+            <span class="s-card__ring" data-role="mastery-ring" aria-hidden="true" style="--pct:0;"><b data-role="mastery-pct">0%</b></span>
+            <span class="s-card__lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg>Preview</span>
+            <span class="s-card__continue" data-role="continue-badge" hidden>Continue</span>
+          </div>
+          <div class="s-card__body">
+            <h2 class="s-card__title">O-Level Physics</h2>
+            <div class="s-card__meta">~20 topics · Mechanics · Waves · Electricity · Modern</div>
+            <div class="s-card__tags">
+              <span class="badge badge--accent" data-role="free-badge">Topic 1 free</span>
+              <span class="badge badge--ok" data-role="full-badge" hidden>Full access</span>
+              <span class="badge">Worked solutions</span>
+              <span class="badge">XP shop</span>
+            </div>
+            <div class="s-card__actions">
+              <span class="dim" style="font-size:13px;" data-role="primary-state">Loading…</span>
+              <span class="text-grad" style="font-weight:700;font-size:14px;" data-role="primary-cta">Open →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- ────────────── Geography ────────────── -->
+        <a class="s-card s-card--geography is-locked" data-subject="geography" href="subject.html?subject=geography" aria-label="O-Level Geography">
+          <div class="s-card__hero">
+            <svg class="pattern" viewBox="0 0 100 100" aria-hidden="true"><path d="M5 80 L25 60 L45 75 L70 40 L95 60 L95 95 L5 95 Z" fill="#061021" opacity="0.35"/></svg>
+            Geography
+            <span class="s-card__ring" data-role="mastery-ring" aria-hidden="true" style="--pct:0;"><b data-role="mastery-pct">0%</b></span>
+            <span class="s-card__lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg>Preview</span>
+            <span class="s-card__continue" data-role="continue-badge" hidden>Continue</span>
+          </div>
+          <div class="s-card__body">
+            <h2 class="s-card__title">O-Level Geography</h2>
+            <div class="s-card__meta">9 topics · Tourism · Climate · Food · Living</div>
+            <div class="s-card__tags">
+              <span class="badge badge--accent" data-role="free-badge">Topic 1 free</span>
+              <span class="badge badge--ok" data-role="full-badge" hidden>Full access</span>
+              <span class="badge">Case studies</span>
+              <span class="badge">SEQs</span>
+            </div>
+            <div class="s-card__actions">
+              <span class="dim" style="font-size:13px;" data-role="primary-state">Loading…</span>
+              <span class="text-grad" style="font-weight:700;font-size:14px;" data-role="primary-cta">Open →</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="help-card" data-role="help-card">
+        <div data-role="help-card-copy">
+          <h3 data-role="help-card-title">New here? Start with Chemistry Topic 1.</h3>
+          <p data-role="help-card-body">Every subject includes a free preview topic with full notes, flashcards, quiz and written practice — no credit card. Upgrade any subject individually when you're ready to unlock the full syllabus.</p>
+        </div>
+        <div class="row" style="gap:8px;">
+          <a class="btn btn-primary" href="subject.html?subject=chemistry" data-role="help-card-primary">Open Chemistry free topic</a>
+          <a class="btn btn-outline" href="parent.html">Parent dashboard</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/shell/app-shell.js"></script>
+  <script src="js/shell/write-hub-tail-scripts.js"></script>
+</body>
+</html>

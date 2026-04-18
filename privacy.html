@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-levelup-build="2026-04-17-02">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Privacy policy · LevelUp</title>
+  <meta name="description" content="How LevelUp collects, uses, and protects your data." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="js/shell/asset-version.js"></script>
+  <link rel="stylesheet" href="css/app-shell.css" />
+  <style>
+    .legal { max-width: 780px; margin: 32px auto 56px; padding: 0 20px; color: var(--ink-dim); }
+    .legal h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); margin: 0 0 6px; color: var(--ink); }
+    .legal .updated { color: var(--ink-muted); font-size: 13px; margin: 0 0 24px; }
+    .legal h2 { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin: 26px 0 8px; }
+    .legal p, .legal li { line-height: 1.55; }
+    .legal ul { padding-left: 20px; }
+    .legal a { color: #7dd3fc; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="levelup-shell" data-page="privacy"></div>
+
+  <main id="main">
+    <section class="legal">
+      <h1>Privacy policy</h1>
+      <p class="updated">Last updated: April 17, 2026</p>
+
+      <p>LevelUp (“we”, “us”) builds a study hub for O-Level students. This
+      page explains what personal data we collect, how we use it, and the
+      choices you have. It is written for a PoC product — keep it honest and
+      boring. No dark patterns, no ad networks, no selling of your data.</p>
+
+      <h2>Who runs LevelUp</h2>
+      <p>LevelUp is operated by an individual developer in Singapore as a
+      pre-launch product. The contact email is
+      <a href="mailto:hello@levelup.local">hello@levelup.local</a>.</p>
+
+      <h2>Data we collect</h2>
+      <ul>
+        <li><strong>Account</strong>: your Google account identifier (name,
+          email, avatar URL) when you sign in with Google. We never see your
+          Google password.</li>
+        <li><strong>Study progress</strong>: XP ledger rows, topic mastery
+          stats, quiz answer history, shop purchases/coupons — used to
+          personalise your study and power the report.</li>
+        <li><strong>Billing</strong>: if you buy a subject, Stripe processes
+          the payment. We store your purchase reference and entitlement, but
+          card details never touch our servers.</li>
+        <li><strong>Diagnostics</strong>: minimal analytics events for page
+          views and error signals. No cross-site tracking.</li>
+      </ul>
+
+      <h2>What we do not do</h2>
+      <ul>
+        <li>We do not sell, rent, or trade your data to third parties.</li>
+        <li>We do not profile minors for advertising.</li>
+        <li>We do not build behavioural-advertising audiences.</li>
+      </ul>
+
+      <h2>Data we share</h2>
+      <p>We share data only with the sub-processors required to run the
+      product: Supabase (database, auth, storage), Stripe (payments), Resend
+      (transactional email), OpenAI / Gemini (only when you opt into an LLM
+      feature, and only with the text of that single request).</p>
+
+      <h2>How long we keep data</h2>
+      <p>We keep study progress for the life of your account. If you ask us
+      to delete your account, we delete your profile, entitlements, and
+      identifiable progress within 30 days. Anonymised aggregates may stay in
+      our analytics logs.</p>
+
+      <h2>Your rights</h2>
+      <p>You can request export or deletion of your account by emailing
+      <a href="mailto:hello@levelup.local">hello@levelup.local</a>. Under the
+      Singapore PDPA (and if you are in the EEA, the GDPR), you also have the
+      right to object to processing or restrict it.</p>
+
+      <h2>Cookies</h2>
+      <p>We use a small number of first-party cookies / local storage entries
+      to keep you signed in and remember your last subject. We do not use
+      tracking cookies from advertising networks.</p>
+
+      <h2>Children</h2>
+      <p>LevelUp is intended for students 13 and older. If you are under 16
+      in the EEA or under 13 elsewhere, a parent must create the account and
+      agree to this policy on your behalf.</p>
+
+      <h2>Changes</h2>
+      <p>If we materially change this policy we will update the date at the
+      top of the page and, for existing customers, post a notice on the
+      profile page before the change takes effect.</p>
+    </section>
+  </main>
+
+  <script src="js/shell/api-config.js"></script>
+  <script src="js/shell/bootstrap.js"></script>
+  <script src="js/shell/app-shell.js"></script>
+</body>
+</html>

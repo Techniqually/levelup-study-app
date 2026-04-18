@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-levelup-build="2026-04-17-02">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>LevelUp · Admin</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="js/shell/asset-version.js"></script>
+  <link rel="stylesheet" href="css/app-shell.css" />
+  <style>
+    .admin { max-width: 820px; margin: 24px auto 56px; padding: 0 20px; color: var(--ink-dim); }
+    .admin h1 { margin: 0 0 4px; font-size: clamp(1.5rem, 4vw, 1.9rem); color: var(--ink); }
+    .admin .subtitle { color: var(--ink-muted); font-size: 0.9rem; margin: 0 0 24px; }
+
+    .adm-warn {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: #fbbf24;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin: 0 0 20px;
+      font-size: 0.9rem;
+    }
+    .adm-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .adm-card h2 { margin: 0 0 12px; font-size: 1.02rem; color: var(--ink); font-weight: 700; }
+    .adm-card .hint { color: var(--ink-muted); font-size: 0.85rem; margin: -4px 0 12px; }
+    label { display: block; margin: 0 0 4px; font-size: 0.82rem; color: var(--ink-muted); }
+    input, select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      font: inherit;
+      font-size: 0.92rem;
+      margin: 0 0 10px;
+    }
+    input:focus, select:focus { outline: 2px solid var(--accent, #7dd3fc); border-color: var(--accent, #7dd3fc); }
+    .row3 { display: grid; gap: 8px; grid-template-columns: repeat(3, 1fr); }
+    .result {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      font-family: ui-monospace, Menlo, monospace;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      min-height: 40px;
+    }
+    .result.ok  { border-color: rgba(94, 234, 212, 0.4); color: #5eead4; }
+    .result.err { border-color: rgba(248, 113, 113, 0.4); color: #f87171; }
+    .sess {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.15);
+      font-size: 0.88rem;
+    }
+    .sess .who { font-weight: 700; color: var(--ink); }
+    .sess .role { padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .sess .role.ok { background: rgba(251, 191, 36, 0.18); color: #fbbf24; }
+    .sess .role.no { background: rgba(148, 163, 184, 0.18); color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="levelup-shell" data-page="hub"></div>
+
+  <main id="main">
+    <section class="admin">
+      <h1>Admin panel</h1>
+      <p class="subtitle">Manual operations for the PoC. All endpoints require either a signed-in admin (<code>profiles.role = 'admin'</code>) or the <code>X-Admin-Api-Key</code> header.</p>
+
+      <div class="adm-warn" id="adm-warn" hidden></div>
+
+      <div class="adm-card" id="adm-session-card">
+        <h2>Session</h2>
+        <div class="sess" id="adm-session">Checking session…</div>
+        <p class="hint" style="margin: 12px 0 0;">Requests below prefer your signed-in JWT. If you are not an admin user, fall back on the admin API key instead.</p>
+        <label style="margin-top:10px">Admin API key (optional fallback)</label>
+        <input id="api-key" type="password" placeholder="ADMIN_API_KEY" autocomplete="off" />
+      </div>
+
+      <div class="adm-card">
+        <h2>Link student to parent</h2>
+        <p class="hint">Adds a row to <code>parent_student_links</code> so the parent dashboard surfaces this student.</p>
+        <label>Parent user ID</label>
+        <input id="link-parent-id" placeholder="UUID" autocomplete="off" />
+        <label>Student user ID</label>
+        <input id="link-student-id" placeholder="UUID" autocomplete="off" />
+        <label>Label (optional)</label>
+        <input id="link-label" placeholder="e.g. Emma" autocomplete="off" />
+        <button class="btn btn-primary btn-sm" id="btn-link" type="button">Link student</button>
+        <div class="result" id="result-link">—</div>
+      </div>
+
+      <div class="adm-card">
+        <h2>Grant subject entitlement</h2>
+        <p class="hint">Upserts a <code>subject_entitlements</code> row. Use for comp accounts or manual trials. For Stripe-driven grants, the webhook handles this automatically.</p>
+        <label>Student user ID</label>
+        <input id="ent-student-id" placeholder="UUID" autocomplete="off" />
+        <div class="row3">
+          <div>
+            <label>Country</label>
+            <select id="ent-country">
+              <option value="SG" selected>SG</option>
+            </select>
+          </div>
+          <div>
+            <label>Class</label>
+            <select id="ent-class">
+              <option value="olevel" selected>O-Level</option>
+            </select>
+          </div>
+          <div>
+            <label>Subject</label>
+            <select id="ent-subject">
+              <option value="chemistry">chemistry</option>
+              <option value="physics">physics</option>
+              <option value="geography">geography</option>
+            </select>
+          </div>
+        </div>
+        <label>Expiry (ISO 8601, optional — blank = no expiry)</label>
+        <input id="ent-expiry" placeholder="2027-01-01T00:00:00Z" autocomplete="off" />
+        <button class="btn btn-primary btn-sm" id="btn-grant" type="button">Grant entitlement</button>
+        <div class="result" id="result-grant">—</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/shell/api-config.js"></script>
+  <script src="js/shell/bootstrap.js"></script>
+  <script src="js/shell/app-shell.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/shell/app-context.js"></script>
+  <script src="js/features/auth/auth-client.js"></script>
+  <script src="js/features/auth/auth-ui.js"></script>
+  <script>
+    (function () {
+      function $(id) { return document.getElementById(id); }
+      function setResult(id, ok, text) {
+        var el = $(id);
+        el.className = "result " + (ok ? "ok" : "err");
+        el.textContent = text;
+      }
+      function apiBase() {
+        if (window.LEVELUP_API_BASE) return String(window.LEVELUP_API_BASE).replace(/\/$/, "");
+        return "";
+      }
+      function apiKey() { return ($("api-key").value || "").trim(); }
+
+      var session = null;
+      var isAdmin = false;
+
+      async function loadSession() {
+        if (!window.LevelupAuth) return;
+        session = await window.LevelupAuth.getSession();
+        if (!session || !session.user) {
+          $("adm-session").innerHTML = '<span class="who">Not signed in</span> <span class="role no">Guest</span>'
+            + ' <a class="btn btn-outline btn-sm js-signin" href="#" style="margin-left:auto;">Sign in with Google</a>';
+          $("adm-warn").hidden = false;
+          $("adm-warn").textContent = "You are not signed in. Admin requests will only work if you provide the X-Admin-Api-Key fallback below.";
+          wireSigninLinks();
+          return;
+        }
+        var sb = window.LevelupAuth.getClient();
+        var roleQ = await sb.from("profiles").select("role").eq("user_id", session.user.id).maybeSingle();
+        isAdmin = !!(roleQ && roleQ.data && String(roleQ.data.role || "").toLowerCase() === "admin");
+        var name = (session.user.user_metadata && (session.user.user_metadata.full_name || session.user.user_metadata.name)) || session.user.email || "User";
+        $("adm-session").innerHTML =
+          '<span class="who">' + escapeHtml(name) + '</span>' +
+          '<span class="role ' + (isAdmin ? "ok" : "no") + '">' + (isAdmin ? "Admin" : "Not admin") + '</span>' +
+          '<span style="color:var(--ink-muted);font-size:12px;">' + escapeHtml(session.user.email || "") + '</span>';
+        if (!isAdmin) {
+          $("adm-warn").hidden = false;
+          $("adm-warn").textContent = "Your account does not have the admin role. Requests below will fail unless you also supply the X-Admin-Api-Key fallback.";
+        } else {
+          $("adm-warn").hidden = true;
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function wireSigninLinks() {
+        document.querySelectorAll(".js-signin").forEach(function (el) {
+          el.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (window.LevelupAuthUI && typeof window.LevelupAuthUI.openAuthModal === "function") {
+              window.LevelupAuthUI.openAuthModal();
+            }
+          });
+        });
+      }
+
+      async function callApi(path, body) {
+        var base = apiBase();
+        if (!base) throw new Error("API base URL is not configured");
+        var headers = { "Content-Type": "application/json" };
+        var key = apiKey();
+        if (key) headers["X-Admin-Api-Key"] = key;
+        if (session && session.access_token) headers["Authorization"] = "Bearer " + session.access_token;
+        var res = await fetch(base + path, { method: "POST", headers: headers, body: JSON.stringify(body) });
+        var data;
+        try { data = await res.json(); } catch (_) { data = { detail: res.statusText }; }
+        return { ok: res.ok, status: res.status, data: data };
+      }
+
+      $("btn-link").addEventListener("click", async function () {
+        var parentId = ($("link-parent-id").value || "").trim();
+        var studentId = ($("link-student-id").value || "").trim();
+        var label = ($("link-label").value || "").trim() || null;
+        if (!parentId || !studentId) { setResult("result-link", false, "Parent and student IDs are required."); return; }
+        setResult("result-link", true, "Sending…");
+        try {
+          var r = await callApi("/admin/link-student", { parent_user_id: parentId, student_user_id: studentId, label: label });
+          setResult("result-link", r.ok, JSON.stringify(r.data, null, 2));
+        } catch (e) { setResult("result-link", false, String(e)); }
+      });
+
+      $("btn-grant").addEventListener("click", async function () {
+        var studentId = ($("ent-student-id").value || "").trim();
+        var country = $("ent-country").value;
+        var klass = $("ent-class").value;
+        var subject = $("ent-subject").value;
+        var expiry = ($("ent-expiry").value || "").trim() || null;
+        if (!studentId) { setResult("result-grant", false, "Student ID is required."); return; }
+        setResult("result-grant", true, "Sending…");
+        try {
+          var r = await callApi("/admin/grant-subject-entitlement", {
+            student_user_id: studentId,
+            country_code: country,
+            class_code: klass,
+            subject_slug: subject,
+            access_to: expiry,
+          });
+          setResult("result-grant", r.ok, JSON.stringify(r.data, null, 2));
+        } catch (e) { setResult("result-grant", false, String(e)); }
+      });
+
+      document.addEventListener("levelup:config-ready", loadSession);
+      if (window.SUPABASE_URL) setTimeout(loadSession, 0);
+    })();
+  </script>
+</body>
+</html>
