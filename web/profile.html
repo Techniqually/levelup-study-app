@@ -115,12 +115,54 @@
     .pf-ent-row__badge.b-trial { background: rgba(251, 191, 36, 0.18); color: #fbbf24; }
     .pf-empty { color: var(--ink-dim); font-size: 14px; }
 
-    /* Lightweight study-report shell. Phase 7 will replace this body content
-       with the full redesigned report (per-subject goals, progress bars). */
+    /* Study-report UI: KPI strip, "today's goals", chapter mastery. */
     #report-body {
       display: grid;
       gap: 14px;
       color: var(--ink-dim);
+    }
+    #report-body .rs-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    @media (min-width: 620px) {
+      #report-body .rs-kpi-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    #report-body .rs-kpi {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    #report-body .rs-kpi strong {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    #report-body .rs-kpi span {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    #report-body .rs-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px 14px 4px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    #report-body .rs-card h3 {
+      margin: 0 0 4px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
     }
     #report-body .rs-row {
       display: grid;
@@ -129,6 +171,7 @@
       padding: 10px 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.15);
     }
     #report-body .rs-bar {
       grid-column: 1 / -1;
@@ -352,34 +395,110 @@
         var sb = window.LevelupAuth.getClient();
         if (!sb) return;
         try {
-          var q = await sb
-            .from("study_topic_stats")
-            .select("topic_id, mastery, seen, updated_at")
-            .eq("user_id", user.id)
-            .order("updated_at", { ascending: false })
-            .limit(40);
-          if (q.error || !Array.isArray(q.data) || q.data.length === 0) return;
-          var rows = q.data.filter(function (r) {
+          // Pull the three building blocks in parallel. Fail silently — the
+          // report panel already has a friendly empty state.
+          var since7d = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+          var startOfDay = new Date();
+          startOfDay.setHours(0, 0, 0, 0);
+          var sinceToday = startOfDay.toISOString();
+          var results = await Promise.all([
+            sb.from("study_topic_stats")
+              .select("topic_id, mastery, seen, updated_at, subject_id")
+              .eq("user_id", user.id)
+              .order("updated_at", { ascending: false })
+              .limit(60),
+            sb.from("study_xp_ledger")
+              .select("delta, created_at, topic_id")
+              .eq("user_id", user.id)
+              .gte("created_at", since7d)
+              .order("created_at", { ascending: false })
+              .limit(500),
+          ]);
+          var topicRows = (results[0] && Array.isArray(results[0].data) ? results[0].data : []).filter(function (r) {
             return Number(r.seen || 0) > 0 || Number(r.mastery || 0) > 0;
           });
-          if (rows.length === 0) return;
+          var xpRows = results[1] && Array.isArray(results[1].data) ? results[1].data : [];
+
+          // KPIs
+          var xpToday = 0;
+          var xpWeek = 0;
+          var topicsToday = {};
+          xpRows.forEach(function (r) {
+            var ts = r.created_at ? new Date(r.created_at).getTime() : 0;
+            var d = Number(r.delta || 0);
+            if (d <= 0) return;
+            xpWeek += d;
+            if (ts >= startOfDay.getTime()) {
+              xpToday += d;
+              if (r.topic_id) topicsToday[r.topic_id] = true;
+            }
+          });
+          var topicsTodayCount = Object.keys(topicsToday).length;
+          var avgMastery = 0;
+          if (topicRows.length) {
+            var sum = topicRows.reduce(function (a, r) { return a + Number(r.mastery || 0); }, 0);
+            avgMastery = Math.round(sum / topicRows.length);
+          }
+
+          // Render. If absolutely nothing to show, keep the empty state.
+          if (!xpWeek && !topicRows.length) return;
           $("pf-report-empty").hidden = true;
-          var html = rows
-            .map(function (r) {
-              var pct = Math.max(0, Math.min(100, Math.round(Number(r.mastery || 0))));
-              var when = r.updated_at ? fmtDate(r.updated_at) : "";
-              return (
-                '<div class="rs-row">' +
-                '<div><strong>' + escapeHtml(r.topic_id) + '</strong>' +
-                '<div class="meta" style="color:var(--ink-muted);font-size:12px;">Last studied ' + escapeHtml(when) + ' · seen ' + Number(r.seen || 0) + '×</div>' +
+
+          // "Today's goals": a lightweight, non-configurable target pair that
+          // nudges daily habit (25 XP, 1 chapter). Phase 8/9 can make these
+          // user-configurable via profile preferences.
+          var GOAL_XP_TODAY = 25;
+          var GOAL_TOPICS_TODAY = 1;
+          var xpPct = Math.max(0, Math.min(100, Math.round((xpToday / GOAL_XP_TODAY) * 100)));
+          var topicPct = Math.max(0, Math.min(100, Math.round((topicsTodayCount / GOAL_TOPICS_TODAY) * 100)));
+
+          var goalsHtml =
+            '<div class="rs-card"><h3>Today\u2019s goals</h3>' +
+              '<div class="rs-row">' +
+                '<div><strong>Earn ' + GOAL_XP_TODAY + ' XP</strong>' +
+                  '<div class="meta" style="color:var(--ink-muted);font-size:12px;">' + xpToday + ' / ' + GOAL_XP_TODAY + ' XP today</div>' +
                 '</div>' +
-                '<div style="text-align:right;font-weight:700;">' + pct + '%</div>' +
-                '<div class="rs-bar"><i style="width:' + pct + '%"></i></div>' +
-                '</div>'
-              );
-            })
-            .join("");
-          $("report-body").innerHTML = html;
+                '<div style="text-align:right;font-weight:700;">' + xpPct + '%</div>' +
+                '<div class="rs-bar"><i style="width:' + xpPct + '%"></i></div>' +
+              '</div>' +
+              '<div class="rs-row">' +
+                '<div><strong>Touch ' + GOAL_TOPICS_TODAY + ' chapter</strong>' +
+                  '<div class="meta" style="color:var(--ink-muted);font-size:12px;">' + topicsTodayCount + ' / ' + GOAL_TOPICS_TODAY + ' chapters today</div>' +
+                '</div>' +
+                '<div style="text-align:right;font-weight:700;">' + topicPct + '%</div>' +
+                '<div class="rs-bar"><i style="width:' + topicPct + '%"></i></div>' +
+              '</div>' +
+            '</div>';
+
+          var kpiHtml =
+            '<div class="rs-kpi-row">' +
+              '<div class="rs-kpi"><strong>' + xpToday.toLocaleString() + '</strong><span>XP today</span></div>' +
+              '<div class="rs-kpi"><strong>' + xpWeek.toLocaleString() + '</strong><span>XP this week</span></div>' +
+              '<div class="rs-kpi"><strong>' + topicRows.length + '</strong><span>Topics touched</span></div>' +
+              '<div class="rs-kpi"><strong>' + avgMastery + '%</strong><span>Avg mastery</span></div>' +
+            '</div>';
+
+          // Per-topic progress (filter empty, cap to the top 20 by mastery)
+          var topicProgressHtml = topicRows.length
+            ? '<div class="rs-card"><h3>Chapter mastery</h3>' +
+              topicRows.slice(0, 20).map(function (r) {
+                var pct = Math.max(0, Math.min(100, Math.round(Number(r.mastery || 0))));
+                var when = r.updated_at ? fmtDate(r.updated_at) : "";
+                var label = r.subject_id ? r.subject_id + " \u00b7 T" + r.topic_id : "T" + r.topic_id;
+                return (
+                  '<div class="rs-row">' +
+                    '<div><strong>' + escapeHtml(label) + '</strong>' +
+                      '<div class="meta" style="color:var(--ink-muted);font-size:12px;">Last studied ' + escapeHtml(when) + ' \u00b7 seen ' + Number(r.seen || 0) + '\u00d7</div>' +
+                    '</div>' +
+                    '<div style="text-align:right;font-weight:700;">' + pct + '%</div>' +
+                    '<div class="rs-bar"><i style="width:' + pct + '%"></i></div>' +
+                  '</div>'
+                );
+              }).join("") +
+              '</div>'
+            : "";
+
+          $("report-body").innerHTML = kpiHtml + goalsHtml + topicProgressHtml;
         } catch (_e) {}
       }
 
