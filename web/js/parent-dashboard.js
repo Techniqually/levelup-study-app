@@ -72,7 +72,11 @@
     if (expiry && new Date(expiry).getTime() < Date.now()) {
       return "<span class='chip locked'>Expired " + fmtDate(expiry) + "</span>";
     }
-    var label = ents.indexOf("olevel_all") !== -1 ? "All subjects" : ents.join(", ");
+    // Entitlements are now subject slugs from public.subject_entitlements
+    // (e.g. ["chemistry","physics","geography"]). All 3 → friendlier label.
+    var label = ents.length >= 3 ? "All subjects" : ents
+      .map(function (s) { return String(s || "").charAt(0).toUpperCase() + String(s || "").slice(1); })
+      .join(", ");
     var exStr = expiry ? " · expires " + fmtDate(expiry) : " · no expiry";
     return "<span class='chip ok'>" + esc(label) + esc(exStr) + "</span>";
   }

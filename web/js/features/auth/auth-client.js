@@ -2,11 +2,6 @@
   var client = null;
   var entitlementsCache = null;
   var cachedForUserId = "";
-  var ENTITLEMENT_MAP = {
-    chemistry: "olevel_chem",
-    physics: "olevel_phys",
-    geography: "olevel_geo",
-  };
 
   function getSupabaseUrl() {
     return (
@@ -82,6 +77,8 @@
     };
   }
 
+  // Returns structured entitlement rows: { country_code, class_code, subject_slug, access_to }.
+  // Cached in entitlementsCache (per-user). Source: my_subject_entitlements() RPC.
   async function fetchEntitlements(forceRefresh) {
     var sb = getClient();
     if (!sb) return [];
@@ -89,23 +86,27 @@
     var uid = session && session.user && session.user.id ? String(session.user.id) : "";
     if (!uid) return [];
     if (!forceRefresh && entitlementsCache && cachedForUserId === uid) return entitlementsCache.slice();
-    var q = await sb
-      .from("user_entitlements")
-      .select("entitlements, access_to")
-      .eq("user_id", uid)
-      .maybeSingle();
-    if (q.error || !q.data) {
+    var q = await sb.rpc("my_subject_entitlements");
+    if (q.error || !Array.isArray(q.data)) {
       entitlementsCache = [];
       cachedForUserId = uid;
       return [];
     }
-    var list = Array.isArray(q.data.entitlements) ? q.data.entitlements : [];
-    if (q.data.access_to && new Date(q.data.access_to).getTime() < Date.now()) {
-      list = []; // expired
-    }
-    entitlementsCache = list.map(function (x) {
-      return String(x);
-    });
+    var now = Date.now();
+    entitlementsCache = q.data
+      .filter(function (r) {
+        if (!r || !r.subject_slug) return false;
+        if (r.access_to && new Date(r.access_to).getTime() < now) return false;
+        return true;
+      })
+      .map(function (r) {
+        return {
+          country_code: String(r.country_code || ""),
+          class_code: String(r.class_code || ""),
+          subject_slug: String(r.subject_slug || ""),
+          access_to: r.access_to || null,
+        };
+      });
     cachedForUserId = uid;
     return entitlementsCache.slice();
   }
@@ -113,10 +114,11 @@
   async function isSubjectEntitled(subjectId) {
     var sid = String(subjectId || "").toLowerCase();
     if (!sid) return false;
-    var needed = ENTITLEMENT_MAP[sid];
-    if (!needed) return false;
     var ents = await fetchEntitlements(false);
-    return ents.indexOf("olevel_all") !== -1 || ents.indexOf(needed) !== -1;
+    for (var i = 0; i < ents.length; i++) {
+      if (ents[i].subject_slug === sid) return true;
+    }
+    return false;
   }
 
   async function requireSession() {
