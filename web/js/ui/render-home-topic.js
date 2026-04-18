@@ -219,8 +219,16 @@ function renderHome() {
     requestAnimationFrame(function () {
       try {
         var hdr = document.querySelector(".topic-header");
-        if (hdr && typeof hdr.scrollIntoView === "function") {
-          hdr.scrollIntoView({ block: "start", behavior: "instant" });
+        if (hdr) {
+          var headerH = 0;
+          try {
+            var cssH = getComputedStyle(document.documentElement).getPropertyValue("--header-h");
+            headerH = parseFloat(cssH) || 0;
+          } catch (_e0) {}
+          var dock = document.getElementById("dock");
+          var dockH = dock && !dock.hidden ? dock.getBoundingClientRect().height : 0;
+          var top = window.scrollY + hdr.getBoundingClientRect().top - headerH - dockH - 8;
+          window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
         } else {
           window.scrollTo(0, 0);
         }

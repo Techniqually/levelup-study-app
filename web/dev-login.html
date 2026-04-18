@@ -93,11 +93,18 @@
       var { data: { user } } = await client().auth.getUser();
       if (!user) { out("Not signed in. Sign in first."); return; }
       out(
+        "Entitlements are stored in public.subject_entitlements (legacy user_entitlements.entitlements[] was removed).\n" +
         "Run this in your terminal (local Supabase):\n\n" +
         "docker exec -i supabase_db_Olevel-study-app psql -U postgres -d postgres <<SQL\n" +
-        "insert into public.user_entitlements (user_id, entitlements) values\n" +
-        "  ('" + user.id + "', ARRAY['olevel_all'])\n" +
-        "on conflict (user_id) do update set entitlements = excluded.entitlements;\n" +
+        "insert into public.subject_entitlements\n" +
+        "  (user_id, country_code, class_code, subject_slug, access_from, access_to, source)\n" +
+        "values\n" +
+        "  ('" + user.id + "', 'sg', 'olevel', '__all__', now(), null, 'dev_login')\n" +
+        "on conflict (user_id, country_code, class_code, subject_slug)\n" +
+        "  do update set\n" +
+        "    access_from = excluded.access_from,\n" +
+        "    access_to   = excluded.access_to,\n" +
+        "    source      = excluded.source;\n" +
         "SQL\n\n" +
         "Your user_id is: " + user.id
       );

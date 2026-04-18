@@ -133,7 +133,7 @@
     if (!sid) return false;
     var ents = await fetchEntitlements(false);
     for (var i = 0; i < ents.length; i++) {
-      if (ents[i].subject_slug === sid) return true;
+      if (ents[i].subject_slug === sid || ents[i].subject_slug === "__all__") return true;
     }
     return false;
   }
