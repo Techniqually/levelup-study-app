@@ -9,8 +9,8 @@
  *   new value from the fresh HTML parse.
  *
  * Where to bump (production):
- *   1) Set `data-levelup-build` on `<html>` in **subject.html**, **index.html**, and **parent.html**
- *      (keep the same value on all three).
+ *   1) Set `data-levelup-build` on `<html>` in **subject.html**, **hub.html**, **parent.html**,
+ *      **index.html**, etc. (keep the same value on shipped entrypoints).
  *   2) Keep the fallback string below in sync for edge cases (no attribute, file://, tests).
  *
  * Local dev: on localhost / 127.0.0.1 we use UTC `YYYYMMDD-dev` unless `APP_VERSION` or
@@ -33,5 +33,5 @@
     g.APP_VERSION = new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-dev";
     return;
   }
-  g.APP_VERSION = "2026-04-17-02";
+  g.APP_VERSION = "2026-04-19-01";
 })(window);
