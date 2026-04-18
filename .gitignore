@@ -8,3 +8,5 @@ config.toml
 .env.prod
 .env.local
 .env.dev
+supabase/.temp/
+supabase/.branches/
