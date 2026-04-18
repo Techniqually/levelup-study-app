@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-levelup-build="2026-04-17-02">
+<html lang="en" data-levelup-build="2026-04-18-01">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -87,10 +87,11 @@
           <button type="button" class="btn" id="btn-shop-refresh">Refresh</button>
           <span class="hint" id="shop-sync-status">Not synced yet.</span>
         </div>
-        <p class="hint" style="margin-top:0">Spend XP on rewards. Show the coupon to your parent to claim.</p>
+        <p class="shop-lead hint">Spend XP on rewards. Show the coupon to your parent to claim.</p>
         <div class="shop-layout">
           <div class="shop-rewards-col">
-            <div id="shop-rewards-list"></div>
+            <div id="shop-summary" class="shop-summary" aria-live="polite"></div>
+            <div id="shop-rewards-list" class="shop-rewards-list"></div>
           </div>
           <div class="shop-coupons-col">
             <h3 class="shop-sub" id="shop-coupons-heading">My coupons today</h3>
