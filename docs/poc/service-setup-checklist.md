@@ -113,6 +113,50 @@ The `redirect_uri` Google sees is always the Supabase callback, not your web app
 | `redirect_uri_mismatch` Google error | Client ID doesn't have the Supabase callback URL whitelisted. |
 | `provider not enabled` | `[auth.external.google] enabled = false` or missing secret. |
 | Logged in but subjects stay locked | Working as designed — user has no `user_entitlements` row. Use `admin.html` to grant for testing. |
+| **Prod login redirects to `http://localhost:3000/#access_token=...`** | **Supabase cloud project still has `SITE_URL = http://localhost:3000`.** Supabase _always_ falls back to `SITE_URL` whenever the requested `redirect_to` is not in the allowlist. **Fix it in the dashboard** (see §2.6). Changing client code alone will not help. |
+
+---
+
+### 2.6 Production OAuth URL configuration (hosted Supabase)
+
+**This is the single most common deployment trip-up.** If you ever see the browser land back on `http://localhost:3000/#access_token=…` after Google sign-in on production, _only_ the Supabase dashboard can fix it.
+
+Open **hosted Supabase → Project → Authentication → URL Configuration** and set:
+
+- **Site URL** (singular — used as the fallback redirect):
+
+  ```
+  https://techniqually.github.io/levelup-study-app/
+  ```
+
+  Replace with your own github.io / custom-domain prod root when you deploy somewhere else.
+
+- **Redirect URLs** (the allowlist — each entry is a glob):
+
+  ```
+  https://techniqually.github.io/levelup-study-app/**
+  http://localhost:3000/**
+  http://127.0.0.1:3000/**
+  ```
+
+  The `**` wildcards cover `hub.html`, `subject.html`, `pricing.html` etc.
+
+Then **Authentication → Providers → Google**:
+
+- Enabled = on.
+- Client ID / secret from Google Cloud Console (same "Web application" client that is authorized to redirect back to `https://<project-ref>.supabase.co/auth/v1/callback`).
+
+Verify after saving:
+
+```bash
+# Should print your production hub URL, NOT localhost:3000
+curl -s -X POST "https://<your-project-ref>.supabase.co/auth/v1/authorize?provider=google&redirect_to=https%3A%2F%2Ftechniqually.github.io%2Flevelup-study-app%2Fhub.html" \
+  -H "apikey: <anon key>" -o /dev/null -w "%{redirect_url}\n"
+```
+
+If the response URL still contains `localhost`, your site_url / allowlist is wrong — re-check the Dashboard.
+
+**Client-side guard (already in the repo, FYI):** `web/js/features/auth/auth-client.js` refuses to pass a `localhost` redirect when running on a non-localhost hostname, and `web/js/shell/runtime-path.js` clears stale `SUPABASE_URL`s out of `localStorage` on prod hosts. These guards only help if you misconfigure the client — they cannot force a correctly configured Supabase project past a wrong dashboard setting.
 
 ---
 

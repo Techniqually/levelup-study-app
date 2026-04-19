@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-levelup-build="2026-04-17-02">
+<html lang="en" data-levelup-build="2026-04-19-02">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -269,7 +269,10 @@
       if (!t) return;
       e.preventDefault();
       if (window.LevelupAuthUI && typeof window.LevelupAuthUI.openAuthModal === "function") {
-        window.LevelupAuthUI.openAuthModal({ redirectTo: window.location.href });
+        var redirectTo = window.LevelupPath && typeof window.LevelupPath.pageHref === "function"
+          ? window.LevelupPath.pageHref("hub.html")
+          : window.location.href;
+        window.LevelupAuthUI.openAuthModal({ redirectTo: redirectTo });
       }
       if (window.LevelupShell && typeof window.LevelupShell.closeDrawer === "function") {
         window.LevelupShell.closeDrawer();

@@ -247,6 +247,14 @@
     if (!host) return;
     var page = host.getAttribute("data-page") || "landing";
 
+    // Expose the mounted page + "has header" marker on <body> so CSS can offset
+    // content without relying on :has() (older mobile WebViews / Samsung Internet).
+    try {
+      document.body.classList.add("levelup-has-header");
+      document.body.classList.add("levelup-page-" + page);
+      document.body.setAttribute("data-levelup-page", page);
+    } catch (_e) {}
+
     var h = buildHeader(page);
     var d = buildDrawer(page);
     host.appendChild(h.header);

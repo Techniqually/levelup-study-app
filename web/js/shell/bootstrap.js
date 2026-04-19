@@ -21,10 +21,33 @@
     document.dispatchEvent(new CustomEvent('levelup:config-ready'));
   }
 
+  function warnIfMisconfigured(apiBase) {
+    try {
+      var path = window.LevelupPath || {};
+      var onDev = typeof path.isDevHostname === "function" ? path.isDevHostname() : false;
+      var supaUrl = window.SUPABASE_URL || localStorage.getItem("SUPABASE_URL") || "";
+      var isLocalSupa = typeof path.isLocalSupabaseUrl === "function" ? path.isLocalSupabaseUrl(supaUrl) : false;
+      if (!onDev && isLocalSupa) {
+        console.error(
+          "[LevelUp] Production host is using a LOCAL Supabase URL (" + supaUrl +
+          "). Clear localStorage['SUPABASE_URL' / 'SUPABASE_ANON_KEY'] and ensure the API at " +
+          apiBase + "/config returns the cloud project."
+        );
+      }
+      if (!onDev && /^http:\/\/(localhost|127\.)/i.test(String(apiBase))) {
+        console.error(
+          "[LevelUp] Production host is pointed at a LOCAL API base (" + apiBase +
+          "). Set the `API_BASE_URL` GitHub Actions variable to the deployed API URL."
+        );
+      }
+    } catch (_e) {}
+  }
+
   function runBootstrap(apiBase) {
     if (window.LevelupPath && typeof window.LevelupPath.clearStaleSupabaseLocalCache === "function") {
       window.LevelupPath.clearStaleSupabaseLocalCache();
     }
+    warnIfMisconfigured(apiBase);
     var cached = localStorage.getItem("SUPABASE_URL");
     if (cached) {
       // Already have config — use immediately, refresh in background
