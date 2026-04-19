@@ -51,8 +51,10 @@ body {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   position: sticky;
-  /* Sit below the global site-header (defined in app-shell.css). */
-  top: var(--header-h, 64px);
+  /* Sit below the global site-header (defined in app-shell.css). On iOS notch
+   * devices the header is pushed down by env(safe-area-inset-top), so the
+   * sticky top offset must include the same amount to avoid overlap. */
+  top: calc(var(--header-h, 64px) + env(safe-area-inset-top, 0px));
   z-index: 30;
 }
 

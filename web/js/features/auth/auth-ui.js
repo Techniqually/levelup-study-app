@@ -114,7 +114,10 @@
         if (lbl) lbl.textContent = "Redirecting to Google…";
         setErr("");
         try {
-          await global.LevelupAuth.signInWithGoogle(opts.redirectTo || global.location.href);
+          var fallback = (global.LevelupPath && typeof global.LevelupPath.postAuthRedirectUrl === "function")
+            ? global.LevelupPath.postAuthRedirectUrl("hub.html")
+            : global.location.href;
+          await global.LevelupAuth.signInWithGoogle(opts.redirectTo || fallback);
           done({ action: "oauth" });
         } catch (e) {
           btn.disabled = false;
