@@ -458,7 +458,10 @@
     btnGoogle.addEventListener("click", function () {
       if (!window.LevelupAuth) return;
       if (authError) authError.hidden = true;
-      window.LevelupAuth.signInWithGoogle(window.location.href).catch(function (e) {
+      var redirectTo = window.LevelupPath && typeof window.LevelupPath.pageHref === "function"
+        ? window.LevelupPath.pageHref("parent.html")
+        : window.location.href;
+      window.LevelupAuth.signInWithGoogle(redirectTo).catch(function (e) {
         if (authError) {
           authError.textContent = "Sign-in error: " + ((e && e.message) || String(e));
           authError.hidden = false;

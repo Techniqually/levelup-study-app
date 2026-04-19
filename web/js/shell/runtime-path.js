@@ -52,10 +52,25 @@
     } catch (_e) {}
   }
 
+  /**
+   * Canonical post-OAuth landing URL for a page. Always deployment-aware:
+   * returns `<origin><base>hub.html` for prod (github.io project site), dev
+   * localhost, or any static server in a subfolder.
+   *
+   * If Supabase's project `site_url` / `additional_redirect_urls` is still
+   * pinned to localhost, Supabase will IGNORE whatever redirectTo we pass and
+   * fall back to site_url. That cannot be fixed from the client — see
+   * docs/poc/service-setup-checklist.md §2.6 "Production OAuth URL config".
+   */
+  function postAuthRedirectUrl(fileName) {
+    return pageHref(fileName || "hub.html");
+  }
+
   global.LevelupPath = {
     isDevHostname: isDevHostname,
     isLocalSupabaseUrl: isLocalSupabaseUrl,
     pageHref: pageHref,
+    postAuthRedirectUrl: postAuthRedirectUrl,
     clearStaleSupabaseLocalCache: clearStaleSupabaseLocalCache,
   };
 })(window);
