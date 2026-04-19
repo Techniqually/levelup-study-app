@@ -41,12 +41,30 @@
 
   // Password auth removed for commercial PoC (Google-only)
 
+  function resolveRedirectTo(requested) {
+    var req = String(requested || "").trim();
+    var loc = global.location || {};
+    var host = String(loc.hostname || "");
+    var isDev = host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+    // Guard: if the caller passed a localhost URL but we're on a prod host,
+    // drop it. Otherwise Supabase echoes back a localhost redirect target that
+    // will never match a correctly configured prod allowlist.
+    if (req && /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?/i.test(req) && !isDev) {
+      req = "";
+    }
+    if (!req && global.LevelupPath && typeof global.LevelupPath.postAuthRedirectUrl === "function") {
+      try { req = global.LevelupPath.postAuthRedirectUrl("hub.html"); } catch (_e) { req = ""; }
+    }
+    return req || global.location.href;
+  }
+
   async function signInWithGoogle(redirectTo) {
     var sb = getClient();
     if (!sb) throw new Error("Supabase client unavailable.");
+    var target = resolveRedirectTo(redirectTo);
     var res = await sb.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: redirectTo || global.location.href },
+      options: { redirectTo: target },
     });
     if (res.error) throw res.error;
     return res.data;
