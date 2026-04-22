@@ -25,18 +25,26 @@
                 "Plastics persist; **recycling** codes; **biodegradable** vs durable.",
                 "Microplastics environmental issue."
             ]
+        },
+        {
+            "title": "Addition vs Condensation — Quick Compare",
+            "points": [
+                "**Addition**: monomer has **C=C** (alkene); π bond opens; **no small molecule released**; repeat unit = monomer atoms.",
+                "**Condensation**: monomers have 2 functional groups; **small molecule lost** (H₂O or HCl per bond formed).",
+                "**Nylon**: diamine + diacid/diacyl chloride → **amide links** (–CONH–).",
+                "**Polyester (PET/Terylene)**: diol + diacid → **ester links** (–COO–).",
+                "Condensation repeat unit contains **fewer atoms** than monomers combined."
+            ]
+        },
+        { 
+            "title": "Deducing Monomers from Polymers", 
+            "points": [ 
+                " **Addition Polymer**: Locate the 2-carbon backbone of the repeat unit. Remove the trailing bonds and place a **double bond (C=C)** between those two carbons.",
+                " **Condensation Polymer (Polyester)**: Break the ester link (–COO–) down the middle. Add an **–OH** to the C=O part (making a dicarboxylic acid) and an **–H** to the –O– part (making a diol).",
+                " **Condensation Polymer (Polyamide/Nylon)**: Break the amide link (–CONH–). Add an **–OH** to the C=O part (making a dicarboxylic acid) and an **–H** to the –NH– part (making a diamine)."
+            ] 
         }
-    ,
-    {
-        "title": "Addition vs Condensation — Quick Compare",
-        "points": [
-            "**Addition**: monomer has **C=C** (alkene); π bond opens; **no small molecule released**; repeat unit = monomer atoms.",
-            "**Condensation**: monomers have 2 functional groups; **small molecule lost** (H₂O or HCl per bond formed).",
-            "**Nylon**: diamine + diacid/diacyl chloride → **amide links** (–CONH–).",
-            "**Polyester (PET/Terylene)**: diol + diacid → **ester links** (–COO–).",
-            "Condensation repeat unit contains **fewer atoms** than monomers combined."
-        ]
-    }],
+    ],
     infographics: [
       { image: "data/subjects/chemistry/images/sustainable-02-polymers.jpg", caption: "Addition and condensation polymers + recycling context" }
     ],
@@ -78,14 +86,6 @@
             "back": "Synthetic polyester fibre."
         },
         {
-            "front": "Plasticiser?",
-            "back": "Softens PVC chains."
-        },
-        {
-            "front": "Cross-linking effect?",
-            "back": "Harder, less flexible."
-        },
-        {
             "front": "Recycling symbol meaning?",
             "back": "Resin identification — sorting."
         },
@@ -116,21 +116,21 @@
     {id:"chem-T18-010",question:"Natural polymer:",options:["PVC","Cellulose","Polyethene","Nylon"],correctIndex:1,explanation:"Plant polymer."},
     {id:"chem-T18-011",question:"Why recycle plastics:",options:["Reduce landfill and crude oil use","Increase waste","No reason","Make heavier"],correctIndex:0,explanation:"Sustainability."},
     {id:"chem-T18-012",question:"PTFE monomer:",options:["Tetrafluoroethene","Ethene","Propene","Styrene"],correctIndex:0,explanation:"CF₂=CF₂."},
-    {id:"chem-T18-013",question:"Plasticiser in PVC:",options:["Increases chain sliding","Cross-links fully","Removes Cl","Only colour"],correctIndex:0,explanation:"Flexibility."},
+    {id:"chem-T18-013",question:"A polymer has the repeat unit –[CH₂–CH(CH₃)]–. What is the name and molecular formula of the monomer?",options:["Ethene, C₂H₄","Propene, C₃H₆","Butene, C₄H₈","Methylpropane, C₄H₁₀"],correctIndex:1,explanation:"Placing a double bond between the two backbone carbons gives CH₂=CH(CH₃), which is propene (C₃H₆)."},
     {id:"chem-T18-014",question:"Biodegradable plastic (ideal):",options:["Never breaks","Microbes break down","Infinite life","Metal"],correctIndex:1,explanation:"Design goal."},
     {id:"chem-T18-015",question:"Polypeptide (protein) is:",options:["Addition polymer of ethene","Condensation of amino acids","Ionic crystal","Only fat"],correctIndex:1,explanation:"Amide links."},
-    {id:"chem-T18-016",question:"Transesterification in biodiesel:",options:["Ester exchange","Addition","Only cracking","Neutralisation"],correctIndex:0,explanation:"Context."},
+    {id:"chem-T18-016",question:"A polymer is formed by reacting HO–CH₂CH₂–OH with HOOC–C₆H₄–COOH. What type of polymer is this and what small molecule is eliminated?",options:["Polyamide, HCl","Polyester, H₂O","Addition polymer, H₂O","Polyester, CO₂"],correctIndex:1,explanation:"A diol and a dicarboxylic acid undergo condensation polymerisation to form a polyester, eliminating water molecules."},
     {id:"chem-T18-017",question:"Monomer count in repeat unit of poly(ethene):",options:["2","1 (–CH₂–CH₂–) derived from 1 ethene","3","0"],correctIndex:1,explanation:"One monomer unit."},
     {id:"chem-T18-018",question:"Condensation needs:",options:["Always UV","Two functional monomers often","Only heat no monomer","Diamond"],correctIndex:1,explanation:"Two sites."},
     {id:"chem-T18-019",question:"Foam polystyrene:",options:["Gas pockets in polymer","Pure metal","Liquid only","Salt"],correctIndex:0,explanation:"Expanded PS."},
-    {id:"chem-T18-020",question:"Elastomer:",options:["Rigid glass","Cross-linked rubber — stretches","Only ceramic","Gas"],correctIndex:1,explanation:"Elastic."},
-    {id:"chem-T18-021",question:"HDPE vs LDPE:",options:["Same branching","Different densities/branching","Not polymers","Only gases"],correctIndex:1,explanation:"Structure."},
+    {id:"chem-T18-020",question:"The molar mass of chloroethene (CH₂=CHCl) is 62.5 g/mol. A single chain of poly(chloroethene) has a molar mass of 62,500 g/mol. How many monomer units are in this chain?",options:["500","1000","2000","Need more information"],correctIndex:1,explanation:"In addition polymerisation, no mass is lost. Number of monomers = Total Mass ÷ Monomer Mass = 62500 ÷ 62.5 = 1000."},
+    {id:"chem-T18-021",question:"A key advantage of biodegradable polymers is:",options:["They always have higher strength","They reduce long-term plastic persistence in the environment","They are always cheaper to manufacture","They cannot burn"],correctIndex:1,explanation:"Biodegradable polymers can be broken down by microbes, helping to reduce the accumulation of persistent plastic waste."},
     {id:"chem-T18-022",question:"Depolymerisation:",options:["Break polymer to monomers","Make longer chains","Only physical","Ionise"],correctIndex:0,explanation:"Reverse."},
     {id:"chem-T18-023",question:"Green polymer goal:",options:["Non-recyclable","Renewable feedstock + recyclable","Only black colour","Heavy metal only"],correctIndex:1,explanation:"Sustainable chemistry."},
-    {id:"chem-T18-024",question:"Kevlar® type:",options:["Polyamide fibre","Polyethene","Salt","Alkane"],correctIndex:0,explanation:"Strong aromatic polyamide."},
-    {id:"chem-T18-025",question:"Phthalates context:",options:["Plasticisers","Monomers for PE","Catalysts only","Fuels"],correctIndex:0,explanation:"Softeners."},
+    {id:"chem-T18-024",question:"Which strategy best supports a circular economy in polymers?",options:["Single-use mixed plastics","Designing for reuse and easier chemical recycling","Landfilling all plastics","Increasing virgin monomer use"],correctIndex:1,explanation:"Designing products so that their materials can be easily recovered and reused reduces reliance on crude oil and minimises waste."},
+    
     {id:"chem-T18-026",question:"Combustion of PVC releases:",options:["Only N₂","HCl among products","No gases","He only"],correctIndex:1,explanation:"Chlorinated polymer."},
-    {id:"chem-T18-027",question:"Oxo-biodegradable (debated):",options:["Proven harmless always","Fragmentation + controversy","Never fragments","Only metal"],correctIndex:1,explanation:"Environmental nuance."},
+    
     {id:"chem-T18-028",question:"In addition polymerisation of ethene, each monomer unit typically:",options:["Joins without eliminating a small molecule (π bond opens)","Eliminates one H₂O","Eliminates one H₂","Eliminates one CO₂"],correctIndex:0,explanation:"Addition polymer: no step-wise loss of H₂O unlike condensation."},
     {id:"chem-T18-029",question:"PET (polyethylene terephthalate) is best described as:",options:["Poly(ethene) with terephthalate","A polyester from a diol + benzene-1,4-dicarboxylic acid (concept)","A polyamide only","Natural rubber"],correctIndex:1,explanation:"Condensation polymer with ester links."},
     {id:"chem-T18-030",question:"PVC contains chlorine in the polymer chain because:",options:["The monomer is chloroethene (vinyl chloride)","Chlorine is added only after polymerisation","Cl is only a colourant","PVC has no chlorine"],correctIndex:0,explanation:"Each repeat unit comes from CH₂=CHCl."},
@@ -143,8 +143,8 @@
     {id:"chem-T18-037",question:"The repeat unit –CH₂–CH₂– in poly(ethene) is derived per monomer from:",options:["Two ethene molecules","One ethene molecule","Ethane only","Ethanol"],correctIndex:1,explanation:"One C=C opens to two –CH₂– units in the chain."},
     {id:"chem-T18-201",question:"In condensation polymerisation, a small molecule such as H₂O or HCl is often eliminated because:",options:["The reactor is wet","Monomers join with loss of atoms not incorporated in the polymer backbone","Addition polymers always lose CO₂","Only metals condense"],correctIndex:1,explanation:"Step-growth with elimination."},
     {id:"chem-T18-202",question:"Compared with LDPE, HDPE typically has:",options:["More short-chain branching → lower density","Fewer branches → higher density and more crystallinity","No carbon atoms","Only ionic bonding"],correctIndex:1,explanation:"Branching lowers packing density."},
-    {id:"chem-T18-203",question:"Natural rubber is primarily:",options:["Poly(chloroethene)","Cis-poly(isoprene) — an addition polymer of an alkene","A polyester","Cellulose"],correctIndex:1,explanation:"Isoprene polymer — natural elastomer."},
-    {id:"chem-T18-204",question:"Vulcanisation of rubber with sulfur mainly:",options:["Removes all double bonds","Introduces cross-links to improve elasticity and strength","Makes rubber ionic","Turns rubber into PVC"],correctIndex:1,explanation:"S–S bridges between chains."},
+    
+    
     {id:"chem-T18-205",question:"A thermosetting polymer differs from a thermoplastic because:",options:["Thermosets soften every time they are heated","Thermosets have extensive cross-links and do not remelt like simple thermoplastics","Thermosets are always gases","Thermosets contain no covalent bonds"],correctIndex:1,explanation:"Network covalent solid."},
     {id:"chem-T18-206",question:"PET bottles are often recycled mechanically by:",options:["Cracking to ethene only","Melting and remoulding (thermoplastic behaviour)","Electrolysis","Dissolving in HCl only"],correctIndex:1,explanation:"Thermoplastic polyester."},
     {id:"chem-T18-207",question:"The repeat unit of poly(propene) contains a methyl branch because:",options:["Propane was cracked","The monomer is CH₂=CHCH₃","The catalyst is methyl","Ethene dimerises"],correctIndex:1,explanation:"Propene structure is retained in the chain."},
@@ -159,6 +159,23 @@
     {id:"chem-T18-307",question:"Burning mixed plastics in open air is environmentally harmful mainly because:",options:["Only CO₂ is released — same as natural fires","Incomplete combustion and chlorine/other atoms in polymers like PVC produce toxic gases (e.g. HCl, dioxins) and particulates","All plastics burn cleanly","Only smoke is harmful"],correctIndex:1,explanation:"Halogenated and mixed plastics release toxic compounds when burnt without proper scrubbing."},
     {id:"chem-T18-308",question:"A polyester is formed from ethane-1,2-diol and benzene-1,4-dicarboxylic acid. The link between monomers is:",options:["Amide bond","Ester bond (–COO–) with elimination of water","Carbon–carbon double bond","Ionic bond"],correctIndex:1,explanation:"Diol + diacid condensation → –COO– ester links + H₂O. This is how PET (Terylene) is made."}
     ],
+    extendedQuestions: [
+        {
+            id: "chem-add-t18-E01",
+            commandWord: "Construct",
+            marks: 6,
+            syllabusNote: "Polymers - Drawing condensation polymer linkages.",
+            prompt: "Nylon is a synthetic polyamide used to make clothing and ropes. It can be manufactured from hexanedioic acid (a dicarboxylic acid) and 1,6-diaminohexane (a diamine).\n\n(a) Draw the full structural formula of the amide linkage that joins the two monomers together.\n(b) Draw the structure of the repeat unit of this nylon, using blocks to represent the carbon chains of the monomers.\n(c) State one difference in the formation process between nylon and poly(ethene).",
+            rubric: [
+                "(a) Diagram must show the amide link: **–C(=O)–N(H)–**.",
+                "(b) Diagram shows: **–[C(=O)–[block 1]–C(=O)–N(H)–[block 2]–N(H)]–**.",
+                "(b) Continuation bonds must be present at both ends crossing the brackets.",
+                "(c) Poly(ethene) is an **addition polymer** formed by the breaking of C=C double bonds with no by-products.",
+                "(c) Nylon is a **condensation polymer** formed by joining two different monomers and **eliminating a small molecule** (water)."
+            ],
+            modelAnswer: "(a) *(Structural description)*: The amide linkage consists of a carbon atom double-bonded to an oxygen atom (C=O), and single-bonded to a nitrogen atom. The nitrogen atom is single-bonded to a hydrogen atom (N-H). \n\n(b) *(Diagram description)*: The repeat unit should show: a continuation bond leading to a C=O group, attached to a shaded rectangle (representing the rest of the diacid chain), attached to another C=O group. This C=O is directly bonded to an N-H group, which is attached to an empty rectangle (representing the diamine chain), which is attached to another N-H group, ending with a continuation bond.\n\n(c) Poly(ethene) is formed via addition polymerisation, where unsaturated monomers simply add together to form a long chain without losing any atoms. Nylon is formed via condensation polymerisation, where two different functional groups react, causing a small molecule (water) to be eliminated each time a link is formed."
+        }
+    ],
     trueFalse: [
     {statement:"All plastics are addition polymers.",correct:false,explain:"Condensation: nylon, polyester."},
     {statement:"The repeat unit of poly(propene) has a methyl branch on every other carbon.",correct:true,explain:"CH₃ side group."},
@@ -170,7 +187,7 @@
     {statement:"Monomer and repeat unit are always identical formula.",correct:false,explain:"Condensation loses atoms."},
     {statement:"Recycling reduces crude oil demand for new plastic.",correct:true,explain:"Feedstock saving."},
     {statement:"Bioplastics are always biodegradable.",correct:false,explain:"Some are durable PLA etc."},
-    {statement:"Cross-linked rubber is vulcanised with sulfur.",correct:true,explain:"Historical process."},
+    
     {statement:"Polymer burning test: PE drips; PVC self-extinguishing green flame (Cl).",correct:true,explain:"Qualitative distinction."}
     ],
     });

@@ -10,3 +10,4 @@ config.toml
 .env.dev
 supabase/.temp/
 supabase/.branches/
+temp/
