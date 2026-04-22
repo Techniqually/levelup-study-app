@@ -30,7 +30,15 @@
             "Sum in **neutral compound** = 0; sum in **polyatomic ion** = charge.",
             "Example: Cr in CrO₄²⁻: $x + 4(-2) = -2 \\Rightarrow x = +6$."
         ]
-    }],
+    },
+    { 
+        "title": "Testing for Oxidising & Reducing Agents", 
+        "points": [ 
+            " **Test for Reducing Agents**: Add acidified potassium manganate(VII) ($KMnO_4$). It acts as an oxidising agent. If a reducing agent is present, the purple solution turns **colourless** ($Mn^{7+} \\rightarrow Mn^{2+}$).",
+            " **Test for Oxidising Agents**: Add aqueous potassium iodide ($KI$). It acts as a reducing agent. If an oxidising agent is present, the colourless solution turns **brown** ($2I^- \\rightarrow I_2$)." 
+        ] 
+    }
+    ],
     infographics: [ { image: "data/subjects/chemistry/images/reactions-06-redox.jpg", caption: "Redox: electron transfer and OIL RIG" } ],
     flashcards: [
         {
@@ -48,10 +56,6 @@
         {
             "front": "Acidified MnO₄⁻ colour change?",
             "back": "Purple → colourless (Mn²⁺)."
-        },
-        {
-            "front": "Cr₂O₇²⁻ reduced?",
-            "back": "Orange → green Cr³⁺."
         },
         {
             "front": "Half-equation balance?",
@@ -95,7 +99,12 @@
     { "front": "Cr in Cr₂O₇²⁻?", "back": "$2x + 7(-2) = -2 \\Rightarrow 2x = +12 \\Rightarrow x = +6$." },
     { "front": "MnO₄⁻: oxidation state of Mn?", "back": "$x + 4(-2) = -1 \\Rightarrow x = +7$." },
     { "front": "Oxidising agent = ?", "back": "**Gains** electrons (is **reduced**). e.g. MnO₄⁻, Cl₂, O₂." },
-    { "front": "Reducing agent = ?", "back": "**Loses** electrons (is **oxidised**). e.g. Fe, CO, SO₂." }],
+    { "front": "Reducing agent = ?", "back": "**Loses** electrons (is **oxidised**). e.g. Fe, CO, SO₂." },
+    { "front": "What is the test for an oxidising agent?", "back": "Add aqueous potassium iodide (KI). It will turn from colourless to brown as iodide ions are oxidised to iodine." },
+    { "front": "What is the test for a reducing agent?", "back": "Add acidified potassium manganate(VII). It will turn from purple to colourless as $Mn^{7+}$ is reduced to $Mn^{2+}$." }
+
+    ],
+
     quiz: [
     {id:"chem-T11-001",question:"In Zn + Cu²⁺ → Zn²⁺ + Cu, oxidising agent:",options:["Zn","Cu²⁺","Zn²⁺","Cu"],correctIndex:1,explanation:"Cu²⁺ reduced."},
     {id:"chem-T11-002",question:"Oxidation is:",options:["Gain e⁻","Loss e⁻","Gain H","Loss O"],correctIndex:1,explanation:"OIL."},
@@ -122,7 +131,7 @@
     {id:"chem-T11-023",question:"Combustion hydrocarbon C oxidised to:",options:["Always only CO","CO₂ if complete","Only C","H₂"],correctIndex:1,explanation:"Complete."},
     {id:"chem-T11-024",question:"Nitrate in acid with Cu:",options:["H₂","NOₓ gases","N₂ only","Cl₂"],correctIndex:1,explanation:"Oxidising acid."},
     {id:"chem-T11-025",question:"Balancing redox acidic MnO₄⁻ + C₂O₄²⁻:",options:["Electrons + H₂O + H⁺","Only heat","No H⁺","Only OH⁻"],correctIndex:0,explanation:"Acid medium."},
-    {id:"chem-T11-026",question:"Superoxide KO₂ (adv) O avg:",options:["-½","-2","-1","0"],correctIndex:0,explanation:"Interesting."},
+    {id:"chem-T11-026",question: "A few drops of aqueous potassium iodide are added to an unknown solution X. The mixture turns from colourless to brown. What can be deduced about solution X?",options: ["X is a strong reducing agent.","X is an oxidising agent.","X is a neutral oxide.","X is an alkali."],correctIndex: 1,explanation: "Potassium iodide is a reducing agent. The colourless iodide ions ($I^-$) are oxidised to brown iodine ($I_2$) by an oxidising agent."},
     {id:"chem-T11-027",question:"In 2Na + Cl₂ → 2NaCl, chlorine is:",options:["Oxidised only","Reduced","Neither","A catalyst"],correctIndex:1,explanation:"Cl goes from 0 to −1 (gains electrons)."},
     {id:"chem-T11-028",question:"Oxidation state of Cr in Cr₂O₇²⁻ is:",options:["+3","+6","+7","−2"],correctIndex:1,explanation:"2Cr + 7(−2) = −2 → Cr = +6."},
     {id:"chem-T11-029",question:"Which is the strongest oxidising agent in typical aqueous chemistry among:",options:["Na⁺(aq)","Cl⁻(aq)","Acidified MnO₄⁻(aq)","K⁺(aq)"],correctIndex:2,explanation:"Permanganate(VII) is a powerful oxidant under acidic conditions."},
@@ -130,9 +139,11 @@
     {id:"chem-T11-031",question:"In electrolysis, reduction occurs at the cathode because:",options:["It is positive in electrolysis","Electrons are supplied to species at the cathode","Anions always oxidise there","It is always the platinum terminal"],correctIndex:1,explanation:"Reduction is gain of electrons — cathode supplies electrons to cations."},
     {id:"chem-T11-032",question:"Fuel combustion of hydrocarbons is redox because:",options:["Only oxygen bonds break","Carbon is oxidised and O₂ is reduced","No electron transfer occurs","Water is always oxidised"],correctIndex:1,explanation:"Electron transfer between fuel and oxidant."},
     {id:"chem-T11-033",question:"The oxidising agent in Cl₂ + 2Br⁻ → 2Cl⁻ + Br₂ is:",options:["Br⁻","Cl₂","Br₂","Cl⁻"],correctIndex:1,explanation:"Cl₂ is reduced (gains electrons) while oxidising Br⁻."},
-    {id:"chem-T11-034",question:"Oxidation state of S in S₂O₃²⁻ (thiosulfate) average per S is:",options:["+4","+2","+6","0"],correctIndex:1,explanation:"Total OS: 2S + 3(−2) = −2 → sum S = +4 → average +2 per S (one central S(VI) and terminal S(−II) in detailed view — O-level: average +2)."},
+    {id:"chem-T11-034",question: "In the reaction: $2FeCl_2(aq) + Cl_2(g) \\rightarrow 2FeCl_3(aq)$, what is the role of chlorine gas?",options: ["It acts as a catalyst.","It acts as a reducing agent because its oxidation state increases.","It acts as an oxidising agent because its oxidation state decreases from 0 to -1.","It is a spectator ion."],correctIndex: 2,explanation: "Chlorine goes from an oxidation state of 0 (in $Cl_2$) to -1 (in $Cl^-$). Because it gains electrons and is reduced, it acts as the oxidising agent."},
     {id:"chem-T11-035",question:"Why balance redox with H⁺ in acid and OH⁻ in alkali?",options:["To match charge and atoms in the medium","Because water has no role","To add colour only","To remove electrons"],correctIndex:0,explanation:"Half-equations must balance atoms and charge in the stated conditions."},
     {id:"chem-T11-036",question:"Corrosion of iron is fundamentally:",options:["Only physical wetting","Electrochemical redox with O₂ and H₂O","A single displacement of gold","Nuclear decay"],correctIndex:1,explanation:"Fe is oxidised; O₂ is reduced in rusting pathways."},
+    {id:"chem-T11-037",question: "A compound has the formula $X_2(SO_4)_3$. What is the oxidation state of element X?",options: ["+2", "+3", "+6", "-2"],correctIndex: 1,explanation: "The sulfate ion ($SO_4^{2-}$) has a charge of -2. Three sulfate ions give a total charge of -6. Therefore, two X ions must have a total charge of +6, meaning each X is +3."},
+    {id:"chem-T11-038",question:"Which observation is the most direct evidence of a redox reaction?",options:["Temperature decreases","Colourless solution turns cloudy","Oxidation state changes","A gas dissolves"],correctIndex:2,explanation:"Redox reactions are fundamentally defined by the transfer of electrons, which is measured by a change in oxidation states."},
     {id:"chem-T11-201",question:"In the reaction Zn + Cu²⁺ → Zn²⁺ + Cu, the oxidising agent is:",options:["Zn","Zn²⁺","Cu²⁺","Cu"],correctIndex:2,explanation:"Cu²⁺ is reduced (gains electrons) — it oxidises Zn."},
     {id:"chem-T11-202",question:"In a redox reaction, the species that reduces another is called the:",options:["Oxidising agent","Reducing agent","Catalyst only","Spectator ion"],correctIndex:1,explanation:"Reducing agent donates electrons."},
     {id:"chem-T11-203",question:"The oxidation number of O in H₂O₂ is:",options:["−2","−1","0","+1"],correctIndex:1,explanation:"Peroxide: O is −1 in H₂O₂."},
@@ -154,6 +165,24 @@
     {id:"chem-T11-310",question:"Fluorine is such a strong oxidising agent because:",options:["It has a low electronegativity","It has the highest electronegativity of all elements and strongly attracts electrons","It is the largest halogen","It easily loses electrons"],correctIndex:1,explanation:"F is the most electronegative element; strongest electron acceptor among the halogens."},
     {id:"chem-T11-311",question:"The oxidation state of chlorine in HClO₄ (perchloric acid) is:",options:["+1","+5","+7","−1"],correctIndex:2,explanation:"H is +1; O is −2 (×4 = −8). Total = 0. +1 + Cl + (−8) = 0 → Cl = +7."},
     {id:"chem-T11-312",question:"In the reaction: MnO₄⁻ + Fe²⁺ → Mn²⁺ + Fe³⁺ (acidic conditions), the oxidising agent is:",options:["Fe²⁺ (reduced)","MnO₄⁻ (Mn goes from +7 to +2 — it is reduced, acting as oxidising agent)","H⁺","H₂O"],correctIndex:1,explanation:"MnO₄⁻ gains electrons (Mn: +7 → +2) = reduced = oxidising agent. Fe²⁺ loses electrons = oxidised = reducing agent."}
+    ],
+    extendedQuestions: [
+        {
+            id: "chem-T11-E01",
+            commandWord: "Evaluate",
+            marks: 6,
+            syllabusNote: "Oxidation and Reduction - Combining oxidation states, half-equations, and tests.",
+            prompt: "Sulfur dioxide ($SO_2$) gas is bubbled into a beaker containing acidified potassium manganate(VII) solution. \n\n(a) State the colour change observed in the beaker.\n(b) Using oxidation states, explain why sulfur dioxide is acting as a reducing agent in this reaction. (Assume $SO_2$ is converted to sulfate ions, $SO_4^{2-}$).\n(c) The half-equation for the reduction of the manganate(VII) ion is: $MnO_4^- + 8H^+ + 5e^- \\rightarrow Mn^{2+} + 4H_2O$. Deduce the number of moles of electrons transferred when 0.2 moles of $MnO_4^-$ is completely reduced.",
+            rubric: [
+                "(a) The solution turns from **purple to colourless**.",
+                "(b) The oxidation state of sulfur in $SO_2$ is **+4**.",
+                "(b) The oxidation state of sulfur in $SO_4^{2-}$ is **+6**.",
+                "(b) Because the oxidation state of sulfur **increases**, it is oxidised. A substance that gets oxidised acts as a **reducing agent**.",
+                "(c) From the half-equation, 1 mole of $MnO_4^-$ requires 5 moles of electrons.",
+                "(c) 0.2 moles of $MnO_4^-$ requires $0.2 \\times 5 =$ **1.0 mole of electrons**."
+            ],
+            modelAnswer: "(a) The acidified potassium manganate(VII) solution will turn from purple to colourless.\n\n(b) In sulfur dioxide ($SO_2$), the oxidation state of oxygen is -2, so sulfur is +4. In the sulfate ion ($SO_4^{2-}$), the four oxygens give -8, so sulfur must be +6 to give an overall charge of -2. Because the oxidation state of sulfur increases from +4 to +6, the sulfur dioxide is oxidised. By being oxidised itself, it acts as a reducing agent.\n\n(c) The half-equation shows a 1:5 molar ratio between $MnO_4^-$ and electrons. Therefore, 0.2 moles of $MnO_4^-$ will require $0.2 \\times 5 = 1.0$ mole of electrons."
+        }
     ],
     trueFalse: [
     {statement:"If a species gains electrons it is oxidised.",correct:false,explain:"Reduced."},

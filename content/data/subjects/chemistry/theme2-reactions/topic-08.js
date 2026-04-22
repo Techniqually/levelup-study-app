@@ -112,20 +112,20 @@
     {id:"chem-T8-015",question:"Silver sulfate solubility:",options:["Insoluble like AgCl","Soluble unlike AgCl","Gas","Only molten"],correctIndex:1,explanation:"AgCl insoluble."},
     {id:"chem-T8-016",question:"Mg + HNO₃ dilute may:",options:["Still complex","H₂ sometimes with very dilute Mg","Never react","Only NO₂ always"],correctIndex:1,explanation:"Syllabus: Mg+HCl typical."},
     {id:"chem-T8-017",question:"Salt hydrolysis Na₂CO₃ solution:",options:["Acidic","Basic","Always 7","Neutral"],correctIndex:1,explanation:"CO₃²⁻ hydrolysis."},
-    {id:"chem-T8-018",question:"Double salt (context):",options:["Two cations/anions one crystal","Only one ion","Gas","No crystal"],correctIndex:0,explanation:"Alum type."},
-    {id:"chem-T8-019",question:"Efflorescence:",options:["Salt loses water to air","Gains water","Melts","Explodes"],correctIndex:0,explanation:"Drying out."},
-    {id:"chem-T8-020",question:"Deliquescent:",options:["Absorbs water to dissolve","Loses water","Inert","Only gas"],correctIndex:0,explanation:"CaCl₂."},
+    {id:"chem-T8-018",question:"To prepare a pure, dry sample of insoluble lead(II) sulfate, which two solutions should be mixed?",options:["Lead(II) carbonate and sulfuric acid","Lead(II) nitrate and sodium sulfate","Lead metal and sulfuric acid","Lead(II) oxide and barium sulfate"],correctIndex:1,explanation:"To make an insoluble salt via precipitation, you MUST mix two SOLUBLE salts. Lead(II) nitrate and sodium sulfate are both soluble."},
+    {id:"chem-T8-019",question:"After mixing two solutions to form an insoluble salt precipitate, what is the purpose of washing the residue with cold distilled water?",options:["To dissolve the precipitate","To remove unreacted soluble impurities from the surface of the crystals","To dry the salt","To increase the size of the crystals"],correctIndex:1,explanation:"Washing the residue removes the soluble spectator ions and leftover aqueous reactants clinging to the solid."},
+    {id:"chem-T8-020",question: "Which of the following methods is NOT suitable for preparing a pure sample of copper(II) sulfate?",options: ["Reacting solid copper(II) oxide with dilute sulfuric acid","Reacting solid copper(II) carbonate with dilute sulfuric acid","Reacting copper metal with dilute sulfuric acid","They are all suitable methods"],correctIndex: 2,explanation: "Copper is an unreactive metal (below hydrogen in the reactivity series) and will not react with dilute sulfuric acid."},
     {id:"chem-T8-021",question:"Preservative NaCl:",options:["Osmosis bacteria","pH 14","Oxidises all","Only sweet"],correctIndex:0,explanation:"Food context."},
     {id:"chem-T8-022",question:"Epsom salt:",options:["MgSO₄·7H₂O","NaCl","CaCO₃","KNO₃"],correctIndex:0,explanation:"Hydrated sulfate."},
     {id:"chem-T8-023",question:"Fertiliser nitrate benefit:",options:["N for protein","Only P","Only K","Cl only"],correctIndex:0,explanation:"N source."},
     {id:"chem-T8-024",question:"Chloride test acidified AgNO₃:",options:["White AgCl","Black","Red","Gas"],correctIndex:0,explanation:"Except AgBr/I."},
     {id:"chem-T8-025",question:"Sulfite + acid:",options:["SO₂ gas","CO₂ only","H₂","No gas"],correctIndex:0,explanation:"Acidified sulfite."},
-    {id:"chem-T8-026",question:"Complex ion [Cu(NH₃)₄]²⁺ colour:",options:["Deep blue solution","Colourless","Green ppt only","Yellow"],correctIndex:0,explanation:"Excess NH₃."},
+    {id:"chem-T8-026",question:"Which salt is insoluble in water?",options:["Sodium nitrate","Potassium sulfate","Silver chloride","Ammonium carbonate"],correctIndex:2,explanation:"Most chlorides are soluble, with the notable exceptions of silver chloride and lead(II) chloride."},
     {id:"chem-T8-027",question:"Why acidify with dilute HNO₃ before adding AgNO₃ for halide tests?",options:["To make AgCl soluble","To remove carbonate/sulfite that could give false white precipitates","To oxidise all metals","To raise pH"],correctIndex:1,explanation:"Carbonates also give white precipitates with Ag⁺ — acid decomposes them."},
     {id:"chem-T8-028",question:"Preparing CuSO₄ from CuO + H₂SO₄, why use excess CuO?",options:["To speed light","To ensure all acid reacts so filtrate is not acidic","To make gas","To dissolve CuO less"],correctIndex:1,explanation:"Filter off excess base; solution contains only salt."},
     {id:"chem-T8-029",question:"Which salt is best prepared by titration of acid with alkali?",options:["CuSO₄ from CuO","NaCl from HCl + NaOH","AgCl from precipitation","BaSO₄ from mixing solutions"],correctIndex:1,explanation:"Both reactants soluble → known endpoint via titration."},
     {id:"chem-T8-030",question:"Heating hydrated CuSO₄·5H₂O strongly turns it white mainly because:",options:["It melts only","Water of crystallisation is lost","Copper oxidises to Cu²⁺","It becomes metallic"],correctIndex:1,explanation:"Dehydration to anhydrous CuSO₄."},
-    {id:"chem-T8-031",question:"A ‘double salt’ contains:",options:["Only one type of ion","Two different cations and/or anions in one lattice (e.g. alums)","Only covalent bonds","No water"],correctIndex:1,explanation:"More than one kind of ion in fixed stoichiometry."},
+    
     {id:"chem-T8-032",question:"Why is Ba(NO₃)₂ used instead of BaCl₂ when chloride interferes?",options:["Ba(NO₃)₂ never works","Avoid introducing Cl⁻ if testing for sulfate in a chloride matrix","BaCl₂ is insoluble","Nitrates are always acidic"],correctIndex:1,explanation:"Choose reagents that don’t add confusing ions."},
     {id:"chem-T8-033",question:"Fe(s) + dilute H₂SO₄ typically gives:",options:["Fe₂(SO₄)₃ + H₂","FeSO₄ + H₂","FeS + H₂","No reaction"],correctIndex:1,explanation:"Iron(II) sulfate with hydrogen (dilute acid)."},
     {id:"chem-T8-034",question:"Which ion with I⁻(aq) forms a yellow precipitate in a common school test?",options:["Pb²⁺","Na⁺","Ba²⁺","K⁺"],correctIndex:0,explanation:"Pb²⁺ + 2I⁻ → PbI₂(s) yellow."},
@@ -140,7 +140,7 @@
     {id:"chem-T8-206",question:"A solution of Na₂CO₃ is slightly basic because:",options:["Na⁺ is acidic","CO₃²⁻ hydrolyses to produce OH⁻","Water has no role","Na₂CO₃ is a strong acid"],correctIndex:1,explanation:"Carbonate is basic in water."},
     {id:"chem-T8-207",question:"When preparing a soluble salt from an acid and an insoluble base, excess base is used so that:",options:["The acid is in excess","No acid remains in the filtrate after filtration","The base dissolves completely","The salt is always insoluble"],correctIndex:1,explanation:"Filter off excess solid base."},
     {id:"chem-T8-208",question:"Which ion with NaOH(aq) gives a green precipitate typical of Fe²⁺?",options:["Fe³⁺","Fe²⁺","Cu²⁺","Na⁺"],correctIndex:1,explanation:"Fe(OH)₂ is green (may oxidise on standing)."},
-    {id:"chem-T8-209",question:"Deliquescent salts (e.g. CaCl₂) are used as drying agents because they:",options:["Never absorb water","Absorb water from air to form a solution","Are always gases","Only work in acidic pH"],correctIndex:1,explanation:"Strong affinity for water."},
+    
     {id:"chem-T8-301",question:"To prepare magnesium sulfate (MgSO₄) in the lab, a student adds excess magnesium oxide to dilute H₂SO₄. Why is excess MgO used?",options:["To speed up the reaction only","To ensure all the acid reacts so the final solution contains only the salt","To make the solution more acidic","To produce more H₂ gas"],correctIndex:1,explanation:"Excess insoluble base consumes all the acid; excess is filtered off leaving pure salt solution."},
     {id:"chem-T8-302",question:"Which of the following salts can only be made by a precipitation reaction (not acid + metal/base/carbonate)?",options:["MgSO₄","NaCl from HCl + NaOH","BaSO₄","ZnCl₂"],correctIndex:2,explanation:"BaSO₄ is insoluble — it cannot be made by titration and is obtained by mixing Ba²⁺ and SO₄²⁻ solutions."},
     {id:"chem-T8-303",question:"In preparing copper(II) sulfate by adding CuO to H₂SO₄, after filtering the excess CuO, the next step to obtain crystals is:",options:["Add more acid","Evaporate the filtrate until saturated then cool","Heat to full dryness immediately","Add NaOH"],correctIndex:1,explanation:"Evaporate to crystallisation point then cool — avoids decomposition of the salt."},
@@ -153,6 +153,37 @@
     {id:"chem-T8-310",question:"Which salt is insoluble in water?",options:["Sodium nitrate NaNO₃","Potassium chloride KCl","Barium sulfate BaSO₄","Ammonium sulfate (NH₄)₂SO₄"],correctIndex:2,explanation:"BaSO₄ is insoluble; most nitrates and potassium/sodium salts are soluble."},
     {id:"chem-T8-311",question:"Lead(II) chloride PbCl₂ is insoluble. To prepare it, a student mixes:",options:["Pb(NO₃)₂(aq) + NaCl(aq) → PbCl₂(s) precipitate by precipitation","Pb metal + HCl — impractical for pure product","Dissolving PbCl₂ in water directly","Electrolysing PbSO₄"],correctIndex:0,explanation:"Precipitation: mix solutions of Pb²⁺ and Cl⁻ salts. PbCl₂ is insoluble → forms precipitate. Filter, wash, dry."},
     {id:"chem-T8-312",question:"Which statement about the solubility of salts is correct?",options:["All potassium salts are insoluble","All nitrate salts are soluble in water","All sodium salts are insoluble","All carbonate salts are soluble"],correctIndex:1,explanation:"Key rule: ALL nitrates are soluble. Most Group 1 (Na, K) salts are soluble. Most carbonates (except Na, K, NH₄) are insoluble."}
+    ],
+    extendedQuestions: [
+        {
+            id: "chem-T8-E01",
+            commandWord: "Construct",
+            marks: 6,
+            syllabusNote: "Salts - Preparing an insoluble salt via precipitation.",
+            prompt: "Barium sulfate ($BaSO_4$) is an insoluble salt used in hospitals as a 'barium meal' for X-rays. \n\n(a) Name two suitable aqueous solutions that can be mixed to prepare a pure sample of barium sulfate.\n(b) Describe the step-by-step procedure to prepare, separate, and obtain a pure, dry sample of barium sulfate from your chosen solutions. Include an ionic equation with state symbols.",
+            rubric: [
+                "(a) Names a soluble barium salt (e.g., **barium chloride** or barium nitrate) AND a soluble sulfate (e.g., **sodium sulfate** or sulfuric acid).",
+                "(b) Step 1: **Mix** the two solutions together to form a white precipitate.",
+                "(b) Step 2: **Filter** the mixture to collect the barium sulfate precipitate as the residue.",
+                "(b) Step 3: **Wash** the residue with cold distilled water to remove any soluble impurities.",
+                "(b) Step 4: **Dry** the precipitate between a few sheets of filter paper.",
+                "(b) Equation: **$Ba^{2+}(aq) + SO_4^{2-}(aq) \\rightarrow BaSO_4(s)$**"
+            ],
+            modelAnswer: "(a) Aqueous **barium chloride** and aqueous **sodium sulfate**.\n\n(b) First, **mix** the solutions of barium chloride and sodium sulfate in a beaker. A white precipitate of barium sulfate will form immediately. \nSecond, **filter** the mixture using a filter funnel and filter paper; the barium sulfate will be collected as the solid residue. \nThird, **wash** the residue with cold distilled water to remove any soluble impurities (like sodium chloride). \nFinally, **dry** the pure barium sulfate precipitate by pressing it between a few sheets of filter paper.\n\nIonic equation: $Ba^{2+}(aq) + SO_4^{2-}(aq) \\rightarrow BaSO_4(s)$"
+        },
+        {
+            id: "chem-T8-E02",
+            commandWord: "Construct",
+            marks: 4,
+            syllabusNote: "Salts - Sequencing the preparation of a soluble salt from an insoluble solid.",
+            prompt: "Andrew was preparing copper(II) sulfate crystals using copper(II) carbonate and dilute sulfuric acid. Below are his steps, but they are written in the wrong order:\n\n**U** - Filter the mixture into an evaporating dish.\n**V** - Heat the filtrate until a saturated solution is obtained.\n**W** - Filter, wash, and dry the crystals between a few sheets of filter paper.\n**X** - Leave the hot saturated solution to cool until crystals are formed.\n**Y** - Place 25 cm³ of dilute sulfuric acid in a beaker.\n**Z** - Add copper(II) carbonate powder with constant stirring, until no more dissolves.\n\n(a) Write down the correct chronological order of the letters to successfully prepare the salt.\n(b) Explain why step Z is a crucial safety and purity precaution in this method.",
+            rubric: [
+                "(a) Correct order: **Y ➔ Z ➔ U ➔ V ➔ X ➔ W**.",
+                "(b) Adding the solid until no more dissolves ensures that **all the sulfuric acid has reacted**.",
+                "(b) This guarantees the final filtrate is not contaminated with unreacted acid."
+            ],
+            modelAnswer: "(a) The correct sequence is: Y, Z, U, V, X, W.\n\n(b) Step Z (adding the copper(II) carbonate until it is in excess) is crucial because it ensures that all of the dilute sulfuric acid is completely neutralised. If acid were left over, it would remain in the filtrate alongside the dissolved copper(II) sulfate, resulting in impure crystals and a potentially hazardous (corrosive) final product."
+        }
     ],
     trueFalse: [
     {statement:"All nitrates are soluble.",correct:true,explain:"General rule."},

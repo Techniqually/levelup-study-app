@@ -33,18 +33,27 @@
                 "**Fractional distillation** separates crude by boiling point into refinery fractions (petrol, diesel, bitumen…).",
                 "**Cracking** breaks long alkanes to shorter alkanes + alkenes (fuels + chemical feedstock)."
             ]
+        },
+        {
+            "title": "Functional Groups & Key Tests",
+            "points": [
+                "**Alkene** (C=C): decolourises **bromine water** (orange → colourless).",
+                "**Alcohol** (–OH): burns; acidified **K₂Cr₂O₇** (orange → green) on oxidation.",
+                "**Carboxylic acid** (–COOH): fizzes with Na₂CO₃ → CO₂; weak acid (higher pH than HCl at same conc).",
+                "**Ester** (–COO–): fruity smell; acid hydrolysis → carboxylic acid + alcohol.",
+                "Fermentation: $C_6H_{12}O_6 \\xrightarrow{\\text{yeast}} 2C_2H_5OH + 2CO_2$ (warm, anaerobic)."
+            ]
+        },
+        { 
+            "title": "Vital Industrial Conditions to Memorise", 
+            "points": [ 
+                " **Cracking of Alkanes**: Catalyst = Aluminium oxide ($Al_2O_3$) or Silicon dioxide ($SiO_2$); Temp = ~600°C.",
+                " **Hydration of Ethene (to make Ethanol)**: Catalyst = Phosphoric(V) acid ($H_3PO_4$); Temp = 300°C; Pressure = 60 atm.",
+                " **Hydrogenation of Alkenes (to make Alkanes/Margarine)**: Catalyst = Nickel; Temp = 200°C.",
+                " **Esterification**: Catalyst = Concentrated Sulfuric Acid ($H_2SO_4$); Condition = Warm."
+            ] 
         }
-    ,
-    {
-        "title": "Functional Groups & Key Tests",
-        "points": [
-            "**Alkene** (C=C): decolourises **bromine water** (orange → colourless).",
-            "**Alcohol** (–OH): burns; acidified **K₂Cr₂O₇** (orange → green) on oxidation.",
-            "**Carboxylic acid** (–COOH): fizzes with Na₂CO₃ → CO₂; weak acid (higher pH than HCl at same conc).",
-            "**Ester** (–COO–): fruity smell; acid hydrolysis → carboxylic acid + alcohol.",
-            "Fermentation: $C_6H_{12}O_6 \\xrightarrow{\\text{yeast}} 2C_2H_5OH + 2CO_2$ (warm, anaerobic)."
-        ]
-    }],
+    ],
     infographics: [
       { image: "data/subjects/chemistry/images/sustainable-01-organic.jpg", caption: "Organic families + key tests (alkene bromine water, oxidation, esterification)" },
       { svg: "<svg viewBox=\"0 0 320 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"320\" height=\"90\" fill=\"#1c222d\"/><text x=\"8\" y=\"22\" fill=\"#a78bfa\" font-size=\"11\">Alkane C–C single</text><text x=\"8\" y=\"42\" fill=\"#fb923c\" font-size=\"11\">Alkene C=C · decolourises Br₂(aq)</text><text x=\"8\" y=\"62\" fill=\"#5eead4\" font-size=\"11\">Alcohol –OH · Acid –COOH · Ester + H₂O</text></svg>", caption: "Organic families (revision)" }
@@ -73,10 +82,6 @@
         {
             "front": "Substitution vs addition?",
             "back": "Alkane + halogen substitution; alkene addition across double bond."
-        },
-        {
-            "front": "Functional group aldehyde?",
-            "back": "–CHO (if taught)."
         },
         {
             "front": "Why alkenes more reactive?",
@@ -141,34 +146,69 @@
     {id:"chem-T17-025",question:"Display ethene has:",options:["Single C–C","Double C=C","Triple bond","Ionic"],correctIndex:1,explanation:"Unsaturation."},
     {id:"chem-T17-026",question:"Bioethanol advantage:",options:["Renewable from biomass","Zero CO₂ lifecycle always","No land use","Only solid"],correctIndex:0,explanation:"Renewable argument."},
     {id:"chem-T17-027",question:"Cyclopentane (a cycloalkane) has molecular formula:",options:["C₅H₁₂","C₅H₁₀","C₅H₈","C₅H₁₀O"],correctIndex:1,explanation:"Saturated ring: CₙH₂ₙ (not CₙH₂ₙ₊₂ for an open chain)."},
-    {id:"chem-T17-028",question:"Ethanol oxidised with acidified K₂Cr₂O₇ under reflux (product not distilled off) gives mainly:",options:["Ethanal","Ethanoic acid","Ethene","Ethane"],correctIndex:1,explanation:"Further oxidation under reflux to the carboxylic acid."},
-    {id:"chem-T17-029",question:"Acid-catalysed hydrolysis of ethyl ethanoate gives:",options:["Ethane + ethanoic acid","Ethanol + ethanoic acid","Ethene + water","Ethanal only"],correctIndex:1,explanation:"Ester splits to carboxylic acid + alcohol."},
+    {id:"chem-T17-028",question: "Which set of conditions is required to manufacture ethanol industrially from ethene and steam?",options: ["Yeast catalyst, 37°C, absence of oxygen","Nickel catalyst, 200°C, 1 atm","Phosphoric(V) acid catalyst, 300°C, 60 atm","Aluminium oxide catalyst, 600°C, 1 atm"],correctIndex: 2,explanation: "Hydration of ethene requires a phosphoric(V) acid catalyst, 300°C, and 60 atm of pressure. (Yeast is for fermentation, Nickel is for hydrogenation, Al₂O₃ is for cracking)."},
+    {id:"chem-T17-029",question: "An ester is named 'propyl ethanoate'. Which alcohol and which carboxylic acid were used to form this ester?",options: ["Propanol and Propanoic acid","Propanol and Ethanoic acid","Ethanol and Propanoic acid","Ethanol and Ethanoic acid"],correctIndex: 1,explanation: "The first part of the name ('propyl') comes from the alcohol (propanol). The second part ('ethanoate') comes from the carboxylic acid (ethanoic acid)."},
     {id:"chem-T17-030",question:"Propene + H₂ with a nickel catalyst gives:",options:["Propyne","Propane","Propanal","No reaction"],correctIndex:1,explanation:"Hydrogenation saturates the C=C."},
     {id:"chem-T17-031",question:"At the same concentration, which solution has the higher pH (weaker acid)?",options:["Hydrochloric acid","Ethanoic acid","They are identical","Sulfuric acid"],correctIndex:1,explanation:"Ethanoic acid is weak; strong acids have lower pH."},
     {id:"chem-T17-032",question:"In esterification, water forms from:",options:["Only the sulfuric acid","The acid’s –OH and the H from the alcohol’s –OH","Only O₂ from air","NaOH neutralisation"],correctIndex:1,explanation:"Condensation between –COOH and –OH (alcohol)."},
     {id:"chem-T17-033",question:"A main reason long-chain alkanes are cracked in refineries is to produce:",options:["Only heavier bitumen","Smaller alkanes and alkenes for fuels and feedstocks","Pure oxygen","Diamond"],correctIndex:1,explanation:"Break C–C bonds to useful shorter molecules."},
-    {id:"chem-T17-034",question:"Why do alkenes decolourise bromine water under ordinary lab conditions more readily than alkanes?",options:["Alkanes are always ionic","The C=C π bond is an electron-rich addition site","Alkanes are lighter","Bromine cannot add to any carbon"],correctIndex:1,explanation:"Electrophilic addition across the double bond."},
+    {id:"chem-T17-034",question: "Compound Q has the molecular formula $C_3H_6O_2$. It reacts with magnesium to produce hydrogen gas and turns blue litmus paper red. What is the name of Compound Q?",options: ["Propanol","Propene","Propanoic acid","Ethyl methanoate"],correctIndex: 2,explanation: "Reaction with magnesium to produce hydrogen and turning blue litmus red are properties of an acid. The formula $C_3H_6O_2$ matches the general formula for a carboxylic acid ($C_nH_{2n}O_2$). A 3-carbon acid is propanoic acid."},
     {id:"chem-T17-035",question:"Structural isomers with formula C₄H₁₀ include:",options:["Only n-butane","Butane and methylpropane","Butane and but-1-ene","Ethane and propane"],correctIndex:1,explanation:"Same molecular formula, different connectivity."},
     {id:"chem-T17-036",question:"Incomplete combustion of a hydrocarbon in limited air can produce:",options:["Only CO₂","CO and/or carbon (soot) among other products","Only H₂O","N₂ only"],correctIndex:1,explanation:"Insufficient O₂ favours CO and elemental carbon."},
-    {id:"chem-T17-201",question:"Fractional distillation of crude oil separates fractions mainly by:",options:["Atomic number","Boiling point (volatility)","Electronegativity","Density of water"],correctIndex:1,explanation:"Different chain lengths → different boiling points."},
-    {id:"chem-T17-202",question:"Compared with many catalytic routes, simple thermal cracking at very high temperature is often:",options:["More selective toward one alkene only","Less selective — broader mixture of fragments and alkenes","Impossible in industry","Only physical distillation"],correctIndex:1,explanation:"High-temperature scission is less controlled than zeolite-catalysed cracking (syllabus-level contrast)."},
-    {id:"chem-T17-203",question:"But-1-ene and but-2-ene (both C₄H₈) are examples of:",options:["Structural isomers only","Positional isomerism among alkenes (same formula, different C=C position)","Functional group isomers with alkanes","Polymers"],correctIndex:1,explanation:"Same molecular formula; double-bond position differs."},
-    {id:"chem-T17-204",question:"When propan-1-ol is oxidised with acidified dichromate under distillation (removing product as it forms), the organic product collected first is often:",options:["Propanoic acid","Propanal","Propane","Propanone"],correctIndex:1,explanation:"Distillation favours stopping at the aldehyde."},
-    {id:"chem-T17-205",question:"Ethene reacts with steam (acid catalyst) to form ethanol. This is best classed as:",options:["Substitution","Electrophilic addition / hydration across C=C","Cracking","Neutralisation"],correctIndex:1,explanation:"π bond opens; –OH adds."},
-    {id:"chem-T17-206",question:"A student tests an unknown with sodium carbonate: vigorous bubbling. This supports:",options:["Presence of an alcohol","Presence of a carboxylic acid (or strong acid)","Presence of an alkene","Presence of an ester only"],correctIndex:1,explanation:"Acid + carbonate → CO₂."},
-    {id:"chem-T17-207",question:"Why does ethanoic acid have a lower electrical conductivity than HCl at the same concentration?",options:["Ethanoic acid is a strong acid","Ethanoic acid is weak — fewer ions per dm³","HCl has no ions","Ethanoic acid is a gas"],correctIndex:1,explanation:"Partial ionisation."},
-    {id:"chem-T17-208",question:"The general formula for a non-cyclic alkane is:",options:["CₙH₂ₙ","CₙH₂ₙ₊₂","CₙH₂ₙ₋₂","CₙHₙO₂"],correctIndex:1,explanation:"Saturated acyclic alkanes."},
-    {id:"chem-T17-209",question:"Methylpropane and butane both have formula C₄H₁₀. Their relationship is:",options:["Same empirical formula only","Structural isomers","Cis–trans isomers","Allotropes"],correctIndex:1,explanation:"Different connectivity — structural isomerism."},
-    {id:"chem-T17-301",question:"Crude oil is separated into fractions using fractional distillation because the fractions have:",options:["Different densities only","Different boiling points — shorter hydrocarbon chains are more volatile","Different colours only","Different ionic charges"],correctIndex:1,explanation:"Shorter/lighter chains have weaker London forces → lower bp → come off the column first."},
-    {id:"chem-T17-302",question:"Short-chain alkanes are in high demand as petrol while long-chain fractions are less so. Refineries crack long chains because:",options:["Long chains have more colour","Cracking produces shorter alkanes + alkenes to match fuel demand and chemical feedstocks","Cracking makes crude oil heavier","Only to remove sulfur"],correctIndex:1,explanation:"Demand > supply for shorter fractions; cracking matches supply to demand."},
-    {id:"chem-T17-303",question:"Propane (C₃H₈) is a saturated hydrocarbon. 'Saturated' means:",options:["It contains only single C–C and C–H bonds (no C=C or C≡C)","It is dissolved in water","It is fully coloured","It cannot burn"],correctIndex:0,explanation:"Saturated = only sigma bonds; cannot undergo addition reactions."},
-    {id:"chem-T17-304",question:"Alkenes burn with a sooty/smoky flame compared with alkanes of similar size because:",options:["Alkenes have lower carbon:hydrogen ratio","Alkenes have higher carbon:hydrogen ratio → less complete combustion → more carbon/soot","Alkenes are ionic","Alkenes do not burn"],correctIndex:1,explanation:"CₙH₂ₙ vs CₙH₂ₙ₊₂: alkenes are relatively carbon-rich → sootier combustion."},
-    {id:"chem-T17-305",question:"Ethene reacts with bromine: CH₂=CH₂ + Br₂ → CH₂BrCH₂Br. This reaction is:",options:["Substitution","Electrophilic addition across the C=C double bond","Combustion","Esterification"],correctIndex:1,explanation:"Atoms add across the C=C (no atoms removed). The π bond breaks to form two new σ bonds."},
-    {id:"chem-T17-306",question:"Bioethanol is claimed to be more sustainable than petrol because:",options:["It produces more energy per litre","It is produced from renewable crops — CO₂ released on combustion is partially offset by CO₂ absorbed during plant growth","It produces no CO₂","It contains no hydrogen"],correctIndex:1,explanation:"Short-cycle carbon: plants fix CO₂; burning releases it back. Net impact less than fossil fuel (though land use matters)."},
-    {id:"chem-T17-307",question:"Fermentation of glucose: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. The conditions required are:",options:["High temperature (300°C) and Pt catalyst","Yeast (contains enzymes/zymase), warm temperature (~30–35°C), anaerobic (no O₂)","Concentrated H₂SO₄","Only UV light"],correctIndex:1,explanation:"Yeast enzymes ferment glucose at body-temperature conditions without oxygen."},
-    {id:"chem-T17-308",question:"Ethanoic acid reacts with sodium carbonate to produce sodium ethanoate, water, and:",options:["Cl₂","H₂","CO₂ gas (effervescence)","O₂"],correctIndex:2,explanation:"Carboxylic acid + carbonate → salt + H₂O + CO₂. Test for –COOH group."},
-    {id:"chem-T17-309",question:"The ester ethyl ethanoate is formed from:",options:["Ethane + acetic acid","Ethanol + ethanoic acid, with conc H₂SO₄ as catalyst","Ethene + ethanol","Ethanol + water"],correctIndex:1,explanation:"Esterification: alcohol + carboxylic acid ⇌ ester + water."},
-    {id:"chem-T17-310",question:"Ethene (from cracking) can be hydrated industrially to form ethanol: $\\text{CH}_2{=}\\text{CH}_2 + \\text{H}_2\\text{O} \\to \\text{C}_2\\text{H}_5\\text{OH}$. This is preferred over fermentation for large-scale production because:",options:["It uses food crops","Continuous process, higher purity, lower cost at scale — though uses non-renewable ethene feedstock","It requires no energy","Fermentation is impossible"],correctIndex:1,explanation:"Industrial hydration is a continuous high-yield process, but relies on fossil-fuel derived ethene."}
+    {id:"chem-T17-037",question:"Fractional distillation of crude oil separates fractions mainly by:",options:["Atomic number","Boiling point (volatility)","Electronegativity","Density of water"],correctIndex:1,explanation:"Different chain lengths → different boiling points."},
+    {id:"chem-T17-038",question:"Compared with many catalytic routes, simple thermal cracking at very high temperature is often:",options:["More selective toward one alkene only","Less selective — broader mixture of fragments and alkenes","Impossible in industry","Only physical distillation"],correctIndex:1,explanation:"High-temperature scission is less controlled than zeolite-catalysed cracking (syllabus-level contrast)."},
+    {id:"chem-T17-039",question:"But-1-ene and but-2-ene (both C₄H₈) are examples of:",options:["Structural isomers only","Positional isomerism among alkenes (same formula, different C=C position)","Functional group isomers with alkanes","Polymers"],correctIndex:1,explanation:"Same molecular formula; double-bond position differs."},
+    {id:"chem-T17-040",question:"An ester is formed by a reaction between:",options:["Alcohol and alkene","Carboxylic acid and alcohol","Alkane and oxygen","Acid and base only"],correctIndex:1,explanation:"Esterification is a condensation reaction combining a carboxylic acid and an alcohol, typically using a concentrated sulfuric acid catalyst."},
+    {id:"chem-T17-041",question:"Ethene reacts with steam (acid catalyst) to form ethanol. This is best classed as:",options:["Substitution","Electrophilic addition / hydration across C=C","Cracking","Neutralisation"],correctIndex:1,explanation:"π bond opens; –OH adds."},
+    {id:"chem-T17-042",question:"A student tests an unknown with sodium carbonate: vigorous bubbling. This supports:",options:["Presence of an alcohol","Presence of a carboxylic acid (or strong acid)","Presence of an alkene","Presence of an ester only"],correctIndex:1,explanation:"Acid + carbonate → CO₂."},
+    {id:"chem-T17-043",question:"Why does ethanoic acid have a lower electrical conductivity than HCl at the same concentration?",options:["Ethanoic acid is a strong acid","Ethanoic acid is weak — fewer ions per dm³","HCl has no ions","Ethanoic acid is a gas"],correctIndex:1,explanation:"Partial ionisation."},
+    {id:"chem-T17-044",question:"The general formula for a non-cyclic alkane is:",options:["CₙH₂ₙ","CₙH₂ₙ₊₂","CₙH₂ₙ₋₂","CₙHₙO₂"],correctIndex:1,explanation:"Saturated acyclic alkanes."},
+    {id:"chem-T17-045",question:"Methylpropane and butane both have formula C₄H₁₀. Their relationship is:",options:["Same empirical formula only","Structural isomers","Cis–trans isomers","Allotropes"],correctIndex:1,explanation:"Different connectivity — structural isomerism."},
+    {id:"chem-T17-046",question:"Crude oil is separated into fractions using fractional distillation because the fractions have:",options:["Different densities only","Different boiling points — shorter hydrocarbon chains are more volatile","Different colours only","Different ionic charges"],correctIndex:1,explanation:"Shorter/lighter chains have weaker London forces → lower bp → come off the column first."},
+    {id:"chem-T17-047",question:"Short-chain alkanes are in high demand as petrol while long-chain fractions are less so. Refineries crack long chains because:",options:["Long chains have more colour","Cracking produces shorter alkanes + alkenes to match fuel demand and chemical feedstocks","Cracking makes crude oil heavier","Only to remove sulfur"],correctIndex:1,explanation:"Demand > supply for shorter fractions; cracking matches supply to demand."},
+    {id:"chem-T17-048",question:"Propane (C₃H₈) is a saturated hydrocarbon. 'Saturated' means:",options:["It contains only single C–C and C–H bonds (no C=C or C≡C)","It is dissolved in water","It is fully coloured","It cannot burn"],correctIndex:0,explanation:"Saturated = only sigma bonds; cannot undergo addition reactions."},
+    {id:"chem-T17-049",question:"Alkenes burn with a sooty/smoky flame compared with alkanes of similar size because:",options:["Alkenes have lower carbon:hydrogen ratio","Alkenes have higher carbon:hydrogen ratio → less complete combustion → more carbon/soot","Alkenes are ionic","Alkenes do not burn"],correctIndex:1,explanation:"CₙH₂ₙ vs CₙH₂ₙ₊₂: alkenes are relatively carbon-rich → sootier combustion."},
+    {id:"chem-T17-050",question:"Bioethanol is claimed to be more sustainable than petrol because:",options:["It produces more energy per litre","It is produced from renewable crops — CO₂ released on combustion is partially offset by CO₂ absorbed during plant growth","It produces no CO₂","It contains no hydrogen"],correctIndex:1,explanation:"Short-cycle carbon: plants fix CO₂; burning releases it back. Net impact less than fossil fuel (though land use matters)."},
+    {id:"chem-T17-051",question:"Fermentation of glucose: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. The conditions required are:",options:["High temperature (300°C) and Pt catalyst","Yeast (contains enzymes/zymase), warm temperature (~30–35°C), anaerobic (no O₂)","Concentrated H₂SO₄","Only UV light"],correctIndex:1,explanation:"Yeast enzymes ferment glucose at body-temperature conditions without oxygen."},
+    {id:"chem-T17-052",question:"Ethanoic acid reacts with sodium carbonate to produce sodium ethanoate, water, and:",options:["Cl₂","H₂","CO₂ gas (effervescence)","O₂"],correctIndex:2,explanation:"Carboxylic acid + carbonate → salt + H₂O + CO₂. Test for –COOH group."},
+    {id:"chem-T17-053",question:"The ester ethyl ethanoate is formed from:",options:["Ethane + acetic acid","Ethanol + ethanoic acid, with conc H₂SO₄ as catalyst","Ethene + ethanol","Ethanol + water"],correctIndex:1,explanation:"Esterification: alcohol + carboxylic acid ⇌ ester + water."},
+    {id:"chem-T17-054",question:"Ethene (from cracking) can be hydrated industrially to form ethanol: $\\text{CH}_2{=}\\text{CH}_2 + \\text{H}_2\\text{O} \\to \\text{C}_2\\text{H}_5\\text{OH}$. This is preferred over fermentation for large-scale production because:",options:["It uses food crops","Continuous process, higher purity, lower cost at scale — though uses non-renewable ethene feedstock","It requires no energy","Fermentation is impossible"],correctIndex:1,explanation:"Industrial hydration is a continuous high-yield process, but relies on fossil-fuel derived ethene."},
+    {id:"chem-T17-055",question:"Why are alkenes generally more reactive than alkanes?",options:["They are heavier","They contain a carbon-carbon double bond","They are all cyclic","They dissolve less in water"],correctIndex:1,explanation:"The presence of the carbon-carbon double bond allows alkenes to readily undergo addition reactions."},
+    {id:"chem-T17-056",question:"In the complete combustion of ethanol, the products are:",options:["CO and H₂","CO₂ and H₂O","C and H₂O","CO₂ and O₂"],correctIndex:1,explanation:"Complete combustion of any alcohol or hydrocarbon in excess oxygen forms carbon dioxide and water."}
+    ],
+    extendedQuestions: [
+        {
+            id: "chem-add-t17-E01",
+            commandWord: "Deduce",
+            marks: 6,
+            syllabusNote: "Organic Chemistry - Qualitative analysis logic puzzle.",
+            prompt: "A colourless, flammable organic liquid, **Substance X**, contains two carbon atoms. \nWhen Substance X is warmed with acidified potassium manganate(VII), the purple solution turns colourless, producing **Substance Y**.\nSubstance Y is isolated and found to react vigorously with sodium carbonate to produce a colourless gas **Z** that forms a white precipitate in limewater.\n\n(a) Identify substances **X**, **Y**, and **Z**.\n(b) Write the balanced chemical equation for the reaction between Substance Y and sodium carbonate.\n(c) Substance X and Substance Y are then heated together with a few drops of concentrated sulfuric acid. Name the organic product formed and draw its full structural formula.",
+            rubric: [
+                "(a) **X**: Ethanol.",
+                "(a) **Y**: Ethanoic acid.",
+                "(a) **Z**: Carbon dioxide.",
+                "(b) Equation: **$2CH_3COOH + Na_2CO_3 \\rightarrow 2CH_3COONa + H_2O + CO_2$**.",
+                "(c) Product Name: **Ethyl ethanoate**.",
+                "(c) Diagram must show the ester linkage: $CH_3-C(=O)-O-CH_2-CH_3$ with all C-H and C-O bonds explicitly drawn."
+            ],
+            modelAnswer: "(a) Substance X is oxidised by acidified potassium manganate(VII) to form an acid (since Y reacts with a carbonate). Because X has two carbon atoms, **X is ethanol**. \nEthanol oxidises to form ethanoic acid, so **Y is ethanoic acid**.\nEthanoic acid reacts with sodium carbonate to produce carbon dioxide gas, so **Z is carbon dioxide**.\n\n(b) The balanced equation is:\n$2CH_3COOH + Na_2CO_3 \\rightarrow 2CH_3COONa + H_2O + CO_2$\n\n(c) When ethanol (X) and ethanoic acid (Y) are heated with concentrated sulfuric acid, an esterification reaction occurs. The organic product formed is **ethyl ethanoate**. \n*(Structural formula description)*: Draw a carbon atom bonded to 3 hydrogens. Bond it to a second carbon atom. This second carbon has a double bond to an oxygen atom (C=O) and a single bond to another oxygen (-O-). Bond this oxygen to a third carbon (which is bonded to 2 hydrogens), which is bonded to a fourth carbon (bonded to 3 hydrogens). This shows the full ester functional group."
+        },
+        {
+            id: "chem-add-t17-E02",
+            commandWord: "Construct",
+            marks: 5,
+            syllabusNote: "Organic Chemistry - Isomers and Addition Reactions.",
+            prompt: "Butene ($C_4H_8$) is an alkene that exhibits structural isomerism.\n\n(a) Draw the full structural formulas of two straight-chain isomers of butene.\n(b) Butene reacts with aqueous bromine in a dark room. State the observation for this reaction and explain the type of chemical reaction occurring.\n(c) Explain why butane ($C_4H_{10}$) does not react with aqueous bromine under the same conditions.",
+            rubric: [
+                "(a) Draws **but-1-ene** (C=C at the end of the chain).",
+                "(a) Draws **but-2-ene** (C=C in the middle of the chain). *(Must show all C-H bonds)*.",
+                "(b) Observation: The **brown/orange bromine water decolourises** (turns colourless).",
+                "(b) Reaction type: **Addition reaction** (bromine atoms add across the carbon-carbon double bond).",
+                "(c) Butane is a **saturated hydrocarbon** (contains only single C-C bonds).",
+                "(c) It does not have a double bond to undergo addition, and requires **ultraviolet (UV) light** to undergo a substitution reaction."
+            ],
+            modelAnswer: "(a) *(Structural formulas description)*: \n1. **But-1-ene**: Draw four carbons in a row. Place a double bond between carbon 1 and carbon 2. Fill in hydrogens so every carbon has 4 bonds ($CH_2=CH-CH_2-CH_3$).\n2. **But-2-ene**: Draw four carbons in a row. Place a double bond between carbon 2 and carbon 3. Fill in hydrogens so every carbon has 4 bonds ($CH_3-CH=CH-CH_3$).\n\n(b) Observation: The orange/brown bromine water will **turn colourless**.\nReaction type: This is an **addition reaction**. The carbon-carbon double bond (C=C) breaks open, and the two bromine atoms add onto the two carbon atoms to form a single, saturated product (a dibromoalkane).\n\n(c) Butane is a **saturated alkane**, meaning it contains only single C-C and C-H bonds. Because it lacks a double bond, it cannot undergo an addition reaction. Alkanes will only react with halogens via a substitution reaction, which requires the presence of **ultraviolet (UV) light** to initiate."
+        }
     ],
     trueFalse: [
     {statement:"All alkenes have the same empirical formula CH₂.",correct:true,explain:"CₙH₂ₙ → CH₂."},
