@@ -50,6 +50,8 @@ stripe listen --forward-to http://127.0.0.1:8081/webhook/stripe
 
 ### CORS errors in the browser
 
+0. **Preflight (OPTIONS) must hit CORS before auth** — if you fork `main.py`, do not register `CORSMiddleware` *before* `@app.middleware` auth guards that reject unauthenticated requests; otherwise OPTIONS gets `401` with no `Access-Control-Allow-Origin`. In this repo, CORS is added **after** `auth_guard_middleware` so it wraps auth on the inbound path.
+
 1. **Run Compose from the `api/` folder** (where `docker-compose.yml` and `.env` live):  
    `cd api` then `docker compose up --build`.  
    If Compose starts from another directory, `env_file: .env` may not pick up `api/.env` and **`CORS_ORIGINS` can be empty** inside the container → no CORS headers → browser reports a preflight / CORS error.

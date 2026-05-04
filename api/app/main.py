@@ -97,29 +97,10 @@ def _parse_cors_origins(raw: str) -> list[str]:
 
 _LOCALHOST_ORIGIN_REGEX = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
 
-_origins = _parse_cors_origins(settings.cors_origins or "")
-if _origins:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=_origins,
-        allow_credentials=False,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    logger.info("CORS allow_origins=%r", _origins)
-else:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origin_regex=_LOCALHOST_ORIGIN_REGEX,
-        allow_credentials=False,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    logger.warning(
-        "CORS_ORIGINS is empty — using localhost regex only. "
-        "Set CORS_ORIGINS for production (see README)."
-    )
-
+# CORS is registered *after* auth_guard_middleware below — FastAPI prepends each
+# add_middleware, so registering CORSMiddleware last keeps it outside auth on
+# the inbound chain. Otherwise OPTIONS preflight hits auth first, gets 401, and
+# browsers report missing Access-Control-Allow-Origin.
 
 # ── Shared singletons ────────────────────────────────────────────────────────
 
@@ -190,6 +171,30 @@ async def auth_guard_middleware(request: Request, call_next):
             )
 
     return await call_next(request)
+
+
+_origins = _parse_cors_origins(settings.cors_origins or "")
+if _origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_origins,
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    logger.info("CORS allow_origins=%r", _origins)
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=_LOCALHOST_ORIGIN_REGEX,
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    logger.warning(
+        "CORS_ORIGINS is empty — using localhost regex only. "
+        "Set CORS_ORIGINS for production (see README)."
+    )
 
 
 # ── Public endpoints ──────────────────────────────────────────────────────────
