@@ -57,70 +57,53 @@
             "$R_f = \\dfrac{\\text{distance substance moved}}{\\text{distance solvent front moved}}$ (always ≤ 1).",
             "SI base units: mass → **kg** (g in chemistry); T → **K** (= °C + 273); time → **s**."
         ]
+    },
+    { 
+    "title": "Measuring Apparatus", 
+    "points": [ 
+        " **Burette** — measures variable volumes accurately to the nearest 0.05 cm³.", 
+        " **Measuring cylinder** — measures approximate volumes to the nearest 0.5 cm³.",
+        " **Gas syringe** — used to collect and measure small, accurate volumes of a gas up to 100 cm³.",
+        " **Meniscus** — read the bottom of the curve at eye level to avoid parallax error."
+    ] 
+    },
+    { 
+    "title": "Collecting Gases", 
+    "points": [ 
+        " **Water displacement** — for gases insoluble or slightly soluble in water (e.g., H₂, O₂, CO₂).", 
+        " **Downward delivery** — for gases denser than air (e.g., Cl₂, HCl, SO₂).", 
+        " **Upward delivery** — for gases less dense than air (e.g., NH₃)." 
+    ] 
+    },
+    { 
+    "title": "Drying Gases", 
+    "points": [ 
+        " **Concentrated sulfuric acid** — for most gases (Cl₂, HCl), but reacts with alkaline gases.", 
+        " **Quicklime (calcium oxide)** — specifically used to dry ammonia (NH₃).", 
+        " **Fused calcium chloride** — for H₂, N₂, CO₂; reacts with ammonia." 
+    ] 
     }],
     infographics: [ { image: "data/subjects/chemistry/images/matter-01-experimental-design.jpg", caption: "Fair test: variables and apparatus" } ],
     flashcards: [
-        {
-            "front": "Independent variable?",
-            "back": "The one you deliberately change."
-        },
-        {
-            "front": "Why control variables?",
-            "back": "So only the tested factor affects the result."
-        },
-        {
-            "front": "Random vs systematic error?",
-            "back": "Random: scatter. Systematic: consistent bias."
-        },
-        {
-            "front": "Hypothesis vs prediction?",
-            "back": "Hypothesis is testable; prediction is expected outcome."
-        },
-        {
-            "front": "Why pilot experiment?",
-            "back": "Check method, range, safety before full run."
-        },
-        {
-            "front": "Anomalous result?",
-            "back": "Outlier — often excluded if clear mistake."
-        },
-        {
-            "front": "Repeat vs replicate?",
-            "back": "Repeat: same person; replicate: different runs/people."
-        },
-        {
-            "front": "Blind testing?",
-            "back": "Reduces bias when subject doesn't know which is which."
-        },
-        {
-            "front": "Resolution of instrument?",
-            "back": "Smallest change it can detect."
-        },
-        {
-            "front": "Uncertainty?",
-            "back": "Half smallest division or stated instrument error."
-        },
-        {
-            "front": "Correlation vs causation?",
-            "back": "Correlation doesn't prove one caused the other."
-        },
-        {
-            "front": "Control group?",
-            "back": "Baseline without the treatment for comparison."
-        },
-        {
-            "front": "Sample size?",
-            "back": "Larger sample usually more representative."
-        },
-        {
-            "front": "Fair test checklist?",
-            "back": "One IV, measure DV, list and fix controls."
-        }
-    ,
-    { "front": "$R_f$ formula?", "back": "$R_f = \\dfrac{d_{\\text{substance}}}{d_{\\text{solvent front}}}$. Always between 0 and 1." },
-    { "front": "Precision vs accuracy?", "back": "**Precision**: readings agree with each other (reproducible). **Accuracy**: readings are close to the true value." },
-    { "front": "How to reduce random error?", "back": "Take **repeat readings** and calculate the **mean**. Discard outliers." },
-    { "front": "Which glassware for exact 25.00 cm³?", "back": "**Volumetric pipette** (fixed volume) or **burette** (variable, to 0.05 cm³)." }],
+        { "front": "Independent variable?","back": "The one you deliberately change."},
+        { "front": "Why control variables?","back": "So only the tested factor affects the result."},
+        { "front": "Random vs systematic error?","back": "Random: scatter. Systematic: consistent bias."},
+        { "front": "Hypothesis vs prediction?","back": "Hypothesis is testable; prediction is expected outcome."},
+        { "front": "Why pilot experiment?","back": "Check method, range, safety before full run."},
+        { "front": "Anomalous result?","back": "Outlier — often excluded if clear mistake."},
+        { "front": "Repeat vs replicate?","back": "Repeat: same person; replicate: different runs/people."},        
+        { "front": "Resolution of instrument?", "back": "Smallest change it can detect."},
+        { "front": "Uncertainty?","back": "Half smallest division or stated instrument error."},        
+        { "front": "Fair test checklist?","back": "One IV, measure DV, list and fix controls."},
+        { "front": "What apparatus is used to accurately measure a variable liquid volume to 0.05 cm³?", "back": "A burette." },
+        { "front": "What is the maximum volume a standard laboratory gas syringe measures?", "back": "100 cm³." },
+        { "front": "How do you collect a gas that is denser than air and very soluble in water (e.g., HCl)?", "back": "By downward delivery." },
+        { "front": "Which drying agent is used for ammonia gas?", "back": "Quicklime (calcium oxide). Concentrated sulfuric acid reacts with it." },
+        { "front": "$R_f$ formula?", "back": "$R_f = \\dfrac{d_{\\text{substance}}}{d_{\\text{solvent front}}}$. Always between 0 and 1." },
+        { "front": "Precision vs accuracy?", "back": "**Precision**: readings agree with each other (reproducible). **Accuracy**: readings are close to the true value." },
+        { "front": "How to reduce random error?", "back": "Take **repeat readings** and calculate the **mean**. Discard outliers." },
+        { "front": "Which glassware for exact 25.00 cm³?", "back": "**Volumetric pipette** (fixed volume) or **burette** (variable, to 0.05 cm³)." }
+    ],
     quiz: [
     {id:"chem-T1-001",question:"Fair test requires changing:",options:["Only one independent variable","All variables","Only the dependent","Nothing"],correctIndex:0,explanation:"One factor at a time."},
     {id:"chem-T1-002",question:"Dependent variable is:",options:["What you measure","What you keep fixed","The hypothesis","Apparatus list"],correctIndex:0,explanation:"Response to your change."},
@@ -133,39 +116,38 @@
     {id:"chem-T1-009",question:"Accuracy means:",options:["Many repeats","Close to true value","Large sample","Short report"],correctIndex:1,explanation:"Correctness."},
     {id:"chem-T1-010",question:"Control experiment helps:",options:["Waste time","Isolate effect of the variable tested","Remove all errors","Avoid graph"],correctIndex:1,explanation:"Comparison baseline."},
     {id:"chem-T1-011",question:"Zero error on a meter:",options:["Random","Systematic","Never happens","Only digital"],correctIndex:1,explanation:"Consistent offset."},
-    {id:"chem-T1-012",question:"Sample should be:",options:["Always size 1","Representative of population","Only extremes","Random words"],correctIndex:1,explanation:"Generalisable."},
+    {id:"chem-T1-012",question:"Which apparatus provides the most appropriate measurement of a variable volume of liquid to the nearest 0.05 cm³?",options:["Measuring cylinder","Burette","Volumetric pipette","Beaker"],correctIndex:1,explanation:"A burette has fine graduations allowing readings to 0.05 cm³."},    
     {id:"chem-T1-013",question:"Risk assessment includes:",options:["Only results","Hazard + control measure","Only cost","Exam date"],correctIndex:1,explanation:"Safety first."},
     {id:"chem-T1-014",question:"Valid conclusion requires:",options:["Fair test + relevant data","Many colours on graph","Short method","No repeats"],correctIndex:0,explanation:"Logic + evidence."},
-    {id:"chem-T1-015",question:"Operational definition:",options:["Defines how you measure a variable","Defines exam board","Unit only","Hypothesis"],correctIndex:0,explanation:"Measurable definition."},
-    {id:"chem-T1-016",question:"Blind trial reduces:",options:["Cost only","Observer bias","Time","Apparatus need"],correctIndex:1,explanation:"Expectation effects."},
+    {id:"chem-T1-015",question:"A student needs to dry a sample of ammonia gas. Which drying agent should be used?",options:["Concentrated sulfuric acid","Quicklime (calcium oxide)","Fused calcium chloride","Anhydrous copper(II) sulfate"],correctIndex:1,explanation:"Ammonia is basic and reacts with acidic drying agents like sulfuric acid. Quicklime is a basic oxide and is safe to use."},
+    
     {id:"chem-T1-017",question:"Line of best fit:",options:["Joins every dot","Shows trend; balances scatter","Horizontal only","Optional for marks"],correctIndex:1,explanation:"Trend line."},
     {id:"chem-T1-018",question:"Interpolation vs extrapolation:",options:["Same","Interpolation within data; extrapolation beyond — riskier","Only extrapolation safe","Neither used"],correctIndex:1,explanation:"Outside range uncertain."},
     {id:"chem-T1-019",question:"Resolution 0.1 cm means:",options:["Error 10%","Smallest reading step 0.1 cm","Length 0.1 cm","Volume"],correctIndex:1,explanation:"Instrument precision."},
-    {id:"chem-T1-020",question:"Peer review improves:",options:["Font size","Credibility of method","Speed only","Nothing"],correctIndex:1,explanation:"Others check design."},
+    
     {id:"chem-T1-021",question:"Controlled variable example when testing temp on rate:",options:["Temperature","Concentration of acid","Time measured","Product colour"],correctIndex:1,explanation:"Keep concentration same."},
     {id:"chem-T1-022",question:"Pilot study:",options:["Final exam","Small trial to refine method","Only theory","Graph type"],correctIndex:1,explanation:"Practice run."},
     {id:"chem-T1-023",question:"Recording raw data means:",options:["Only averages","Original readings before manipulation","Final conclusion","Teacher marks"],correctIndex:1,explanation:"Primary data."},
-    {id:"chem-T1-024",question:"Ethical sampling (humans):",options:["Force participation","Informed consent","Hide purpose always","No documentation"],correctIndex:1,explanation:"Consent matters."},
+    
     {id:"chem-T1-025",question:"Uncertainty bar on graph shows:",options:["Artist choice","Range of doubt in measurement","Exam board","Colour code"],correctIndex:1,explanation:"Error representation."},
     {id:"chem-T1-026",question:"If gradient units are mol/dm³ ÷ s, you have:",options:["Rate of reaction","Density","Pressure","Voltage"],correctIndex:0,explanation:"Concentration change per time."},
     {id:"chem-T1-027",question:"Two investigators get different means from repeats of the same method. Most likely difference:",options:["Random error only in one lab","They changed the independent variable","Different systematic errors (e.g. calibration)","Random error cannot differ between labs"],correctIndex:2,explanation:"Consistent bias shifts the whole dataset; random scatter differs run-to-run."},
     {id:"chem-T1-028",question:"A result is precise but not accurate. This fits:",options:["Tight cluster far from true value","Wide scatter around true value","Tight cluster on true value","One reading only"],correctIndex:0,explanation:"Precision is repeatability; accuracy needs closeness to true value."},
-    {id:"chem-T1-029",question:"Blinding in testing mainly addresses:",options:["Instrument resolution","Observer and subject bias","Random error from temperature","Systematic zero error"],correctIndex:1,explanation:"Expectations should not drive measurements or responses."},
+    
     {id:"chem-T1-030",question:"Interpolation is usually safer than extrapolation because:",options:["Graph paper forbids extrapolation","You stay within the range where the relationship was observed","Interpolation always gives exact values","Extrapolation only works for gases"],correctIndex:1,explanation:"Outside the data range the model may fail."},
-    {id:"chem-T1-031",question:"Percentage uncertainty on a calculated quantity often combines uncertainties by:",options:["Adding raw readings","Root-sum-square or linear rules depending on operation","Always halving them","Ignoring the smallest uncertainty"],correctIndex:1,explanation:"How uncertainties combine depends on how quantities are combined."},
+    
     {id:"chem-T1-032",question:"A control experiment differs from a control variable because it:",options:["Is always a placebo","Provides a baseline without the factor being tested","Must use a different instrument","Removes all random error"],correctIndex:1,explanation:"A control run isolates the effect; control variables are kept constant."},
     {id:"chem-T1-033",question:"Validity of a conclusion is threatened most when:",options:["Random error is small","The method answers a different question than claimed","Sample size is large","Results are reproducible"],correctIndex:1,explanation:"Validity is whether the evidence actually supports the claim."},
     {id:"chem-T1-034",question:"Calibration of a balance with standard masses mainly reduces:",options:["Random error in a single reading","Systematic error from incorrect scale","The need to repeat","Human reaction time"],correctIndex:1,explanation:"Calibration corrects consistent offsets."},
-    {id:"chem-T1-035",question:"An operational definition is important so that:",options:["The experiment uses expensive kit","The dependent variable is measured the same way each time","The hypothesis becomes unfalsifiable","The risk assessment is shorter"],correctIndex:1,explanation:"It makes the measurement explicit and comparable."},
+    
     {id:"chem-T1-036",question:"Using a line of best fit rather than joining every point mainly helps:",options:["Remove the need for units","Show overall trend and reduce noise from scatter","Guarantee a straight line","Increase systematic error"],correctIndex:1,explanation:"Trend lines summarise data; anomalies stand out."},
     {id:"chem-T1-201",question:"A student reads a burette meniscus from above while the liquid is still draining. This mainly introduces:",options:["A random error that averages to zero","A systematic parallax / timing error","No error if the titre is repeated","Only random error from temperature"],correctIndex:1,explanation:"Viewing angle and premature reading bias results consistently; repeats may not fix systematic bias."},
     {id:"chem-T1-202",question:"Multiplying 2.3 cm × 4.56 cm gives an area that should be reported as:",options:["10.488 cm²","10.5 cm²","10 cm²","10.49 cm²"],correctIndex:1,explanation:"The product cannot be more precise than the least precise factor (2.3 has 2 s.f.)."},
-    {id:"chem-T1-203",question:"Random allocation of participants/samples to experimental groups mainly reduces:",options:["Systematic zero error","Selection bias from non-random assignment","The need for a control group","Instrument resolution"],correctIndex:1,explanation:"Randomisation spreads confounding factors evenly."},
-    {id:"chem-T1-204",question:"A double-blind experiment means:",options:["Two observers time each trial","Neither subject nor key assessor knows who received which treatment","Two independent variables are tested","Two repeats are done"],correctIndex:1,explanation:"Reduces expectation bias on both sides."},
-    {id:"chem-T1-205",question:"Internal validity of a study refers to:",options:["Whether results apply worldwide","Whether the measured effect is genuinely caused by the intended factor","Whether the sample size is large","Whether the graph is printed in colour"],correctIndex:1,explanation:"Internal validity = causal claim is supported within the setup."},
-    {id:"chem-T1-206",question:"External validity refers to:",options:["How far conclusions generalise beyond the specific conditions tested","Whether the thermometer is calibrated","Whether random error is small","Whether the hypothesis is long"],correctIndex:0,explanation:"Generalisable to other contexts."},
-    {id:"chem-T1-207",question:"When plotting a quantity that spans 10^4–10^8 on a wide range, a log scale is often used because:",options:["It removes all systematic error","It compresses wide ranges so trends are easier to see","It makes all relationships linear","It is required by SI"],correctIndex:1,explanation:"Log scales help visualise multiplicative change across orders of magnitude."},
-    {id:"chem-T1-208",question:"A systematic error that is proportional to the measured value (e.g. a wrongly calibrated 2% high scale) will:",options:["Affect only one reading","Shift all readings by a consistent percentage or offset pattern","Disappear if you repeat once","Average out over many repeats"],correctIndex:1,explanation:"Repeats stay biased; calibration is needed."},
+    
+    
+    
+    
+    
     {id:"chem-T1-209",question:"The best reason to plot error bars on a graph is to:",options:["Make the graph colourful","Show uncertainty in each measured point","Force the line to be straight","Replace a table"],correctIndex:1,explanation:"Error bars communicate uncertainty visually."},
     {id:"chem-T1-301",question:"Which conversion is correct?",options:["1 m = 1000 cm","1 kg = 100 g","1 minute = 60 s","1 cm³ = 1000 dm³"],correctIndex:2,explanation:"1 minute equals 60 seconds."},
     {id:"chem-T1-302",question:"Temperature in Kelvin is calculated from Celsius by:",options:["K = °C - 273","K = °C + 273","K = °C × 273","K = °C / 273"],correctIndex:1,explanation:"Add 273 to convert from degrees Celsius to Kelvin."},
@@ -179,7 +161,7 @@
     {id:"chem-T1-310",question:"'Accuracy' in a measurement means:",options:["Getting the same reading every time","How close the measurement is to the true/accepted value","Taking many measurements","Having no random error ever"],correctIndex:1,explanation:"Accuracy = closeness to true value. Precision = reproducibility (same result each time, but may be consistently wrong)."}
     ],
     extendedQuestions: [
-      {
+    {
         id: "chem-T1-E01",
         commandWord: "Explain",
         marks: 4,
@@ -192,8 +174,8 @@
           "Quality: clear cause–effect (confounding) reasoning in the context of reaction rate."
         ],
         modelAnswer: "- **Control variables** are factors kept constant so they do not affect the outcome.\n- **Concentration** and **volume of acid** change the amount of reactant per unit time; **mass or size of chips** changes surface area — all alter rate.\n- If they changed together with temperature, any difference in gas volume could be due to those factors **or** temperature, so the conclusion about temperature would **not be valid** (not a fair test)."
-      },
-      {
+    },
+    {
         id: "chem-T1-E02",
         commandWord: "Describe",
         marks: 4,
@@ -206,8 +188,8 @@
           "Any valid second distinct strategy (e.g. larger gas sample if method allows, consistent **room pressure** awareness) if clearly linked to reliability."
         ],
         modelAnswer: "1) **Repeat** each temperature **at least two or three times** and calculate a **mean** volume — random errors tend to average out.\n2) Use a **consistent method** for starting the clock and reading the **bottom of the meniscus** at eye level on the measuring cylinder each time.\n3) (Optional third) Check joints are **airtight** so gas loss does not differ between runs."
-      },
-      {
+    },
+    {
         id: "chem-T1-E03",
         commandWord: "State",
         marks: 2,
@@ -218,8 +200,8 @@
           "**Accuracy** — readings are **not** accurate / systematically high / **systematic error** (offset from true value)."
         ],
         modelAnswer: "- **Precision** is good (readings are reproducible and cluster tightly).\n- **Accuracy** is poor because there is a **systematic error** — a constant +2 °C bias from the true value."
-      },
-      {
+    },
+    {
         id: "chem-T1-E04",
         commandWord: "Explain",
         marks: 5,
@@ -233,7 +215,7 @@
           "Conclusion: comparison **as described** is **not valid** (or only valid if same setup) — clear judgement."
         ],
         modelAnswer: "It would **not be a valid** comparison because the **calorimeter** differs: polystyrene is a better **insulator** than an open glass beaker, so Group B loses **more heat** to the air. That **systematically reduces** the measured temperature rise even if the metal is equally reactive.\nFor a **fair test**, both groups should use the **same type** of insulated cup (or same beaker + lid), **same stirring**, and the **same initial conditions**. Then temperature rise reflects the reaction more reliably."
-      }
+    }
     ],
     trueFalse: [
     {statement:"More repeats always remove systematic error.",correct:false,explain:"Repeats reduce random error; systematic needs calibration/fix."},
@@ -247,7 +229,10 @@
     {statement:"A hypothesis must be falsifiable.",correct:true,explain:"Science tests refutation."},
     {statement:"Same student repeating 10 times is weaker than independent replication.",correct:true,explain:"Same bias may persist."},
     {statement:"Digital readout always means higher accuracy than analogue.",correct:false,explain:"Resolution and calibration matter."},
-    {statement:"Risk: concentrated acid — wear eye protection.",correct:true,explain:"Standard lab rule."}
+    {statement:"Risk: concentrated acid — wear eye protection.",correct:true,explain:"Standard lab rule."},
+    {statement:"A gas syringe is typically used to collect and measure gas volumes up to 100 cm³.",correct:true,explain:"Gas syringes provide an accurate method for measuring evolved gas volumes up to 100 cm³."},
+    {statement:"Concentrated sulfuric acid is a suitable drying agent for all laboratory gases.",correct:false,explain:"It reacts with alkaline gases like ammonia."},
+    {statement:"Locating agents are required to visualise food colourings on a chromatogram.",correct:false,explain:"Food colourings are already visible. Locating agents are for colourless substances like amino acids."}
     ],
     orderGame: ["State aim and hypothesis","List hazards and controls","List apparatus","Describe method step-by-step","Tabulate raw results","Process data and graph","Evaluate and conclude"],
     orderTitle: "Typical investigation write-up",

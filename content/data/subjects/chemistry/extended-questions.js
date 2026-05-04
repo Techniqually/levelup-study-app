@@ -172,11 +172,6 @@
         "Incorrect balancing gives wrong stoichiometric factors.",
         "Directly affects calculated masses/volumes/yields.",
       ], "- Balanced equations give correct mole ratios between reactants and products.\n- Mole calculations depend on these ratios.\n- If equation is not balanced, all later quantitative answers are wrong.", "Topic 6 equations and moles"),
-      q("chem-T6-EX-04", "Calculate", 5, "Find empirical formula of a compound containing 40.0% C, 6.7% H, 53.3% O.", [
-        "Assume 100 g sample: C=40.0 g, H=6.7 g, O=53.3 g.",
-        "Convert to moles using Ar values.",
-        "Obtain simplest ratio approximately 1:2:1 -> CH2O.",
-      ], "Moles: C = 40.0/12 = 3.33, H = 6.7/1 = 6.7, O = 53.3/16 = 3.33.\nDivide by 3.33 gives ratio 1:2:1.\nEmpirical formula = CH2O.", "Topic 6 empirical formula"),
       q("chem-T6-EX-05", "Describe", 4, "Describe how percentage yield is calculated and suggest one reason for yield below 100%.", [
         "Percentage yield = actual/theoretical x 100%.",
         "Any valid reason: incomplete reaction, side reactions, product loss in transfer/filtration.",
@@ -193,11 +188,6 @@
         "Effervescence observed.",
         "CO2 turns limewater milky.",
       ], "- Acid + carbonate gives salt + water + carbon dioxide.\n- Bubbles/effervescence are seen.\n- The gas turns limewater milky, confirming carbon dioxide.", "Topic 7 acid reactions"),
-      q("chem-T7-EX-03", "Explain", 5, "A solution has pH 3 while another has pH 5.\nExplain the difference in acidity quantitatively.", [
-        "pH scale is logarithmic (base 10).",
-        "Difference of 2 pH units means 10^2 = 100 times [H^+].",
-        "pH 3 is more acidic.",
-      ], "Because pH is logarithmic, a 2-unit difference means $10^2 = 100$ times change in hydrogen ion concentration.\nSo pH 3 solution is 100 times more acidic than pH 5.", "Topic 7 pH scale"),
       q("chem-T7-EX-04", "State", 4, "State two differences between strong and weak acids of equal concentration.", [
         "Strong acids ionise almost completely; weak acids partially.",
         "Strong acids have higher [H^+] and usually lower pH.",
@@ -237,12 +227,6 @@
       ], "- Heating to complete dryness can decompose some salts or cause spitting/loss.\n- Good crystallisation needs near-saturated solution then slow cooling.\n- Overheating gives poor crystal formation and possible impurity.", "Topic 8 crystallisation control"),
     ],
     "9": [
-      q("chem-T9-EX-01", "Explain", 6, "In the Haber process, explain why conditions around 450 deg C, 200 atm and iron catalyst are used.", [
-        "Reaction is exothermic so lower temperature favors yield.",
-        "Higher temperature needed for acceptable rate; 450 deg C is compromise.",
-        "High pressure favors fewer gas moles (product side).",
-        "Iron catalyst increases rate, not equilibrium position.",
-      ], "- Since Haber synthesis is exothermic, lower temperature favors ammonia yield, but rate would be too slow.\n- About 450 deg C is a practical compromise between yield and rate.\n- High pressure shifts equilibrium toward fewer gas molecules (ammonia).\n- Iron catalyst speeds reaching equilibrium without changing the equilibrium position.", "Topic 9 Haber process"),
       q("chem-T9-EX-02", "Describe", 4, "Describe laboratory test to identify ammonia gas.", [
         "Pungent smell (carefully wafted).",
         "Turns damp red litmus paper blue.",
@@ -330,10 +314,6 @@
         "Carbon cannot reduce Al2O3 effectively.",
         "Electrolysis provides external electrical energy to force reduction.",
       ], "- Aluminium is above carbon in reactivity, so carbon cannot reduce aluminium oxide effectively.\n- Extraction therefore uses electrolysis of molten/alumina-containing electrolyte to force reduction at the cathode.", "Topic 12 extraction"),
-      q("chem-T12-EX-04", "Calculate", 4, "In electroplating, a current of 2.0 A passes for 600 s.\nCalculate total charge passed.", [
-        "Uses Q = It.",
-        "Q = 2.0 x 600 = 1200 C.",
-      ], "$Q = It = 2.0 \\times 600 = 1200\\ \\text{C}$.", "Topic 12 quantitative electrolysis"),
       q("chem-T12-EX-05", "State", 4, "State one advantage and one environmental issue of electroplating.", [
         "Advantage: corrosion resistance/appearance.",
         "Issue: toxic metal ions/waste disposal/electricity consumption.",
@@ -396,12 +376,6 @@
         "Activation energy barrier shown from reactants to peak.",
         "Delta H negative.",
       ], "- In an exothermic profile, products are at lower energy than reactants.\n- The peak above reactants shows activation energy.\n- The enthalpy change, $\\Delta H$, is negative because energy is released overall.", "Topic 15 energy profiles"),
-      q("chem-T15-EX-02", "Describe", 5, "Describe simple calorimetry method to estimate heat released by neutralisation and state one limitation.", [
-        "Measure initial temperatures and volumes/masses.",
-        "Mix reactants in insulated cup and record max temperature rise.",
-        "Use q = mcDeltaT.",
-        "Limitation: heat loss to surroundings.",
-      ], "- Measure starting temperatures and known mass/volume of solutions.\n- Mix in an insulated cup and record highest temperature.\n- Estimate heat change with $q = mc\\Delta T$.\n- A key limitation is heat loss to surroundings/apparatus.", "Topic 15 calorimetry"),
       q("chem-T15-EX-03", "Explain", 5, "Explain why bond breaking is endothermic and bond making is exothermic.", [
         "Energy required to overcome attractions when breaking bonds.",
         "Energy released when new stable bonds form.",
@@ -411,10 +385,7 @@
         "Exothermic uses: hand warmers/fuel combustion/self-heating cans.",
         "Endothermic use: instant cold packs/thermal decomposition steps.",
       ], "- Exothermic reactions are used in hand warmers and fuel combustion for heating.\n- Endothermic reactions are used in instant cold packs for cooling.", "Topic 15 applications"),
-      q("chem-T15-EX-05", "Calculate", 4, "If 100 g water rises by 7.5 deg C and $c = 4.2$ J g^-1 deg C^-1, calculate heat gained by water.", [
-        "Use q = mcDeltaT.",
-        "q = 100 x 4.2 x 7.5 = 3150 J.",
-      ], "$q = mc\\Delta T = 100 \\times 4.2 \\times 7.5 = 3150\\ \\text{J}$.", "Topic 15 thermal calculations"),
+      
     ],
     "16": [
       q("chem-T16-EX-01", "Explain", 6, "Use collision theory to explain effect of increasing concentration on reaction rate.", [

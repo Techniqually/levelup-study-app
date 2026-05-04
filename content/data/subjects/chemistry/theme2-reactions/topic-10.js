@@ -18,8 +18,7 @@
                 "Cl⁻ + AgNO₃ → white AgCl (insoluble in dil HNO₃).",
                 "SO₄²⁻ + Ba²⁺ → white BaSO₄."
             ]
-        }
-    ,
+        },
     {
         "title": "Flame Test Colours",
         "points": [
@@ -64,7 +63,10 @@
             "**NO₃⁻** — add NaOH + Al foil, heat: NH₃ gas produced (litmus test)."
         ]
     }],
-    infographics: [ { image: "data/subjects/chemistry/images/reactions-05-qualitative-analysis.jpg", caption: "Flame colours and precipitate tests" } ],
+    infographics: [ 
+        { image: "data/subjects/chemistry/images/reactions-05-qualitative-analysis.jpg", caption: "Flame colours and precipitate tests" },
+        { image: "data/subjects/chemistry/images/topic-10-infographic.png", caption: "Qualitative Analysis Infographic" }
+    ],
     flashcards: [
         {
             "front": "Carbonate test?",
@@ -87,10 +89,6 @@
             "back": "Remove CO₃²⁻ interference."
         },
         {
-            "front": "Fe³⁺ SCN⁻ blood red?",
-            "back": "Complex (A-level)."
-        },
-        {
             "front": "Ca²⁺ flame?",
             "back": "Brick red-orange."
         },
@@ -101,14 +99,6 @@
         {
             "front": "Sulfite + acid?",
             "back": "SO₂ — reduces dichromate."
-        },
-        {
-            "front": "Nitrate brown ring test?",
-            "back": "Historical wet test."
-        },
-        {
-            "front": "Phosphate + ammonium molybdate?",
-            "back": "Yellow ppt (adv)."
         },
         {
             "front": "Starch iodine?",
@@ -156,15 +146,15 @@
     {id:"chem-T10-018",question:"Flame test wire clean:",options:["HCl dip heat","Only water","Oil","Sugar"],correctIndex:0,explanation:"Remove contamination."},
     {id:"chem-T10-019",question:"MnO₄⁻ colour:",options:["Colourless","Purple","Yellow","Pink only"],correctIndex:1,explanation:"Permanganate."},
     {id:"chem-T10-020",question:"Cu²⁺ concentrated solution colour:",options:["Blue","Green/yellow high Cl⁻","Always red","None"],correctIndex:0,explanation:"Aqua complex."},
-    {id:"chem-T10-021",question:"Ferricyanide test Fe²⁺ (adv):",options:["Turnbull's blue","Only gas","White","Silver"],correctIndex:0,explanation:"Qual scheme."},
-    {id:"chem-T10-022",question:"Nitrate reduction to NH₃ Devarda (context):",options:["Alloy reduces","Only heat","Only acid","Light"],correctIndex:0,explanation:"Old test."},
-    {id:"chem-T10-023",question:"Silver mirror Tollen aldehyde:",options:["Not cation test","Organic","Cl⁻","SO₄²⁻"],correctIndex:1,explanation:"Different test."},
+    {id:"chem-T10-021",question:"How is the presence of a nitrate ion ($NO_3^-$) confirmed in an unknown solution?",options:["Adding acidified barium chloride","Adding aqueous sodium hydroxide, followed by aluminium foil, and warming","Adding dilute nitric acid and silver nitrate","Adding universal indicator"],correctIndex:1,explanation:"The nitrate ion is reduced by aluminium in alkaline conditions to produce ammonia gas, which turns damp red litmus paper blue."},
+    {id:"chem-T10-022",question: "A mystery white solid Y is insoluble in water. When dilute nitric acid is added, it effervesces and the gas turns limewater milky. The resulting clear solution is then mixed with aqueous sodium sulfate, forming a white precipitate. Identify Y.",options: ["Zinc carbonate","Sodium carbonate","Copper(II) carbonate","Barium carbonate"],correctIndex: 3,explanation: "Effervescence with acid indicates a carbonate. Sodium carbonate is soluble in water, so it can't be Na₂CO₃. Copper(II) carbonate is green, not white. The formation of a white precipitate with sodium sulfate indicates the presence of Barium ions (BaSO₄ is insoluble)."},
+    {id:"chem-T10-023",question:"Which ion gives a white precipitate with acidified barium nitrate?",options:["Chloride","Nitrate","Sulfate","Carbonate"],correctIndex:2,explanation:"Sulfate ions react with barium ions to form insoluble barium sulfate. The acid prevents carbonate ions from giving a false positive."},
     {id:"chem-T10-024",question:"Gas relights glowing splint:",options:["CO₂","O₂","N₂","Cl₂"],correctIndex:1,explanation:"Oxygen test."},
     {id:"chem-T10-025",question:"Pop test gas:",options:["O₂","H₂","CO₂","NH₃"],correctIndex:1,explanation:"Hydrogen."},
     {id:"chem-T10-026",question:"Pb²⁺ + I⁻:",options:["White","Yellow ppt","Gas","Blue"],correctIndex:1,explanation:"PbI₂."},
     {id:"chem-T10-027",question:"Why view K⁺ flame through cobalt blue glass?",options:["To magnify the flame","To filter yellow Na light that can mask lilac K","To cool the flame","To make sodium flame brighter"],correctIndex:1,explanation:"Sodium contamination is common; cobalt glass reduces yellow overlap."},
-    {id:"chem-T10-028",question:"AgBr is cream and AgI is yellow. The order of solubilities (highest first) is roughly:",options:["AgCl > AgBr > AgI","AgI > AgBr > AgCl","All equal","Only AgCl exists"],correctIndex:0,explanation:"Halide silver salts become less soluble down the group (Ksp trend)."},
-    {id:"chem-T10-029",question:"Fe³⁺(aq) + SCN⁻ can give blood-red colour due to:",options:["Precipitate of Fe(OH)₃ only","Formation of a complex ion","Cl₂ gas","Only an acid–base indicator"],correctIndex:1,explanation:"Thiocyanate forms a coloured iron(III) complex."},
+    
+    
     {id:"chem-T10-030",question:"A student adds acidified BaCl₂ and sees a white ppt. It might be sulfate OR:",options:["Always chloride","Carbonate if not acidified (BaCO₃)","Always nitrate","Always silver"],correctIndex:1,explanation:"Without acid, carbonate interferes; acid removes CO₃²⁻ as CO₂."},
     {id:"chem-T10-031",question:"Confirmatory test for ammonia gas:",options:["Relights a glowing splint","Turns damp red litmus blue","Gives a white ppt with AgNO₃","Turns acidified dichromate green only"],correctIndex:1,explanation:"Basic gas — litmus test is classic."},
     {id:"chem-T10-032",question:"MnO₄⁻(aq) is purple. When reduced to Mn²⁺ in acid, the solution becomes:",options:["More purple","Colourless/pale pink","Yellow","Black precipitate always"],correctIndex:1,explanation:"Mn²⁺ is very pale in dilute solution."},
@@ -205,7 +195,7 @@
     {statement:"Copper carbonate green solid adds acid → CO₂.",correct:true,explain:"Carbonate."},
     {statement:"Silver nitrate stains skin brown.",correct:true,explain:"Photodecomposition."},
     {statement:"Sodium flame can mask potassium without cobalt glass.",correct:true,explain:"Yellow overlap."},
-    {statement:"Chromate-dichromate pH equilibrium.",correct:true,explain:"Orange/yellow."},
+    
     {statement:"Qualitative means identity not amount.",correct:true,explain:"vs quantitative."}
     ],
     });

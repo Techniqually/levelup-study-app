@@ -31,7 +31,10 @@
             "**Alloying**: stainless steel (Cr, Ni) forms passive Cr₂O₃ layer."
         ]
     }],
-    infographics: [ { image: "data/subjects/chemistry/images/reactions-09-reactivity-series.jpg", caption: "Reactivity series and displacement" } ],
+    infographics: [ 
+        { image: "data/subjects/chemistry/images/reactions-09-reactivity-series.jpg", caption: "Reactivity series and displacement" } ,
+        { image: "data/subjects/chemistry/images/topic-14-infographic.png", caption: "Reactivity Series Infographic" }
+    ],
     flashcards: [
         {
             "front": "Fe + CuSO₄?",
@@ -121,7 +124,7 @@
     {id:"chem-T14-023",question:"Gold jewellery alloy:",options:["Pure always","Cu added hardness","Na added","Cl added"],correctIndex:1,explanation:"Hardness."},
     {id:"chem-T14-024",question:"Fe + acid → Fe²⁺ or Fe³⁺ dilute:",options:["Fe²⁺ typically","Fe³⁺ always","Fe⁰","No ions"],correctIndex:0,explanation:"Dilute HCl."},
     {id:"chem-T14-025",question:"Metal + water steam general gp1:",options:["Hydroxide + H₂","Only oxide","No reaction","Only O₂"],correctIndex:0,explanation:"Alkali metals."},
-    {id:"chem-T14-026",question:"Reactivity series from reduction potentials (concept):",options:["More negative E° more reactive metal","More positive more reactive","No link","Only non-metals"],correctIndex:0,explanation:"Trend."},
+    {id:"chem-T14-026",question: "Four unknown metals W, X, Y, and Z are tested. \n- W displaces X from a solution of X nitrate.\n- Z reacts violently with cold water, while W only reacts with steam.\n- Y does not react with dilute hydrochloric acid.\nWhat is the correct order of reactivity, from most reactive to least reactive?",options: ["Z > W > X > Y","Z > X > W > Y","Y > X > W > Z","W > Z > Y > X"],correctIndex: 0,explanation: "Z reacts with cold water (most reactive). W reacts with steam (less reactive than Z). W displaces X (W > X). Y doesn't react with acid (least reactive, below hydrogen). Thus, Z > W > X > Y."},
     {id:"chem-T14-027",question:"Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s) happens because:",options:["Cu is more reactive than Zn","Zn is more reactive than Cu","Both are equally reactive","Cu oxidises Zn"],correctIndex:1,explanation:"Zn is higher in the series — displaces Cu²⁺."},
     {id:"chem-T14-028",question:"Why does aluminium resist corrosion in air despite being very reactive?",options:["It cannot oxidise","A stable surface Al₂O₃ layer protects the metal","It is a noble metal","Water dissolves aluminium instantly"],correctIndex:1,explanation:"Passivation by oxide film."},
     {id:"chem-T14-029",question:"Iron rusting is accelerated by salt water mainly because:",options:["Salt removes oxygen","Ions increase electrolyte conductivity for electrochemical corrosion","NaCl reacts with Fe to make Au","Salt raises bp only"],correctIndex:1,explanation:"Better ionic conduction speeds electron-transfer steps."},
@@ -132,13 +135,15 @@
     {id:"chem-T14-034",question:"Pb with cold dilute HCl often gives little H₂ because:",options:["Pb is above hydrogen","Insoluble PbCl₂ can coat the metal and slow/stop reaction","Pb is not a metal","HCl is always dry"],correctIndex:1,explanation:"Kinetic barrier from surface coating."},
     {id:"chem-T14-035",question:"Thermite (Al + Fe₂O₃) releases a lot of heat because:",options:["Al is reduced","Highly exothermic redox forming Al₂O₃ and Fe","It is endothermic","No redox occurs"],correctIndex:1,explanation:"Al reduces iron oxide very exothermically."},
     {id:"chem-T14-036",question:"In extraction, a metal high in the reactivity series typically needs:",options:["Only carbon reduction","Electrolysis of molten compounds","Heating in air only","Dissolving in water"],correctIndex:1,explanation:"Very stable oxides — electrolytic routes."},
+    {id:"chem-T14-037",question: "Which of the following methods of rust prevention relies on 'sacrificial protection'?",options: ["Painting a steel bridge","Coating a food can with a layer of tin","Attaching blocks of magnesium to the steel hull of a ship","Applying grease to a bicycle chain"],correctIndex: 2,explanation: "Magnesium is more reactive than iron. It acts as a sacrificial anode, corroding in place of the iron. Painting, greasing, and tin-plating are purely barrier methods."},
+    {id:"chem-T14-038",question:"In blast furnace reduction, iron(III) oxide is reduced mainly by:",options:["Hydrogen","Carbon monoxide","Calcium oxide","Steam"],correctIndex:1,explanation:"Coke burns to form carbon monoxide gas, which acts as the primary reducing agent to convert iron(III) oxide into molten iron."},
     {id:"chem-T14-201",question:"When Mg ribbon is placed in CuSO₄(aq), the blue colour fades mainly because:",options:["Cu²⁺ is reduced to Cu(s) and Mg is oxidised","Mg dissolves without redox","Water evaporates","Cu²⁺ is oxidised"],correctIndex:0,explanation:"Mg displaces Cu²⁺ — redox."},
     {id:"chem-T14-202",question:"Iron nails in copper(II) sulfate solution will:",options:["Deposit Cu and Fe²⁺ forms (if Fe displaces Cu²⁺)","Never react","Make Cl₂","Only rust without Cu"],correctIndex:0,explanation:"Fe above Cu — displacement."},
     {id:"chem-T14-203",question:"Rusting of iron requires both:",options:["Only dry air","Oxygen and water (electrochemical cell on surface)","Only pure nitrogen","Only heat with no O₂"],correctIndex:1,explanation:"Classic rust conditions."},
     {id:"chem-T14-204",question:"Sacrificial protection of steel pipes uses a metal that is:",options:["Less reactive than iron","More reactive than iron (e.g. Zn, Mg)","Exactly as reactive as carbon","A noble gas"],correctIndex:1,explanation:"Anode corrodes instead of Fe."},
     {id:"chem-T14-205",question:"Blast furnace iron production uses CO mainly as a:",options:["Catalyst only","Reducing agent for iron oxide","Oxidising agent for water","Coolant only"],correctIndex:1,explanation:"C/CO reduces Fe₂O₃."},
     {id:"chem-T14-206",question:"Why is cryolite used with molten Al₂O₃ in aluminium extraction?",options:["It is the aluminium ore","It lowers the working temperature of the melt","It removes all oxygen without current","It makes Al unreactive"],correctIndex:1,explanation:"Flux — lowers mp / dissolves alumina."},
-    {id:"chem-T14-207",question:"Heating zinc oxide with carbon can produce zinc vapour because:",options:["Zn is less reactive than carbon in the Ellingham sense at high T / carbon can reduce ZnO under practical conditions","Carbon never reduces oxides","ZnO is a noble gas","Zn cannot boil"],correctIndex:0,explanation:"Industrial reduction context — O-level: carbon reduces many metal oxides below Al."},
+    
     {id:"chem-T14-208",question:"Stainless steel resists rust better than plain carbon steel mainly because:",options:["It contains chromium that forms a passive oxide layer","It has no iron","It cannot conduct electricity","It is pure copper"],correctIndex:0,explanation:"Cr₂O₃ passive layer."},
     {id:"chem-T14-209",question:"If a student adds Sn to Pb²⁺(aq), Sn is:",options:["Reduced because Sn is less reactive","Oxidised to Sn²⁺ if Sn is more reactive than Pb","Unchanged always","A catalyst only"],correctIndex:1,explanation:"More reactive metal displaces less reactive ion."},
     {id:"chem-T14-301",question:"Potassium reacts vigorously with cold water. The products are:",options:["K₂O + H₂","KOH(aq) + H₂(g)","KCl + H₂","K₂SO₄ + O₂"],correctIndex:1,explanation:"2K + 2H₂O → 2KOH + H₂. Group 1 metals produce metal hydroxide + hydrogen."},
@@ -149,6 +154,38 @@
     {id:"chem-T14-306",question:"Calcium metal reacts with cold water to give Ca(OH)₂ + H₂. Calcium is placed above magnesium in the reactivity series because:",options:["Ca is denser than Mg","Ca reacts more vigorously — cold water vs only steam for Mg","Ca has fewer electrons","Mg is radioactive"],correctIndex:1,explanation:"Relative vigour with water and acids places Ca above Mg in the series."},
     {id:"chem-T14-307",question:"Gold and silver are found as native metals in nature because:",options:["They are radioactive and decay from other metals","They are very unreactive — low position in series means oxides easily reduced / rarely form stable compounds","They are allotropes of carbon","Water dissolves their ores"],correctIndex:1,explanation:"Low reactivity → not easily oxidised → found uncombined."},
     {id:"chem-T14-308",question:"In the thermite reaction: Al + Fe₂O₃ → Al₂O₃ + Fe, which is the oxidising agent?",options:["Al","Fe₂O₃ (Fe³⁺ is reduced to Fe)","O₂ gas added separately","H₂O"],correctIndex:1,explanation:"Fe₂O₃ oxidises Al (Al is oxidised); Fe³⁺ gains electrons (is reduced). Fe₂O₃ = oxidising agent."}
+    ],
+    extendedQuestions: [
+        {
+            id: "chem-T14-E01",
+            commandWord: "Evaluate",
+            marks: 6,
+            syllabusNote: "Reactivity Series - Rusting conditions and prevention.",
+            prompt: "Three test tubes are set up to investigate the rusting of iron nails.\n- **Tube A**: Iron nail in tap water, open to the air.\n- **Tube B**: Iron nail in boiled water, with a layer of oil on top.\n- **Tube C**: Iron nail in tap water containing dissolved sodium chloride, open to the air.\n\n(a) Explain the purpose of boiling the water and adding the oil layer in Tube B.\n(b) State and explain the observation in Tube B after one week.\n(c) Compare the expected rate of rusting in Tube A and Tube C after one week. Explain your reasoning.",
+            rubric: [
+                "(a) Boiling the water removes **dissolved oxygen**.",
+                "(a) The oil layer prevents **oxygen from the air from dissolving** back into the water.",
+                "(b) Observation: **No rust** is formed.",
+                "(b) Explanation: Rusting requires **both oxygen and water**; Tube B lacks oxygen.",
+                "(c) Comparison: Tube C will rust **much faster** than Tube A.",
+                "(c) Explanation: The dissolved sodium chloride (salt) acts as an electrolyte, which **accelerates the electrochemical rusting process**."
+            ],
+            modelAnswer: "(a) Boiling the water drives out any dissolved air/oxygen. The layer of oil acts as a barrier to prevent atmospheric oxygen from re-dissolving into the water.\n\n(b) After one week, the nail in Tube B will have **no rust**. Rusting is an oxidation process that requires the simultaneous presence of both water and oxygen. Because Tube B has no oxygen, rusting cannot occur.\n\n(c) The nail in Tube C will rust **much faster** and more extensively than the nail in Tube A. While both tubes have water and oxygen, Tube C contains dissolved sodium chloride. The salt provides mobile ions that increase the electrical conductivity of the water, greatly accelerating the electrochemical rusting process."
+        },
+        {
+            id: "chem-T14-E02",
+            commandWord: "Deduce",
+            marks: 4,
+            syllabusNote: "Reactivity Series - Extraction of metals using carbon.",
+            prompt: "Lead can be extracted from its ore, lead(II) oxide ($PbO$), by heating it strongly with carbon in a furnace. However, aluminium cannot be extracted from aluminium oxide ($Al_2O_3$) using this method.\n\n(a) Write a balanced chemical equation for the extraction of lead using carbon.\n(b) Using the reactivity series, explain why carbon can reduce lead(II) oxide but cannot reduce aluminium oxide.",
+            rubric: [
+                "(a) Equation: **$2PbO(s) + C(s) \\rightarrow 2Pb(s) + CO_2(g)$** (or forming CO).",
+                "(b) Carbon is positioned **above lead** in the reactivity series, so it is reactive enough to displace/reduce lead.",
+                "(b) Carbon is positioned **below aluminium** in the reactivity series.",
+                "(b) Therefore, carbon is **not reactive enough** to reduce the very stable aluminium oxide."
+            ],
+            modelAnswer: "(a) $2PbO(s) + C(s) \\rightarrow 2Pb(s) + CO_2(g)$\n\n(b) In the reactivity series, carbon is positioned above lead but below aluminium. Because carbon is more reactive than lead, it can successfully reduce lead(II) oxide to extract the metal. However, because aluminium is highly reactive, aluminium oxide is extremely stable. Carbon is less reactive than aluminium and therefore cannot remove the oxygen from aluminium oxide."
+        }
     ],
     trueFalse: [
     {statement:"Copper reacts with dilute hydrochloric acid to give hydrogen.",correct:false,explain:"Below hydrogen."},

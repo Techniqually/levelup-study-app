@@ -37,7 +37,34 @@
             "**Electroplating**: object = cathode in metal ion solution. Anode = plating metal (dissolves to replenish ions).",
             "**Electrorefining Cu**: impure Cu anode dissolves; pure Cu deposits on cathode."
         ]
-    }],
+    },
+    { 
+        "title": "Selective Discharge in Aqueous Solutions", 
+        "points": [ 
+            "Aqueous solutions contain ions from the salt PLUS $H^+$ and $OH^-$ from water.",
+            " **At the Cathode (-)**: The **less reactive** cation is discharged. (e.g., $Cu^{2+}$ or $Ag^+$ will discharge over $H^+$. However, $H^+$ will discharge over reactive metals like $Na^+$ or $Mg^{2+}$).",
+            " **At the Anode (+)**: $OH^-$ is usually discharged to form $O_2$ and $H_2O$. **Exception**: If a **high concentration** of halide ions (like $Cl^-$ in concentrated brine) is present, the halogen gas (e.g., $Cl_2$) is discharged instead."
+        ] 
+    },
+    {
+        "title": "Simple Cells (Voltaic Cells)",
+        "points": [
+            "A simple cell consists of two different metals placed in an electrolyte.",
+            "The **more reactive metal** acts as the **negative electrode (anode)** because it loses electrons more readily.",
+            "The **further apart** the two metals are in the reactivity series, the **greater the voltage** produced.",
+            "Electrons flow through the external wire from the more reactive metal to the less reactive metal."
+        ]
+    },
+    {
+        "title": "Hydrogen Fuel Cells",
+        "points": [
+            "Uses hydrogen and oxygen gases to continuously produce electricity.",
+            " **Overall reaction**: $2H_2(g) + O_2(g) \\rightarrow 2H_2O(l)$.",
+            " **Advantages**: Non-polluting (only produces water), highly efficient.",
+            " **Disadvantages**: Hydrogen is flammable/explosive, hard to store/transport, and often extracted from fossil fuels."
+        ]
+    }
+    ],
     infographics: [
       { image: "data/subjects/chemistry/images/reactions-07-electrochemistry.jpg", caption: "Electrolysis and Daniel cell" },
       { svg: "<svg viewBox=\"0 0 280 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"280\" height=\"120\" fill=\"#1c222d\"/><rect x=\"50\" y=\"35\" width=\"180\" height=\"55\" fill=\"#2a3344\" stroke=\"#5eead4\"/><rect x=\"60\" y=\"45\" width=\"35\" height=\"35\" fill=\"#6366f1\"/><rect x=\"185\" y=\"45\" width=\"35\" height=\"35\" fill=\"#f87171\"/><text x=\"58\" y=\"100\" fill=\"#8b95a8\" font-size=\"9\">cathode −</text><text x=\"175\" y=\"100\" fill=\"#8b95a8\" font-size=\"9\">anode +</text><text x=\"70\" y=\"28\" fill=\"#5eead4\" font-size=\"10\">Electrolysis · DC supply</text></svg>", caption: "Electrolysis cell (schematic)" }
@@ -60,20 +87,12 @@
             "back": "Ions conduct."
         },
         {
-            "front": "Faraday (qual)?",
-            "back": "More charge ∝ more substance."
-        },
-        {
             "front": "Mg–Cu cell negative?",
             "back": "Mg."
         },
         {
             "front": "Salt bridge?",
             "back": "Completes ion circuit."
-        },
-        {
-            "front": "Standard electrode potential?",
-            "back": "Measure vs reference."
         },
         {
             "front": "Al extraction?",
@@ -86,10 +105,6 @@
         {
             "front": "Anode in cell is oxidation?",
             "back": "Yes in voltaic cell."
-        },
-        {
-            "front": "Overpotential?",
-            "back": "Extra voltage needed (kinetics)."
         },
         {
             "front": "Inert electrode Pt?",
@@ -113,7 +128,7 @@
     {id:"chem-T12-005",question:"Dilute H₂SO₄ electrolysis inert:",options:["Na at cathode","H₂ and O₂","Only SO₂","Cu"],correctIndex:1,explanation:"Water electrolysis dominant."},
     {id:"chem-T12-006",question:"CuSO₄ aq Cu electrodes:",options:["Cu dissolves anode plates cathode","Only H₂","No change","Cl₂"],correctIndex:0,explanation:"Refining."},
     {id:"chem-T12-007",question:"More reactive metal as cell anode:",options:["Oxidised","Reduced","Inert","Coated"],correctIndex:0,explanation:"Loses e⁻."},
-    {id:"chem-T12-008",question:"E° cell >0 means:",options:["Non-spontaneous","Spontaneous as written","Equilibrium","No electrons"],correctIndex:1,explanation:"ΔG<0."},
+    {id:"chem-T12-008",question: "A student sets up three simple cells using copper as the positive electrode in each. The negative electrodes are Magnesium, Zinc, and Iron. Which metal will produce the highest voltage?",options: ["Iron","Zinc","Magnesium","They will all produce the same voltage"],correctIndex: 2,explanation: "The voltage of a simple cell depends on the difference in reactivity between the two metals. Magnesium is the most reactive (furthest from copper in the reactivity series), so it produces the highest voltage."},
     {id:"chem-T12-009",question:"Ion flow salt bridge to cathode compartment:",options:["Anions","Cations","Electrons","None"],correctIndex:0,explanation:"Balance charge."},
     {id:"chem-T12-010",question:"Al extraction method:",options:["Coke reduction","Electrolysis molten","Displacement","Acid leach only"],correctIndex:1,explanation:"Too reactive."},
     {id:"chem-T12-011",question:"Na extraction:",options:["H₂ reduction","Electrolysis molten NaCl","Carbon only","Titanium catalyst"],correctIndex:1,explanation:"Reactive metal."},
@@ -131,7 +146,7 @@
     {id:"chem-T12-023",question:"Why AC not used simple electrolysis cell:",options:["No net product","Better yield","Safer always","Required"],correctIndex:0,explanation:"Alternating redox."},
     {id:"chem-T12-024",question:"Concentrated NaCl brine anode:",options:["O₂ preferred","Cl₂ preferred","H₂","Na"],correctIndex:1,explanation:"High [Cl⁻]."},
     {id:"chem-T12-025",question:"Reduction at cathode always involves:",options:["Gain of electrons","Loss of electrons","Proton emission","Neutron capture"],correctIndex:0,explanation:"Definition."},
-    {id:"chem-T12-026",question:"Nernst idea (qual):",options:["Concentration affects E","No effect","Only gas colour","Only solid"],correctIndex:0,explanation:"Le Chatelier on potentials."},
+    {id:"chem-T12-026",question: "During the electrolysis of concentrated aqueous sodium chloride (brine) using inert carbon electrodes, what is produced at the cathode and the anode?",options: ["Cathode: Sodium metal | Anode: Chlorine gas","Cathode: Hydrogen gas | Anode: Chlorine gas","Cathode: Hydrogen gas | Anode: Oxygen gas","Cathode: Sodium metal | Anode: Oxygen gas"],correctIndex: 1,explanation: "At the cathode, $H^+$ is discharged instead of $Na^+$ because sodium is very reactive. At the anode, because the solution is concentrated, the $Cl^-$ ions are selectively discharged over $OH^-$ to form chlorine gas."},
     {id:"chem-T12-027",question:"Electrolysis of molten NaCl: product at the positive anode is:",options:["Na metal","Cl₂ gas","H₂ gas","O₂ gas"],correctIndex:1,explanation:"Chloride ions are oxidised to chlorine."},
     {id:"chem-T12-028",question:"Electrolysis of dilute Na₂SO₄(aq) with inert electrodes mainly produces at the electrodes:",options:["Na and S","H₂ at cathode and O₂ at anode","Cl₂ and Na","Only H₂ at both"],correctIndex:1,explanation:"Water is split preferentially in dilute sulfate (H⁺/OH⁻ from water)."},
     {id:"chem-T12-029",question:"In a voltaic cell, electrons travel externally from:",options:["Cathode to anode","Anode to cathode","Salt bridge to air","Positive cathode to positive anode"],correctIndex:1,explanation:"Oxidation at anode releases electrons that flow to cathode."},
@@ -142,10 +157,11 @@
     {id:"chem-T12-034",question:"During discharge of a simple Zn–Cu voltaic cell, the mass of the Zn electrode:",options:["Increases","Decreases","Stays exactly constant","Doubles"],correctIndex:1,explanation:"Zn oxidises to Zn²⁺ and enters solution."},
     {id:"chem-T12-035",question:"Why does pure water conduct electricity poorly in electrolysis?",options:["Water has no dipole","Very low concentration of ions (H⁺/OH⁻) from autoionisation","Electrons swim in water freely","O₂ blocks current"],correctIndex:1,explanation:"Adding an electrolyte increases conductivity."},
     {id:"chem-T12-036",question:"Fuel cell advantage over combustion in a heat engine (ideal comparison):",options:["Always 100% efficient","Direct chemical-to-electrical conversion can be more efficient than Carnot-limited heat engines","No redox occurs","Produces only solid carbon"],correctIndex:1,explanation:"Avoids some thermal losses — syllabus-level idea."},
+    {id:"chem-T12-037",question: "What is the only chemical product formed in a hydrogen-oxygen fuel cell?",options: ["Carbon dioxide","Hydrogen peroxide","Water","Sodium hydroxide"],correctIndex: 2,explanation: "Hydrogen and oxygen react in the fuel cell to form pure water ($2H_2 + O_2 \\rightarrow 2H_2O$), making it environmentally friendly at the point of use."},
     {id:"chem-T12-201",question:"During electrolysis of molten PbBr₂ with inert electrodes, bromide ions are oxidised at:",options:["The cathode","The anode","Both electrodes","Neither"],correctIndex:1,explanation:"Anode = oxidation; 2Br⁻ → Br₂ + 2e⁻."},
     {id:"chem-T12-202",question:"In electrolysis of dilute H₂SO₄(aq) with Pt electrodes, the main product at the cathode is usually:",options:["O₂","H₂","SO₂","Na"],correctIndex:1,explanation:"H⁺ reduced to H₂ in acidic aqueous electrolysis."},
     {id:"chem-T12-203",question:"Why is cryolite used in aluminium extraction with molten Al₂O₃?",options:["It is the main ore","It lowers the melting point of the mixture","It removes oxygen without electricity","It is cheaper than aluminium"],correctIndex:1,explanation:"Al₂O₃ has very high mp; cryolite dissolves it at lower T."},
-    {id:"chem-T12-204",question:"A Faraday (F) links:",options:["Mass of metal to gas volume only","Moles of electrons to electric charge","Temperature to pressure","Catalyst mass to rate"],correctIndex:1,explanation:"Q = nF for electrons transferred."},
+    
     {id:"chem-T12-205",question:"In electroplating silver onto a spoon, the spoon should be:",options:["The anode","The cathode","The electrolyte","The salt bridge"],correctIndex:1,explanation:"Ag⁺ reduces onto the object (cathode)."},
     {id:"chem-T12-206",question:"In a voltaic cell, electrons flow in the external wire from:",options:["Cathode to anode","Anode to cathode","Salt bridge to air","Positive cathode to positive anode"],correctIndex:1,explanation:"Oxidation at anode releases electrons."},
     {id:"chem-T12-207",question:"Electrolysis of concentrated NaCl(aq) with inert electrodes often produces Cl₂ at the anode because:",options:["OH⁻ is never oxidised","High [Cl⁻] favours chloride discharge over oxygen evolution","Na metal always forms","Water never oxidises"],correctIndex:1,explanation:"Preferential discharge order depends on concentration."},
@@ -158,7 +174,54 @@
     {id:"chem-T12-305",question:"In the chlor-alkali process (brine electrolysis), the THREE products formed are:",options:["Na, Cl₂, H₂","Cl₂, H₂, and NaOH solution","Na, O₂, HCl","NaCl, H₂, O₂"],correctIndex:1,explanation:"At cathode: 2H₂O + 2e⁻ → H₂ + 2OH⁻ (NaOH); at anode: 2Cl⁻ → Cl₂."},
     {id:"chem-T12-306",question:"In a hydrogen fuel cell, hydrogen is oxidised at the:",options:["Cathode","Anode","Salt bridge","Electrolyte only"],correctIndex:1,explanation:"Anode = oxidation: H₂ → 2H⁺ + 2e⁻. Electrons flow through external circuit."},
     {id:"chem-T12-307",question:"Corrosion of iron is accelerated when two different metals are in electrical contact in an electrolyte (bimetallic corrosion) because:",options:["The less reactive metal becomes the anode and corrodes","The more reactive metal becomes the anode and preferentially oxidises","Both metals corrode at equal rate","No electrons transfer"],correctIndex:1,explanation:"More reactive metal = anode, corrodes sacrificially. This is also the principle of galvanic corrosion."},
-    {id:"chem-T12-308",question:"The quantity of product in electrolysis (Faraday's law concept) depends on:",options:["Only temperature","Charge passed (current × time) and the number of electrons per ion","Only the colour of the electrolyte","The shape of the electrode only"],correctIndex:1,explanation:"$Q = It$; moles of electrons = $Q/F$; links to moles of product via stoichiometry."}
+    
+    ],
+    extendedQuestions: [
+        {
+            id: "chem-T12-E01",
+            commandWord: "Predict",
+            marks: 6,
+            syllabusNote: "Electrochemistry - Concentration effect in aqueous electrolysis.",
+            prompt: "A student performs electrolysis on two different solutions of hydrochloric acid ($HCl$) using inert platinum electrodes. \nSetup A: Concentrated hydrochloric acid.\nSetup B: Very dilute hydrochloric acid.\n\n(a) Identify the ions present in both solutions.\n(b) Predict the gas produced at the anode (+) in Setup A and write its half-equation.\n(c) Predict the gas produced at the anode (+) in Setup B and write its half-equation.\n(d) Name the gas produced at the cathode (-) in both setups.",
+            rubric: [
+                "(a) $H^+$, $Cl^-$, and $OH^-$ (from water).",
+                "(b) Gas in Setup A: **Chlorine gas ($Cl_2$)**.",
+                "(b) Equation: **$2Cl^-(aq) \\rightarrow Cl_2(g) + 2e^-$**.",
+                "(c) Gas in Setup B: **Oxygen gas ($O_2$)**.",
+                "(c) Equation: **$4OH^-(aq) \\rightarrow 2H_2O(l) + O_2(g) + 4e^-$**.",
+                "(d) Gas at Cathode: **Hydrogen gas ($H_2$)**."
+            ],
+            modelAnswer: "(a) The ions present in both solutions are hydrogen ions ($H^+$), chloride ions ($Cl^-$), and hydroxide ions ($OH^-$) from the auto-ionisation of water.\n\n(b) In Setup A (concentrated), the high concentration of chloride ions causes them to be selectively discharged at the anode. The gas produced is **chlorine gas**. \nHalf-equation: $2Cl^-(aq) \\rightarrow Cl_2(g) + 2e^-$.\n\n(c) In Setup B (dilute), the concentration of chloride ions is too low, so the hydroxide ions from water are preferentially discharged. The gas produced is **oxygen gas**.\nHalf-equation: $4OH^-(aq) \\rightarrow 2H_2O(l) + O_2(g) + 4e^-$.\n\n(d) In both setups, the only positive ion available is $H^+$, so **hydrogen gas** is produced at the cathode."
+        },
+        {
+            id: "chem-T12-E02",
+            commandWord: "Deduce",
+            marks: 5,
+            syllabusNote: "Electrochemistry - Simple cells and predicting the reactivity series.",
+            prompt: "A student constructs simple cells using various unknown metals (W, X, Y) paired with a standard copper (Cu) electrode in an electrolyte. The voltages measured are:\n- Metal W and Cu = 1.10 V (W is the negative electrode)\n- Metal X and Cu = 0.45 V (X is the negative electrode)\n- Metal Y and Cu = 2.70 V (Y is the negative electrode)\n\n(a) Explain why metals W, X, and Y act as the negative electrodes when paired with copper.\n(b) Deduce the order of reactivity of the four metals (Cu, W, X, Y), starting with the most reactive.\n(c) In the cell containing Metal W and Cu, state the direction of electron flow in the external circuit.",
+            rubric: [
+                "(a) Metals W, X, and Y act as the negative electrode because they are **more reactive than copper**.",
+                "(a) Because they are more reactive, they **lose electrons more readily** (undergo oxidation).",
+                "(b) The greater the voltage, the further apart the metals are in the reactivity series.",
+                "(b) Correct order: **Y > W > X > Cu**.",
+                "(c) Electrons flow from **Metal W to Copper**."
+            ],
+            modelAnswer: "(a) In a simple cell, the more reactive metal loses electrons more readily to become ions (undergoes oxidation). Because W, X, and Y act as the negative electrodes (the source of electrons), they must all be more reactive than copper.\n\n(b) The voltage produced by a simple cell is proportional to the difference in reactivity between the two metals. Metal Y produces the highest voltage (2.70 V), meaning it is the furthest away from copper and therefore the most reactive. X produces the lowest voltage, making it the closest to copper. \nThe order of reactivity from most to least reactive is: **Y, W, X, Cu**.\n\n(c) In the external circuit, electrons flow from the more reactive metal (the negative electrode) to the less reactive metal. Therefore, electrons flow from **Metal W to Copper**."
+        },
+        {
+            id: "chem-T12-E03",
+            commandWord: "Predict",
+            marks: 4,
+            syllabusNote: "Electrochemistry - Electroplating mass changes.",
+            prompt: "A student sets up an electroplating cell to coat a steel spoon with silver. The electrolyte is aqueous silver nitrate.\n\n(a) Identify the material that should be used for the anode (+).\n(b) Write the half-equation for the reaction occurring at the cathode (-).\n(c) State how the mass of the anode and the mass of the electrolyte will change over time, and explain why.",
+            rubric: [
+                "(a) The anode should be made of **pure silver**.",
+                "(b) Cathode equation: **$Ag^+(aq) + e^- \\rightarrow Ag(s)$**.",
+                "(c) The mass of the anode **decreases**.",
+                "(c) The concentration/mass of the electrolyte **remains constant**, because the rate at which silver ions are discharged at the cathode is exactly equal to the rate at which silver atoms dissolve from the anode."
+            ],
+            modelAnswer: "(a) To electroplate an object with silver, the anode must be a piece of pure silver.\n\n(b) At the cathode, silver ions from the solution gain electrons and deposit as solid silver metal: $Ag^+(aq) + e^- \\rightarrow Ag(s)$.\n\n(c) The mass of the silver anode will decrease because it undergoes oxidation, dissolving into the solution as silver ions ($Ag(s) \\rightarrow Ag^+(aq) + e^-$). The concentration of the silver nitrate electrolyte remains constant. This is because every time a silver ion is removed from the solution at the cathode, a new silver ion is produced at the anode to replace it."
+        }
     ],
     trueFalse: [
     {statement:"In electrolysis the cathode is where oxidation happens.",correct:false,explain:"Reduction at cathode."},
