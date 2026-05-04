@@ -1,6 +1,10 @@
 (function () {
-  // Storage-native key; runtime signs this into a Supabase URL.
-  const img = (filename) => "chemistry/images/" + filename;
+  // Build absolute URLs so the shell can live anywhere (root vs /physics/).
+  const img = (filename) =>
+    new URL(
+      "data/subjects/chemistry/images/" + filename,
+      window.location.href
+    ).toString();
 
   const imagesByTopic = {
     "1": [
@@ -30,6 +34,11 @@
         caption: "Atomic Structure",
         infoKey: "matter-04-atomic-structure.jpg",
       },
+      {
+        image: img("topic-04-infographic.png"),
+        caption: "Atomic Structure Infographic",
+        infoKey: "topic-04-infographic.png",
+      },
     ],
     "5": [
       {
@@ -37,12 +46,32 @@
         caption: "Chemical Bonding and Structure",
         infoKey: "matter-05-Bonding.jpg",
       },
+      {
+        image: img("topic-05-1-infographic.png"),
+        caption: "Chemical Bonding Infographic",
+        infoKey: "topic-05-1-infographic.png",
+      },
+      {
+        image: img("topic-05-2-infographic.png"),
+        caption: "Structure and properties of materials",
+        infoKey: "topic-05-2-infographic.png",
+      }
     ],
     "6": [
       {
         image: img("reactions-01-calculations.jpg"),
         caption: "Chemical Calculations",
         infoKey: "reactions-01-calculations.jpg",
+      },
+      {
+        image: img("topic-06-1-infographic.png"),
+        caption: "Chemical Calculations Infographic",
+        infoKey: "topic-06-1-infographic.png",
+      },
+      {
+        image: img("topic-06-2-infographic.png"),
+        caption: "Moles and Stoichiometry Infographic",
+        infoKey: "topic-06-2-infographic.png",
       },
     ],
     "7": [
@@ -51,6 +80,11 @@
         caption: "Acids and Bases",
         infoKey: "reactions-02-acids-bases.jpg",
       },
+      {
+        image: img("topic-07-infographic.png"),
+        caption: "Acids and Bases Infographic",
+        infoKey: "topic-07-infographic.png",
+      }
     ],
     "8": [
       {
@@ -72,6 +106,11 @@
         caption: "Qualitative Analysis",
         infoKey: "reactions-05-qualitative-analysis.jpg",
       },
+      {
+        image: img("topic-10-infographic.png"),
+        caption: "Qualitative Analysis Infographic",
+        infoKey: "topic-10-infographic.png",
+      }
     ],
     "11": [
       {
@@ -79,6 +118,11 @@
         caption: "Redox Chemistry",
         infoKey: "reactions-06-redox.jpg",
       },
+      {
+        image: img("topic-11-infographic.png"),
+        caption: "Oxidation and Reduction Infographic",
+        infoKey: "topic-11-infographic.png",
+      }
     ],
     "12": [
       {
@@ -86,6 +130,7 @@
         caption: "Electrochemistry",
         infoKey: "reactions-07-electrochemistry.jpg",
       },
+      
     ],
     "13": [
       {
@@ -93,6 +138,16 @@
         caption: "Periodic Table",
         infoKey: "reactions-08-periodic-table.jpg",
       },
+      {
+        image: img("chemistry-periodic-table-pic.png"),
+        caption: "Periodic Table",
+        infoKey: "chemistry-periodic-table-pic.png",
+      },
+      {
+        image: img("topic-13-infographic.png"),
+        caption: "Periodic Table Trends Infographic",
+        infoKey: "topic-13-infographic.png",
+      }
     ],
     "14": [
       {
@@ -100,6 +155,11 @@
         caption: "Reactivity Series",
         infoKey: "reactions-09-reactivity-series.jpg",
       },
+      {
+        image: img("topic-14-infographic.png"),
+        caption: "Reactivity Series Infographic",
+        infoKey: "topic-14-infographic.png",
+      }
     ],
     "15": [
       {
@@ -107,6 +167,11 @@
         caption: "Energetics",
         infoKey: "reactions-10-energetics.jpg",
       },
+      {
+        image: img("topic-15-infographic.png"),
+        caption: "Energetics Infographic",
+        infoKey: "topic-15-infographic.png",
+      }
     ],
     "16": [
       {
@@ -114,6 +179,11 @@
         caption: "Rate of Reactions",
         infoKey: "reactions-11-rates.jpg",
       },
+      {
+        image: img("topic-16-infographic.png"),
+        caption: "Rate of Reactions Infographic",
+        infoKey: "topic-16-infographic.png",
+      }
     ],
     "17": [
       {
